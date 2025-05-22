@@ -4,7 +4,7 @@ This repository contains the evaluation scripts for the paper "Runtime Verificat
 
 <img src="assets/img_readme.png" alt="experiment" width="900"/>
 
-> Snapshot from deploying our approach for traffic-rule compliant motion planning in real-world test drives. 
+> Snapshot from deploying our approach for traffic-rule compliant motion planning in real-world test drives.
 
 ## :file_folder: Overview
 
