@@ -1,93 +1,107 @@
-# runtime-verification-motion-planners
+# Runtime Verification of Motion Planners Using Formalized Traffic Rules – Evaluation Scripts
 
+This repository contains the evaluation scripts for the paper "Runtime Verification of Motion Planners Using Formalized Traffic Rules".
 
+<img src="assets/img_readme.png" alt="experiment" width="900"/>
 
-## Getting started
+> Snapshot from deploying our approach for traffic-rule compliant motion planning in real-world test drives. 
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## :file_folder: Overview
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
-
+The repository contains the following files and directories:
+```tree
+.
+├── configurations/             # Contains the configuration files
+│
+├── scenarios/                  # Contains the CommonRoad scenarios
+│   ├── motivating_example/     # Scenarios used in the motivating example
+│   ├── test_drives/            # Scenarios generated from the test drives
+│
+├── src/                        # Contains the source code for the experiments and the evaluation
+│
+├── *.py files                  # Main scripts for the evaluation: see below for details
+.
 ```
-cd existing_repo
-git remote add origin https://gitlab.lrz.de/publications_sebastian_maierhofer/runtime-verification-motion-planners.git
-git branch -M main
-git push -uf origin main
+
+
+## :computer: Getting Started
+
+1. Pull the Docker image `no-more-traffic-tickets` from the GitHub container registry (Docker may require `sudo` root privileges if your user is not in the `docker` group):
+```bash
+docker pull ghcr.io/commonroad/no-more-traffic-tickets/no-more-traffic-tickets:latest
 ```
 
-## Integrate with your tools
+2. After pulling the image, make sure that you are in the root directory of the repository (the directory containing this file) and start the container with:
+```bash
+docker run -it --rm -v $(pwd):/workspace ghcr.io/commonroad/no-more-traffic-tickets/no-more-traffic-tickets:latest /bin/bash
+```
+The command above mounts the current working directory into the Docker container.
+Thus, modifications to the code from inside the container will also be reflected on your local machine.
+Moreover, it allows you to access the results even after the container has stopped.
 
-- [ ] [Set up project integrations](https://gitlab.lrz.de/publications_sebastian_maierhofer/runtime-verification-motion-planners/-/settings/integrations)
+> **Note:** If you are using Windows, you have to replace `$(pwd)` by `%cd%`.
 
-## Collaborate with your team
+3. Install the evaluation Python package in the Docker container:
+```bash
+pip install .
+```
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+If the package is installed successfully, you can run the experiments as described [below](#replicating-the-results-from-the-paper).
 
-## Test and Deploy
+> **Note:** It can happen that you do not have permissions to access the files created inside the container from the host machine.
+> In this case, you can change the owner of the files using `sudo chown -R $USER <directory>`.
 
-Use the built-in continuous integration in GitLab.
+## :arrow_forward: Replicating the Results from the Paper
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+All results from the paper can be replicated with the evaluation scripts in this repository.
+We describe the purpose of each script in detail.
 
-***
+### `motivating_example.py`
 
-# Editing this README
+This script reproduces the figures for the motivating example.
+All plots are written to the `output/plots` directory.
+You can run the script as follows
+```bash
+python motivating_examples.py
+```
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### `evaluate_runtimes.py`
 
-## Suggestions for a good README
+This script evaluates and compares the runtimes of our approach.
+The results are written to the `output/runtimes` directory.
+You can run the script as follows
+```bash
+python evaluate_runtimes.py
+```
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+### `test_drives_monitor.py`
 
-## Name
-Choose a self-explaining name for your project.
+This script runs the traffic rule monitor on the CommonRoad scenarios generated from the test drives.
+For each relevant rule, it reports whether the rule was satisfied or violated.
+You can run the script as follows
+```bash
+python test_drives_monitor.py
+```
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+### `test_drives_visualization.py`
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+This script recreates the plots of the CommonRoad scenarios generated from the test drives that are shown in the paper.
+All plots are written to the `output/plots` directory.
+You can run the script as follows
+```bash
+python test_drives_visualization.py
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+## :speech_balloon: Citation
+```
+@article{Althoff2025xx
+  author = {Althoff, Matthias and Maierhofer, Sebastian and Würsching, Gerald and Lin, Yuanfei and Lercher, Florian and Stolz, Roland},
+  title = {No More Traffic Tickets: A Tutorial to Ensure Traffic-Rule Compliance of Automated Vehicles},
+  journal = {Proceedings of the IEEE},
+  volume = {tbd},
+  number = {tbd},
+  pages = {tbd},
+  year={2025},
+}
+```

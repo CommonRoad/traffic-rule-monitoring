@@ -1,0 +1,32 @@
+[project]
+name = "evaluation"
+version = "0.1.0"
+readme = { file = "README.md", content-type = "text/markdown" }
+description = ""
+authors = [
+    { name = "Sebastian Maierhofer", email = "sebastian.maierhofer@tum.de" }
+]
+requires-python = ">=3.10,<3.12"
+
+[tool.poetry.dependencies]
+rv-monitors = { git = "git@gitlab.lrz.de:cps/commonroad/rv-monitors.git", branch = "develop" }
+commonroad-carla-interface = { git = "git@gitlab.lrz.de:cps/commonroad/commonroad-carla-interface.git", branch = "monitor-integration" }
+commonroad-reactive-planner = { git = "git@gitlab.lrz.de:cps/reactive-planner.git", branch = "integration_crmonitor" }
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.0.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 120
+indent-width = 4
+format.quote-style = "double"
+target-version = "py311"
+lint.ignore = ["E203"]
+lint.select = ["E4", "E7", "E9", "F", "I"]
