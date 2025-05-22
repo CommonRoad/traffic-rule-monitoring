@@ -1,32 +1,21 @@
 import time
 from pathlib import Path
 from typing import List, Tuple
-
+import matplotlib.pyplot as plt
 import pandas as pd
 import rvm
-import tikzplotlib
-from evaluation.run_eval import gen_log
-from matplotlib import pyplot as plt
+
+from src.evaluation.monitor.run_eval import gen_log
+
+try:
+    import tikzplotlib
+except ImportError:
+    tikzplotlib = None
+
+
 
 plt.style.use("ggplot")
 
-specs1 = [
-    ("S1", "G((a) S[0, 4] (b))"),
-    (
-        "S2",
-        "G((a) U[0, 4] (b))",
-    ),
-    ("S3", "G((a) U[0, 4] (b) & (a) S[0, 4] (b))"),
-]
-
-specs2 = [
-    ("S1", "G(P[0, 4] a)"),
-    (
-        "S2",
-        "G(X[0, 4] b)",
-    ),
-    ("S3", "G((c) U[0, 4] (d) & (e) S[0, 4] (f))"),
-]
 
 
 def create_trace(length: int, num_atomics: int, seed: int) -> rvm.Trace:
@@ -37,7 +26,7 @@ def create_trace(length: int, num_atomics: int, seed: int) -> rvm.Trace:
     time_steps = []
 
     # Open the file and read the lines
-    with open("./logs/eval.log", "r") as file:
+    with open(Path(__file__).parent / "logs/eval.log", "r") as file:
         lines = file.readlines()
 
     # Process each line
@@ -85,7 +74,7 @@ def evaluate(approach: str, mon: rvm.Hydra2, tr: rvm.Trace, df: pd.DataFrame, tr
     df.loc[len(df)] = [approach, trace_length, elapsed_time / num_iters]
 
 
-def eval_and_fig(spec: List[Tuple[str, str]], name: str, num_atomics: int, max_y: float):
+def eval_trace_length_atomic(spec: List[Tuple[str, str]], name: str, num_atomics: int, max_y: float):
     trace_lengths = range(20000, 220000, 20000)
     x_axis_text = "Trace Length [x10000]"
 
@@ -129,8 +118,6 @@ def eval_and_fig(spec: List[Tuple[str, str]], name: str, num_atomics: int, max_y
     plt.tick_params(axis="y", labelcolor="black", top=max_y)
     plt.legend(fontsize=30)
     plt.savefig(f"./monitor_artificial_examples/{name}.svg")
-    tikzplotlib.save(f"./monitor_artificial_examples/{name}.tex")
+    if tikzplotlib:
+        tikzplotlib.save(f"./monitor_artificial_examples/{name}.tex")
 
-
-eval_and_fig(specs1, "running_example_atomic", 2, 1.1)
-eval_and_fig(specs2, "dissimilar_atomic", 6, 1.1)

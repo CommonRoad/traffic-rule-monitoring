@@ -4,30 +4,20 @@ from typing import List, Tuple
 
 import pandas as pd
 import rvm
-import tikzplotlib
-from evaluation.run_eval import gen_log
+
 from matplotlib import pyplot as plt
-from tests.bindings.test_bindings import make_event_list
+
+from src.evaluation.monitor.run_eval import gen_log
+
+try:
+    import tikzplotlib
+except ImportError:
+    tikzplotlib = None
+
 
 plt.style.use("ggplot")
 
-specs1 = [
-    ("S1", "G((a('rand')) S[0, 4] (b('rand')))"),
-    (
-        "S2",
-        "G((a('rand')) U[0, 4] (b('rand')))",
-    ),
-    ("S3", "G((a('rand')) U[0, 4] (b('rand')) & (a('rand')) S[0, 4] (b('rand')))"),
-]
 
-specs2 = [
-    ("S1", "G(P[0, 4] (a('rand')))"),
-    (
-        "S2",
-        "G(X[0, 4] (b('rand')))",
-    ),
-    ("S3", "G((c('rand')) U[0, 4] (d('rand')) & (e('rand')) S[0, 4] (f('rand')))"),
-]
 
 trace = []
 
@@ -75,7 +65,7 @@ def create_trace(length: int, num_atomics: int, seed: int) -> List[List[str]]:
     actions = []
 
     # Open the file and read the lines
-    with open("./logs/eval.log", "r") as file:
+    with open(Path(__file__).parent / "logs/eval.log", "r") as file:
         lines = file.readlines()
 
     # Process each line
@@ -105,6 +95,8 @@ def create_trace(length: int, num_atomics: int, seed: int) -> List[List[str]]:
 
     return actions
 
+def make_event_list(size):
+    return [rvm.Event(i, i == size - 1) for i in range(size)]
 
 def evaluate(approach: str, mon: rvm.Hydra2, df: pd.DataFrame, trace_length: int):
     event_list = make_event_list(trace_length)
@@ -130,7 +122,7 @@ def evaluate(approach: str, mon: rvm.Hydra2, df: pd.DataFrame, trace_length: int
     df.loc[len(df)] = [approach, trace_length, elapsed_time / num_iters]
 
 
-def eval_and_fig(spec: List[Tuple[str, str]], name: str, num_atomics: int, max_y: float):
+def eval_trace_length_predicate(spec: List[Tuple[str, str]], name: str, num_atomics: int, max_y: float):
     trace_lengths = range(500, 5500, 500)
     x_axis_text = "Trace Length [x100]"
 
@@ -176,8 +168,6 @@ def eval_and_fig(spec: List[Tuple[str, str]], name: str, num_atomics: int, max_y
     plt.tick_params(axis="y", labelcolor="black", top=max_y)
     plt.legend(fontsize=30)
     plt.savefig(f"./monitor_artificial_examples/{name}.svg")
-    tikzplotlib.save(f"./monitor_artificial_examples/{name}.tex")
+    if tikzplotlib:
+        tikzplotlib.save(f"./monitor_artificial_examples/{name}.tex")
 
-
-eval_and_fig(specs1, "running_example_predicate", 2, 0.6)
-eval_and_fig(specs2, "dissimilar_predicate", 6, 0.6)

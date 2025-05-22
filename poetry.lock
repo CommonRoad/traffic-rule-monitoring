@@ -115,6 +115,7 @@ description = "Python API for communicating with the CARLA server."
 optional = false
 python-versions = "*"
 groups = ["main"]
+markers = "python_version < \"3.11\""
 files = [
     {file = "carla-0.9.15-cp27-cp27mu-manylinux_2_27_x86_64.whl", hash = "sha256:25034b4ae3a67108e362ae33e4e1e4ed4b5bc73059115c38a4471d64057b8c98"},
     {file = "carla-0.9.15-cp310-cp310-manylinux_2_27_x86_64.whl", hash = "sha256:61449e33260f6a0cfd2f88d56f2463a5797a0b51bc46618beec07365422d4ad6"},
@@ -312,7 +313,7 @@ files = []
 develop = false
 
 [package.dependencies]
-carla = ">=0.9.15,<0.10.0"
+carla = {version = ">=0.9.15,<0.10.0", markers = "python_version >= \"3.9\" and python_version < \"3.11\""}
 commonroad-clcs = ">=2025.1"
 commonroad-drivability-checker = ">=2025.1"
 commonroad-idm-planner = {git = "ssh://git@gitlab.lrz.de/cps/commonroad/commonroad-idm-planner.git", branch = "develop"}
@@ -332,7 +333,7 @@ scipy = "^1.11.3"
 type = "git"
 url = "ssh://git@gitlab.lrz.de/cps/commonroad/commonroad-carla-interface.git"
 reference = "monitor-integration"
-resolved_reference = "7ae9b8daaf6c7bb1f2074f7292c7af9bfe135c0d"
+resolved_reference = "bd26520dca1278574ebafb1971f06c3870fa71e1"
 
 [[package]]
 name = "commonroad-clcs"
@@ -3512,6 +3513,21 @@ files = [
 visualization = ["matplotlib"]
 
 [[package]]
+name = "tabulate"
+version = "0.9.0"
+description = "Pretty-print tabular data"
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+files = [
+    {file = "tabulate-0.9.0-py3-none-any.whl", hash = "sha256:024ca478df22e9340661486f85298cff5f6dcdba14f3813e8830015b9ed1948f"},
+    {file = "tabulate-0.9.0.tar.gz", hash = "sha256:0095b12bf5966de529c0feb1fa08671671b3368eec77d7ef7ab114be2c068b3c"},
+]
+
+[package.extras]
+widechars = ["wcwidth"]
+
+[[package]]
 name = "tenacity"
 version = "9.1.2"
 description = "Retry code until it succeeds"
@@ -3526,6 +3542,24 @@ files = [
 [package.extras]
 doc = ["reno", "sphinx"]
 test = ["pytest", "tornado (>=4.5)", "typeguard"]
+
+[[package]]
+name = "tikzplotlib"
+version = "0.10.1"
+description = "Convert matplotlib figures into TikZ/PGFPlots"
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+files = [
+    {file = "tikzplotlib-0.10.1-py3-none-any.whl", hash = "sha256:bf0451b86fe4db40aa742f7e5a180dfaaadf57c746ddb2ab7e58a5163d8be75f"},
+    {file = "tikzplotlib-0.10.1.tar.gz", hash = "sha256:93d141342d143804fc1dfabe03e6d4e38e547cf72803bdf124615affdd56f59d"},
+]
+
+[package.dependencies]
+matplotlib = ">=1.4.0"
+numpy = "*"
+Pillow = "*"
+webcolors = "*"
 
 [[package]]
 name = "toml"
@@ -3816,6 +3850,18 @@ files = [
 ]
 
 [[package]]
+name = "webcolors"
+version = "24.11.1"
+description = "A library for working with the color formats defined by HTML and CSS."
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "webcolors-24.11.1-py3-none-any.whl", hash = "sha256:515291393b4cdf0eb19c155749a096f779f7d909f7cceea072791cb9095b92e9"},
+    {file = "webcolors-24.11.1.tar.gz", hash = "sha256:ecb3d768f32202af770477b8b65f318fa4f566c22948673a977b00d589dd80f6"},
+]
+
+[[package]]
 name = "websocket-client"
 version = "1.8.0"
 description = "WebSocket client for Python with low level API options"
@@ -3854,4 +3900,4 @@ test = ["pytest (>=4.6.7)", "pytest-checkdocs (>=1.2.5) ; python_version < \"3\"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.12"
-content-hash = "c516201507e11d02e9caa7711bb99cac3b37f1bd8ddb59911a726a790842d7e4"
+content-hash = "879c800ff1bfe016fb879550b2b4d532d6c0119a763502a0a6ba482cd5bc36bc"
