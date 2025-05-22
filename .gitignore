@@ -7,3 +7,7 @@ data/
 .vscode/
 
 path/to/log/file
+/path/
+/output/
+/.venv/
+/src/evaluation/common/cr_vis/USA_US101-22_3_T-1_6.svg

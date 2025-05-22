@@ -8,7 +8,6 @@ import numpy as np
 from commonroad.common.file_reader import CommonRoadFileReader
 from commonroad.scenario.scenario import Scenario
 from tabulate import tabulate
-from tests.python.test_utils import get_test_scenario_directory
 
 comp_summary = np.array(
     ["Scenario Name", "num_vehicles", "num_time_steps", "baseline", "short-circuiting", "ours", "ours_early"]
@@ -63,7 +62,7 @@ def evaluate(
 
 print("##### Interstate #######")
 activated_traffic_rule_sets_1 = ["R_G1", "R_G2", "R_G3", "R_G4", "R_G5", "R_I1", "R_I2", "R_I3", "R_I4", "R_I5"]
-scenario_path = Path(__file__).parent / "USA_US101-14_2_T-1.xml"
+scenario_path = Path(__file__).parent / "scenarios/planning" / "USA_US101-14_2_T-1.xml"
 
 scenario, _ = CommonRoadFileReader(filename_2020a=scenario_path).open()
 
@@ -93,8 +92,7 @@ print("##### Intersection #######")
 activated_traffic_rule_sets_1 = ["R_G1", "R_G2", "R_G3", "R_G4", "R_G5", "R_U1", "R_U2", "R_U3", "R_U4", "R_U5"]
 activated_traffic_rule_sets_2 = ["R_G3", "R_G5", "R_U1", "R_U2", "R_U3", "R_U4", "R_U5"]
 scenario_path = Path(
-    get_test_scenario_directory() + "/test_intersection_rules/ru3_right_before_left/DEU_TestRightBeforeLeft-1/"
-    "DEU_TestRightBeforeLeft-1_2_T-1.pb"
+    Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1/" / "DEU_TestRightBeforeLeft-1_2_T-1.pb"
 )
 map_path = scenario_path.parent / f"{scenario_path.stem.split('_')[0]}_{scenario_path.stem.split('_')[1]}.pb"
 scenario = CommonRoadFileReader(

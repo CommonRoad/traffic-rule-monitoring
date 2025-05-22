@@ -4,8 +4,9 @@ from typing import List, Tuple
 import pandas as pd
 import rvm
 import tikzplotlib
-from evaluation.run_eval import gen_fmla, gen_log
 from matplotlib import pyplot as plt
+
+from src.evaluation.monitor.run_eval import gen_fmla, gen_log
 
 plt.style.use("ggplot")
 

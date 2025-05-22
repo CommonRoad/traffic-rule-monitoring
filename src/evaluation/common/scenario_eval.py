@@ -10,7 +10,6 @@ from commonroad.scenario.scenario import Scenario
 from commonroad.visualization.draw_params import MPDrawParams
 from commonroad.visualization.mp_renderer import MPRenderer
 from matplotlib import pyplot as plt
-from tests.python.test_utils import get_test_scenario_directory
 
 
 def time_step_violated(
@@ -108,23 +107,3 @@ def vis_scenario(
 
     for time_step in time_steps:
         visualize_time_step(scenario, obstacle_ids, time_step, 20, obstacle_ids, result, plot_limits)
-
-
-vis_scenario(
-    Path(__file__).parent / "USA_US101-22_3_T-1.xml", [6], ["R_G1"], rotation=0.725
-)  # alternatives: USA_Peach-4_5_T-1.xml DEU_TestSafeDistance-1_1_T-1.xml
-vis_scenario(
-    Path(__file__).parent / "USA_US101-14_2_T-1.xml",
-    [0, 10, 20],
-    ["R_G1", "R_G2", "R_G3", "R_G4", "R_G5", "R_I1", "R_I2", "R_I3", "R_I4", "R_I5"],
-    rotation=0.72,
-)
-vis_scenario(
-    Path(
-        get_test_scenario_directory() + "/test_intersection_rules/ru3_right_before_left/DEU_TestRightBeforeLeft-1/"
-        "DEU_TestRightBeforeLeft-1_2_T-1.pb"
-    ),
-    [0, 32, 38, 47],
-    ["R_G1", "R_G2", "R_G3", "R_G4", "R_G5", "R_U1", "R_U2", "R_U3", "R_U4", "R_U5"],
-    plot_limits=[0, 120, 0, 80],
-)
