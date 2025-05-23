@@ -87,7 +87,7 @@ def eval_scenario(res, scenario_path, activated_traffic_rule_sets, base_idx):
         axis=0,
     )
     # C4: we use re-ordering to see concrete benefit of connected eval
-    for idx, config in enumerate(configs[1::6]):
+    for idx, config in enumerate(configs[1:6]):
         res[base_idx, idx + 2] = evaluate(f"C{idx}", scenario, config, activated_traffic_rule_sets)
 
     return res
