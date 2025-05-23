@@ -9,6 +9,7 @@ from src.evaluation.set_based.set_based_common import execute_rp, set_scenario_i
 
 def set_based_safe_distance(scenario_path: str, conf_path: Path, eval_config: EvalConfig, pl: List[Union[int, float]]):
     rp_config = ReactivePlannerConfiguration.load(conf_path, scenario_path)
+    rp_config.general.path_output = str(Path(__file__).parent.parent.parent.parent / "output/set_based")
     rp_config.monitor.short_circuiting = eval_config.short_circuiting
     rp_config.monitor.hydraReordering = eval_config.reordering
     rp_config.monitor.earlyTermination = eval_config.early_termination
@@ -31,7 +32,9 @@ def set_based_safe_distance(scenario_path: str, conf_path: Path, eval_config: Ev
 
 def eval_set_based_safe_dist():
     scenario = Path(__file__).parent.parent.parent.parent / "scenarios/set_based" / "ZAM_Augmentation-1_1_S-1.xml"
-    config_path = Path(__file__).parent.parent.parent.parent / "configurations" / "ZAM_Augmentation-1_1_S-1.yaml"
+    config_path = (
+        Path(__file__).parent.parent.parent.parent / "configurations/set_based" / "ZAM_Augmentation-1_1_S-1.yaml"
+    )
     plot_limits = [0, 80, -5, 10]
 
     for config in configs:

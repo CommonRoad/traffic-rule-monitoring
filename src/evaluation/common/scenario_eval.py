@@ -32,8 +32,9 @@ def visualize_time_step(
     result: Dict[str, Dict[int, Dict[str, Dict[int, List[int]]]]],
     plot_limits: Union[List[Union[int, float]], None] = None,
 ):
-    if not (Path(__file__).parent / "cr_vis").exists():
-        (Path(__file__).parent / "cr_vis").mkdir(parents=True, exist_ok=True)
+    path = Path(__file__).parent.parent.parent.parent / "output/planning"
+    if not path.exists():
+        path.mkdir(parents=True, exist_ok=True)
     rnd = MPRenderer(plot_limits=plot_limits)
     rnd.draw_params.time_begin = time_step
     rnd.draw_params.time_end = max_time_step
@@ -66,7 +67,11 @@ def visualize_time_step(
         scenario_copy.remove_obstacle(obstacle)
     scenario_copy.draw(rnd)
     rnd.render()
-    plt.savefig(str(Path(__file__).parent / "cr_vis" / f"{sc.scenario_id}_{time_step}.svg"), bbox_inches="tight")
+
+    plt.savefig(
+        str(Path(__file__).parent.parent.parent.parent / "output/planning" / f"{sc.scenario_id}_{time_step}.svg"),
+        bbox_inches="tight",
+    )
 
 
 def vis_scenario(
