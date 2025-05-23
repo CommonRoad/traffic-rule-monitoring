@@ -60,9 +60,6 @@ def evaluate(
     return np.round(average_time, 4)
 
 
-
-
-
 def eval_scenario(res, scenario_path, activated_traffic_rule_sets, base_idx):
     if scenario_path.suffix == ".pb":
         map_path = scenario_path.parent / f"{scenario_path.stem.split('_')[0]}_{scenario_path.stem.split('_')[1]}.pb"
@@ -95,20 +92,18 @@ def eval_scenario(res, scenario_path, activated_traffic_rule_sets, base_idx):
 
     return res
 
+
 print("##### Interstate #######")
 interstate_rule_set = ["R_G1", "R_G2", "R_G3", "R_G4", "R_G5", "R_I1", "R_I2", "R_I3", "R_I4", "R_I5"]
 comp_summary = eval_scenario(
-    comp_summary,
-    Path(__file__).parent / "scenarios/planning" / "USA_US101-14_2_T-1.xml",
-    interstate_rule_set,
-    1
+    comp_summary, Path(__file__).parent / "scenarios/planning" / "USA_US101-14_2_T-1.xml", interstate_rule_set, 1
 )
 
 comp_summary = eval_scenario(
     comp_summary,
     Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_3_T-1.xml",
     interstate_rule_set,
-    2
+    2,
 )
 
 print("##### Intersection #######")
@@ -119,7 +114,7 @@ comp_summary = eval_scenario(
     comp_summary,
     Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1/" / "DEU_TestRightBeforeLeft-1_2_T-1.pb",
     activated_traffic_rule_sets_2,
-    3
+    3,
 )
 
 
