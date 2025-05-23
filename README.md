@@ -56,7 +56,7 @@ If the package is installed successfully, you can run the experiments as describ
 All results from the paper can be replicated with the evaluation scripts in this repository.
 We describe the purpose of each script in detail.
 
-### `motivating_example.py`
+### `motivating_examples.py`
 
 This script reproduces the figures for the motivating example.
 All plots are written to the `output/plots` directory.
@@ -65,10 +65,18 @@ You can run the script as follows
 python motivating_examples.py
 ```
 
-### `evaluate_runtimes.py`
+### `monitor.py`
 
-This script evaluates and compares the runtimes of our approach.
+This script evaluates and compares the runtimes of our monitoring approach.
 The results are written to the `output/runtimes` directory.
+If you want to create latex-ready tikz images, please install `tikzplotlib`:
+```bash
+ pip install "matplotlib<3.6" "tikzplotlib==0.10.1" "webcolors<=1.11.1"
+```
+ and ignore upcoming warnings.
+
+Then, you can run the script as follows
+```bash
 You can run the script as follows
 ```bash
 python evaluate_runtimes.py

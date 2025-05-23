@@ -45,4 +45,3 @@ eval_trace_length_predicate(specs2_pred, "dissimilar_predicate", 6, 0.6)
 
 eval_trace_length_atomic(specs1_atomic, "running_example_atomic", 2, 1.1)
 eval_trace_length_atomic(specs2_atomic, "dissimilar_atomic", 6, 1.1)
-

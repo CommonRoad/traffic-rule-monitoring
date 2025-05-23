@@ -4,7 +4,6 @@ from typing import List, Tuple
 
 import pandas as pd
 import rvm
-
 from matplotlib import pyplot as plt
 
 from src.evaluation.monitor.run_eval import gen_log
@@ -16,7 +15,6 @@ except ImportError:
 
 
 plt.style.use("ggplot")
-
 
 
 trace = []
@@ -95,8 +93,10 @@ def create_trace(length: int, num_atomics: int, seed: int) -> List[List[str]]:
 
     return actions
 
+
 def make_event_list(size):
     return [rvm.Event(i, i == size - 1) for i in range(size)]
+
 
 def evaluate(approach: str, mon: rvm.Hydra2, df: pd.DataFrame, trace_length: int):
     event_list = make_event_list(trace_length)
@@ -170,4 +170,3 @@ def eval_trace_length_predicate(spec: List[Tuple[str, str]], name: str, num_atom
     plt.savefig(f"./monitor_artificial_examples/{name}.svg")
     if tikzplotlib:
         tikzplotlib.save(f"./monitor_artificial_examples/{name}.tex")
-

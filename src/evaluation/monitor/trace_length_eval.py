@@ -1,6 +1,7 @@
 import time
 from pathlib import Path
 from typing import List, Tuple
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import rvm
@@ -13,9 +14,7 @@ except ImportError:
     tikzplotlib = None
 
 
-
 plt.style.use("ggplot")
-
 
 
 def create_trace(length: int, num_atomics: int, seed: int) -> rvm.Trace:
@@ -120,4 +119,3 @@ def eval_trace_length_atomic(spec: List[Tuple[str, str]], name: str, num_atomics
     plt.savefig(f"./monitor_artificial_examples/{name}.svg")
     if tikzplotlib:
         tikzplotlib.save(f"./monitor_artificial_examples/{name}.tex")
-
