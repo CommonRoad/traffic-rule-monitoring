@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import rvm
 
-from src.evaluation.monitor.run_eval import gen_log
+from src.evaluation.monitor import path
+from src.evaluation.monitor.common_monitor import gen_log
 
 try:
     import tikzplotlib
@@ -18,6 +19,8 @@ plt.style.use("ggplot")
 
 
 def create_trace(length: int, num_atomics: int, seed: int) -> rvm.Trace:
+    if not path.exists():
+        path.mkdir(parents=True, exist_ok=True)
     gen_log("./eval", length, 1, 10, seed, num_atomics)
 
     # Initialize the lists
@@ -77,9 +80,6 @@ def eval_trace_length_atomic(spec: List[Tuple[str, str]], name: str, num_atomics
     trace_lengths = range(20000, 220000, 20000)
     x_axis_text = "Trace Length [x10000]"
 
-    if not Path("./monitor_artificial_examples").exists():
-        Path("./monitor_artificial_examples").mkdir(parents=True, exist_ok=True)
-
     df = pd.DataFrame(columns=["Approach", x_axis_text, "Comp. Time [s]"])
     formulas = [rvm.Parser.parse(form[1], form[0]) for form in spec]
     for trace_length in trace_lengths:
@@ -116,6 +116,6 @@ def eval_trace_length_atomic(spec: List[Tuple[str, str]], name: str, num_atomics
     plt.tick_params(axis="x", which="major", pad=30, color="black")
     plt.tick_params(axis="y", labelcolor="black", top=max_y)
     plt.legend(fontsize=30)
-    plt.savefig(f"./monitor_artificial_examples/{name}.svg")
+    plt.savefig(f"{path}/{name}.svg")
     if tikzplotlib:
-        tikzplotlib.save(f"./monitor_artificial_examples/{name}.tex")
+        tikzplotlib.save(f"{path}/{name}.tex")

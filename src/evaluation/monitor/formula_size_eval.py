@@ -1,4 +1,5 @@
 import time
+from pathlib import Path
 from typing import List, Tuple
 
 import pandas as pd
@@ -6,7 +7,8 @@ import rvm
 import tikzplotlib
 from matplotlib import pyplot as plt
 
-from src.evaluation.monitor.run_eval import gen_fmla, gen_log
+from src.evaluation.monitor import path
+from src.evaluation.monitor.common_monitor import gen_fmla, gen_log
 
 plt.style.use("ggplot")
 
@@ -19,7 +21,7 @@ def create_trace(length: int, num_atomics: int, seed: int) -> rvm.Trace:
     time_steps = []
 
     # Open the file and read the lines
-    with open("./logs/eval.log", "r") as file:
+    with open(f"{Path(__file__).parent / 'logs/eval.log'}", "r") as file:
         lines = file.readlines()
 
     # Process each line
@@ -61,7 +63,7 @@ def create_specs(size: int, num_atomics: int, seed: int) -> List[Tuple[str, str]
     idx = 1
 
     # Open the file and read the lines
-    with open("./fmlas/eval.mdl", "r") as file:
+    with open(f"{Path(__file__).parent / 'fmlas/eval.mdl'}", "r") as file:
         lines = file.readlines()
 
     for line in lines:
@@ -84,7 +86,10 @@ def evaluate(approach: str, mon: rvm.Hydra2, tr: rvm.Trace, df: pd.DataFrame, sp
     df.loc[len(df)] = [approach, spec_size, elapsed_time / num_iters]
 
 
-def eval_and_fig(name: str, num_atomics: int, trace_length: int, max_formula_size: int, max_y: float):
+def formula_size_eval(name: str, num_atomics: int, trace_length: int, max_formula_size: int, max_y: float):
+    if not path.exists():
+        path.mkdir(parents=True, exist_ok=True)
+
     seed = 10
     df = pd.DataFrame(columns=["Approach", "Formula Size", "Computation Time [s]"])
     trace = create_trace(trace_length, num_atomics, seed)
@@ -123,8 +128,5 @@ def eval_and_fig(name: str, num_atomics: int, trace_length: int, max_formula_siz
     plt.tick_params(axis="x", which="major", pad=30, color="black")
     plt.tick_params(axis="y", labelcolor="black", top=max_y)
     plt.legend(fontsize=30)
-    plt.savefig(f"./monitor_artificial_examples/{name}.svg")
-    tikzplotlib.save(f"./monitor_artificial_examples/{name}.tex")
-
-
-eval_and_fig("formula_size_atomic", 4, 1000, 50, 0.3)
+    plt.savefig(f"{path}/{name}.svg")
+    tikzplotlib.save(f"{path}/{name}.tex")

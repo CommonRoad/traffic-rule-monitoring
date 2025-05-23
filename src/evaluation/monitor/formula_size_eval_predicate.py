@@ -1,5 +1,4 @@
 import time
-from pathlib import Path
 from typing import List, Tuple
 
 import pandas as pd
@@ -8,6 +7,8 @@ import tikzplotlib
 from evaluation.run_eval import gen_fmla, gen_log
 from matplotlib import pyplot as plt
 from tests.bindings.test_bindings import make_event_list
+
+from src.evaluation.monitor import path
 
 plt.style.use("ggplot")
 
@@ -112,8 +113,8 @@ def evaluate(approach: str, mon: rvm.Hydra2, df: pd.DataFrame, spec_size: int, t
 
 
 def eval_and_fig(name: str, num_atomics: int, trace_length: int, max_y: float):
-    if not Path("./monitor_artificial_examples").exists():
-        Path("./monitor_artificial_examples").mkdir(parents=True, exist_ok=True)
+    if not path.exists():
+        path.mkdir(parents=True, exist_ok=True)
     seed = 4
     df = pd.DataFrame(columns=["Approach", "Formula Size", "Computation Time [s]"])
     global trace
@@ -153,8 +154,8 @@ def eval_and_fig(name: str, num_atomics: int, trace_length: int, max_y: float):
     plt.tick_params(axis="x", which="major", pad=30, color="black")
     plt.tick_params(axis="y", labelcolor="black", top=max_y)
     plt.legend(fontsize=30)
-    plt.savefig(f"./monitor_artificial_examples/{name}.svg")
-    tikzplotlib.save(f"./monitor_artificial_examples/{name}.tex")
+    plt.savefig(f"{path}/{name}.svg")
+    tikzplotlib.save(f"{path}/{name}.tex")
 
 
 eval_and_fig("formula_size_predicate", 4, 1000, 0.3)

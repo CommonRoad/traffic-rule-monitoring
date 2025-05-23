@@ -6,7 +6,8 @@ import pandas as pd
 import rvm
 from matplotlib import pyplot as plt
 
-from src.evaluation.monitor.run_eval import gen_log
+from src.evaluation.monitor import path
+from src.evaluation.monitor.common_monitor import gen_log
 
 try:
     import tikzplotlib
@@ -123,14 +124,13 @@ def evaluate(approach: str, mon: rvm.Hydra2, df: pd.DataFrame, trace_length: int
 
 
 def eval_trace_length_predicate(spec: List[Tuple[str, str]], name: str, num_atomics: int, max_y: float):
+    if not path.exists():
+        path.mkdir(parents=True, exist_ok=True)
     trace_lengths = range(500, 5500, 500)
     x_axis_text = "Trace Length [x100]"
 
     df = pd.DataFrame(columns=["Approach", x_axis_text, "Comp. Time [s]"])
     formulas = [rvm.Parser.parse(form[1], form[0]) for form in spec]
-
-    if not Path("./monitor_artificial_examples").exists():
-        Path("./monitor_artificial_examples").mkdir(parents=True, exist_ok=True)
 
     for trace_length in trace_lengths:
         print(trace_length)
@@ -167,6 +167,6 @@ def eval_trace_length_predicate(spec: List[Tuple[str, str]], name: str, num_atom
     plt.tick_params(axis="x", which="major", pad=30, color="black")
     plt.tick_params(axis="y", labelcolor="black", top=max_y)
     plt.legend(fontsize=30)
-    plt.savefig(f"./monitor_artificial_examples/{name}.svg")
+    plt.savefig(f"{path}/{name}.svg")
     if tikzplotlib:
-        tikzplotlib.save(f"./monitor_artificial_examples/{name}.tex")
+        tikzplotlib.save(f"{path}/{name}.tex")
