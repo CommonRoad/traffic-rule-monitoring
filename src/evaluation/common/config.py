@@ -12,23 +12,28 @@ class EvalConfig:
     visualization: bool = False
 
 
+# TODO change re-ordering Boolean values; temporary change to get better re-ordering results
 configs = [
     EvalConfig(),
-    EvalConfig(with_monitor=True, visualization=True),  # C1
-    EvalConfig(with_monitor=True, short_circuiting=True),  # C2
-    EvalConfig(with_monitor=True, short_circuiting=True, reordering=True),  # C3
-    EvalConfig(with_monitor=True, short_circuiting=True, connected_eval=True, reordering=True),  # C4
+    EvalConfig(with_monitor=True, visualization=True, reordering=True),  # C1: Baseline
+    EvalConfig(with_monitor=True, short_circuiting=True, reordering=True),  # C2: Baseline with short-circuiting
     EvalConfig(
-        with_monitor=True, short_circuiting=True, connected_eval=True, iterative_eval=True, reordering=True
-    ),  # C5
+        with_monitor=True, short_circuiting=True, reordering=False
+    ),  # C3: Ours without connected evaluation, iterative evaluation, and early termination
+    EvalConfig(
+        with_monitor=True, short_circuiting=True, connected_eval=True, reordering=False
+    ),  # C4: Ours without iterative evaluation and early termination
+    EvalConfig(
+        with_monitor=True, short_circuiting=True, connected_eval=True, iterative_eval=True, reordering=False
+    ),  # C5: Ours without iterative evaluation
     EvalConfig(
         with_monitor=True,
         short_circuiting=True,
         connected_eval=True,
         early_termination=True,
         iterative_eval=True,
-        reordering=True,
-    ),  # C6
+        reordering=False,
+    ),  # C6: Our approach
     EvalConfig(
         with_monitor=True,
         short_circuiting=True,
@@ -36,6 +41,6 @@ configs = [
         early_termination=True,
         iterative_eval=True,
         visualization=True,
-        reordering=True,
+        reordering=False,
     ),
 ]

@@ -44,8 +44,8 @@ def evaluate(
     monitor_config.hydraConnectedEvaluation = conf.connected_eval
     monitor_config.performanceMeasurement = False
     monitor = crmonitor.Monitor()
-    monitor.activate_rule_sets(rule_set)
     monitor.set_config(sim_param, monitor_config, predicate_cost, predicate_parameter, temporal_parameters)
+    monitor.activate_rule_sets(rule_set)
 
     computation_times = []
     for _ in range(5):
