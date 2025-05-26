@@ -1,0 +1,24 @@
+simulation_param:
+  evaluation_mode: directory
+  log_level: "info"
+  log_file_path: "/home/sebastian/03_code/runtime-verification-motion-planners/output/predicates/log.txt"
+  threads: 16
+  directories: ["/home/sebastian/03_code/commonroad-scenarios/scenarios_2020a/NGSIM/Lankershim"
+     ]
+  performance_measurement: true
+  output_directory: "/home/sebastian/03_code/runtime-verification-motion-planners/output/predicates"
+  output_file_name: "traffic_rule_evaluation"
+  single_file_storage: false
+  benchmark_id: "DEU_TrafficLightTest-1_1_T-1"
+
+monitor:
+  early_termination: false
+  performance_measurement: true
+  hydra:
+    short_circuiting: true
+    connected_evaluation: true
+    reordering: true
+
+rules:
+ # activated_rules: ["R_G1", "R_G2", "R_G3", "R_G4", "R_G5", "R_I1", "R_I2", "R_I3", "R_I4", "R_I5"]
+  activated_rules: ["R_G1" , "R_G2", "R_G3", "R_G4", "R_G5", "R_U1", "R_U2", "R_U3", "R_U4", "R_U5"]

@@ -12,7 +12,7 @@ from tabulate import tabulate
 from src.evaluation.common.config import EvalConfig, configs
 
 comp_summary = np.array(
-    ["Scenario Name", "num_vehicles", "num_time_steps", "C1", "C2", "C3", "C4", "C5"]
+    ["Scenario Name", "num_vehicles", "num_time_steps", "C1", "C2", "C3", "C4", "C5", "C6"]
 ).reshape(1, -1)
 
 
@@ -22,6 +22,7 @@ def evaluate(
     conf: EvalConfig,
     rule_set: List[str],
 ) -> float:
+    print(f"Evaluating scenario {eval_name} - {conf}")
     sim_param = crmonitor.MonitorSimulationParameters()
     sim_param.world_parameters = crcpp.WorldParameters(
         crcpp.RoadNetworkParameters(),
@@ -81,12 +82,12 @@ def eval_scenario(res, scenario_path, activated_traffic_rule_sets, base_idx):
                 None,
                 None,
                 None,
+                None,
             ]
         ).reshape(1, -1),
         axis=0,
     )
-    # C4: we use re-ordering to see concrete benefit of connected eval
-    for idx, config in enumerate(configs[1:6]):
+    for idx, config in enumerate(configs[1:7]):
         res[base_idx, idx + 3] = evaluate(f"C{idx}", scenario, config, activated_traffic_rule_sets)
 
     return res
@@ -106,7 +107,18 @@ comp_summary = eval_scenario(
 )
 
 print("##### Intersection #######")
-activated_traffic_rule_set_intersection = ["R_G1", "R_G2", "R_G3", "R_G4", "R_G5", "R_U1", "R_U2", "R_U3", "R_U4", "R_U5"]
+activated_traffic_rule_set_intersection = [
+    "R_G1",
+    "R_G2",
+    "R_G3",
+    "R_G4",
+    "R_G5",
+    "R_U1",
+    "R_U2",
+    "R_U3",
+    "R_U4",
+    "R_U5",
+]
 
 comp_summary = eval_scenario(
     comp_summary,
