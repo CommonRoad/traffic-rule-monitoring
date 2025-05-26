@@ -1,7 +1,7 @@
 from pathlib import Path
 
-import crmonitor
 import crcpp
+import crmonitor
 
 
 def execute_dateset_eval(config_path: Path):
@@ -11,7 +11,8 @@ def execute_dateset_eval(config_path: Path):
     monitor = crmonitor.Monitor(str(config_path))
     monitor.evaluate()
 
+
 if __name__ == "__main__":
     execute_dateset_eval(Path(__file__).parent / "configurations/predicates/monitor.yaml")
 
-    crcpp.SlowOtherVehiclePredicate.
+    crcpp.SlowOtherVehiclePredicate
