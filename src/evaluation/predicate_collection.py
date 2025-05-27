@@ -1,73 +1,77 @@
-import dataclasses
+from enum import Enum
 from typing import Dict, List
 
 
-@dataclasses.dataclass
-class Argument:
-    lanelet_type: bool = False
-    traffic_light_type: bool = False
-    intersection_type: bool = False
-    traffic_sign_type: bool = False
-    obstacle_type: bool = False
-    side: bool = False
-    threshold: bool = False
-    turning_direction: bool = False
+class Argument(Enum):
+    LANELET_TYPE = 1
+    TRAFFIC_LIGHT_TYPE = 2
+    INTERSECTION_TYPE = 3
+    TRAFFIC_SIGN_TYPE = 4
+    OBSTACLE_TYPE = 5
+    SIDE = 6
+    THRESHOLD = 7
+    TURNING_DIRECTION = 8
+
+
+class Side(Enum):
+    LEFT = "left"
+    RIGHT = "right"
 
 
 predicate_collection_args: Dict[str, List[Argument]] = {
-    "adjacent_lanelet_of_type_predicate": [Argument(lanelet_type=True)],
+    "adjacent_lanelet_of_type_predicate": [Argument.SIDE, Argument.LANELET_TYPE],
     # "approach_intersection_predicate",
-    "at_intersection_type_predicate": [Argument(intersection_type=True)],
+    "at_intersection_type_predicate": [Argument.INTERSECTION_TYPE],
     # "at_same_intersection_predicate",
-    "at_traffic_light_predicate": [Argument(traffic_light_type=True)],
-    "at_traffic_sign_predicate": [Argument(traffic_sign_type=True)],
-    "brakes_stronger_predicate": [Argument(threshold=True)],
+    "at_traffic_light_predicate": [Argument.TURNING_DIRECTION, Argument.TRAFFIC_LIGHT_TYPE],
+    "at_traffic_sign_predicate": [Argument.TRAFFIC_SIGN_TYPE],
+    "brakes_stronger_predicate": [Argument.THRESHOLD],
     # "braking_at_intersection_possible_predicate",
     # "causes_braking_intersection_predicate",
-    "close_to_intersection_predicate": [Argument(intersection_type=True)],
-    "close_to_lane_border_predicate": [Argument(threshold=True)],
+    "close_to_intersection_predicate": [Argument.INTERSECTION_TYPE],
+    "close_to_lane_border_predicate": [Argument.THRESHOLD],
     # "close_to_stop_line_predicate",
-    "completely_on_lanelet_type_predicate": [Argument(lanelet_type=True)],
-    "decelerates_predicate": [Argument(threshold=True)],
+    "completely_on_lanelet_type_predicate": [Argument.LANELET_TYPE],
+    "decelerates_predicate": [Argument.THRESHOLD],
     # "drives_faster_predicate",
     # "drives_with_slightly_higher_speed_predicate",
-    "has_priority_predicate": [Argument(turning_direction=True), Argument(turning_direction=True)],
+    "has_priority_predicate": [Argument.TURNING_DIRECTION, Argument.TURNING_DIRECTION],
     # "high_computation_time_test_predicate",
     # "in_front_of_predicate",
     # "in_intersection_conflict_area_predicate",
-    "in_neighboring_lane_predicate": [Argument(side=True)],
-    "in_outermost_lane_predicate": [Argument(side=True)],
+    "in_neighboring_lane_predicate": [Argument.SIDE],
+    "in_outermost_lane_predicate": [Argument.SIDE],
     # "in_projection_domain_predicate",
     # "in_same_lane_predicate",
     # "in_single_lane_predicate",
     # "in_standstill_predicate",
     # "interstate_broad_enough_predicate",
-    "is_of_type_predicate": [Argument(obstacle_type=True)],
+    "is_of_type_predicate": [Argument.OBSTACLE_TYPE],
     # "keeps_braking_speed_limit_predicate",
     # "keeps_fov_speed_limit_predicate",
     # "keeps_lane_speed_limit_predicate",
     # "keeps_min_speed_limit_predicate",
     # "keeps_safe_distance_prec_predicate",
     # "keeps_type_speed_limit_predicate",
-    "lane_based_orientation_side_predicate": [Argument(side=True)],
+    "lane_based_orientation_side_predicate": [Argument.SIDE],
     # "lane_based_orientation_similar_predicate",
-    "lateral_distance_to_obstacle_above_threshold_predicate": [Argument(threshold=True)],
+    "lateral_distance_to_obstacle_above_threshold_predicate": [Argument.THRESHOLD],
     # "left_of_predicate",
     # "low_computation_time_test_predicate",
     # "makes_u_turn_predicate",
     # "narrow_road_predicate",
-    "neighboring_lane_opp_driving_dir_predicate": [Argument(side=True)],
+    "neighboring_lane_opp_driving_dir_predicate": [Argument.SIDE],
     # "on_incoming_left_of_predicate",
-    "on_lanelet_with_successor_type_predicate": [Argument(lanelet_type=True)],
-    "on_lanelet_with_type_predicate": [Argument(lanelet_type=True)],
+    "on_lanelet_with_successor_type_predicate": [Argument.LANELET_TYPE],
+    "on_lanelet_with_type_predicate": [Argument.LANELET_TYPE],
     # "on_oncoming_of_predicate",
     # "on_road_predicate",
     # "on_same_road_predicate",
-    "on_similar_oriented_lanelet_with_type_predicate": [Argument(lanelet_type=True)],
-    "on_similar_oriented_lanelet_without_type_predicate": [Argument(lanelet_type=True)],
+    "on_similar_oriented_lanelet_with_type_predicate": [Argument.LANELET_TYPE],
+    "on_similar_oriented_lanelet_without_type_predicate": [Argument.LANELET_TYPE],
     # "orientation_towards_predicate",
     # "overtaking_allowed_predicate",
-    "parallel_to_lane_marking_of_type_on_side_predicate": [Argument(side=True)],
+    "parallel_to_lane_marking_of_type_on_side_predicate": [Argument.SIDE],
     # "preserves_traffic_flow_predicate",
     # "relevant_traffic_light_predicate",
     # "reverses_predicate",
@@ -75,7 +79,7 @@ predicate_collection_args: Dict[str, List[Argument]] = {
     # "signal_set_predicate",
     # "slow_other_vehicle_predicate",
     # "stop_line_in_front_predicate",
-    "two_or_more_lanes_for_one_dir_predicate": [Argument(side=True)],
+    "two_or_more_lanes_for_one_dir_predicate": [Argument.SIDE],
     # "unobstructed_intersection_view_predicate",
-    "velocity_below_threshold_predicate": [Argument(threshold=True)],
+    "velocity_below_threshold_predicate": [Argument.THRESHOLD],
 }
