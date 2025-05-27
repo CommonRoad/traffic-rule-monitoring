@@ -3,7 +3,7 @@ import dataclasses
 import glob
 import statistics
 from typing import Dict, List
-
+import concurrent.futures
 import crcpp
 import crmonitor
 from commonroad.common.file_reader import CommonRoadFileReader
@@ -27,6 +27,26 @@ class PredicateCost:
 
 pred_cost_collection: Dict[str, PredicateCost] = {}
 
+def evaluate_predicate(pred_name, paths):
+    pred = crcpp.predicates()[pred_name]
+    print(f"-------------Evaluating predicate: {pred_name}---------------")
+    pred_cost_collection[pred_name] = PredicateCost()
+    timer = crcpp.Timer()
+    pred_stat = crcpp.PredicateStatistics()
+    additional_function_parameters = extract_arg_combinations(pred_name)
+
+    for param_combi in additional_function_parameters:
+        for sc_path in paths:
+            evaluate_scenario(param_combi, pred, pred_name, pred_stat, sc_path, timer)
+
+    pred_cost_collection[pred_name].num_executions = pred_stat.num_executions
+    pred_cost_collection[pred_name].satisfactions = pred_stat.num_satisfaction
+    pred_cost_collection[pred_name].total_comp_time = pred_stat.total_computation_time
+    pred_cost_collection[pred_name].min_comp_time = min(pred_stat.computation_time)
+    pred_cost_collection[pred_name].max_comp_time = max(pred_stat.computation_time)
+    pred_cost_collection[pred_name].avg_comp_time = statistics.mean(pred_stat.computation_time)
+    pred_cost_collection[pred_name].median_comp_time = statistics.median(pred_stat.computation_time)
+    print(pred_cost_collection[pred_name])
 
 def execute_dateset_eval(paths: List[str]):
     """
@@ -42,28 +62,9 @@ def execute_dateset_eval(paths: List[str]):
                 if pred[:-10] in elem[1]:
                     rel_predicates.append(pred)
 
-    for pred_name in rel_predicates:
-        #     if pred_name in predicate_collection_args.keys():
-        #        continue
-        pred = crcpp.predicates()[pred_name]
-        print(f"-------------Evaluating predicate: {pred_name}---------------")
-        pred_cost_collection[pred_name] = PredicateCost()
-        timer = crcpp.Timer()
-        pred_stat = crcpp.PredicateStatistics()
-        additional_function_parameters = extract_arg_combinations(pred_name)
-
-        for param_combi in additional_function_parameters:
-            for sc_path in paths:
-                evaluate_scenario(param_combi, pred, pred_name, pred_stat, sc_path, timer)
-
-        pred_cost_collection[pred_name].num_executions = pred_stat.num_executions
-        pred_cost_collection[pred_name].satisfactions = pred_stat.num_satisfaction
-        pred_cost_collection[pred_name].total_comp_time = pred_stat.total_computation_time
-        pred_cost_collection[pred_name].min_comp_time = min(pred_stat.computation_time)
-        pred_cost_collection[pred_name].max_comp_time = max(pred_stat.computation_time)
-        pred_cost_collection[pred_name].avg_comp_time = statistics.mean(pred_stat.computation_time)
-        pred_cost_collection[pred_name].median_comp_time = statistics.median(pred_stat.computation_time)
-        print(pred_cost_collection[pred_name])
+    with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
+        futures = [executor.submit(evaluate_predicate, pred_name, paths) for pred_name in rel_predicates]
+        concurrent.futures.wait(futures)
 
 
 def evaluate_scenario(additional_function_parameters, pred, pred_name, pred_stat, sc_path, timer):
