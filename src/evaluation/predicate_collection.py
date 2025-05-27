@@ -1,5 +1,8 @@
+import itertools
 from enum import Enum
 from typing import Dict, List
+
+import crcpp
 
 
 class Argument(Enum):
@@ -83,3 +86,39 @@ predicate_collection_args: Dict[str, List[Argument]] = {
     # "unobstructed_intersection_view_predicate",
     "velocity_below_threshold_predicate": [Argument.THRESHOLD],
 }
+
+param_values: Dict[str, List[str]] = {
+    "brakes_stronger_predicate": ["-2.0"],
+    "decelerates_predicate": ["-2.0"],
+}
+
+
+def extract_arg_combinations(pred_name: str) -> List[List[str]]:
+    """
+    Extract argument combinations for a given predicate name.
+    """
+    args = []
+    if pred_name in predicate_collection_args:
+        for idx, arg in enumerate(predicate_collection_args[pred_name]):
+            if arg is Argument.LANELET_TYPE:
+                args.append([lt.name for lt in crcpp.LaneletType])
+            if arg is Argument.TRAFFIC_LIGHT_TYPE:
+                args.append([tl.name for tl in crcpp.TrafficLightState])
+            if arg is Argument.INTERSECTION_TYPE:
+                args.append([it.name for it in crcpp.IntersectionType])
+            if arg is Argument.INTERSECTION_TYPE:
+                args.append([it.name for it in crcpp.IntersectionType])
+            if arg is Argument.TRAFFIC_SIGN_TYPE:
+                print("TODO")
+                break
+            if arg is Argument.OBSTACLE_TYPE:
+                args.append([ot.name for ot in crcpp.ObstacleType])
+            if arg is Argument.SIDE:
+                args.append([side.value for side in Side])
+            if arg is Argument.THRESHOLD:
+                args.append([param_values[pred_name][idx]])
+            if arg is Argument.TURNING_DIRECTION:
+                args.append([side.value for side in Side])
+
+        return [list(comb) for comb in itertools.product(*args)]
+    return [["0.0"]]

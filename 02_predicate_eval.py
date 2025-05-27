@@ -1,14 +1,14 @@
 import copy
 import dataclasses
 import glob
-import itertools
 import statistics
 from typing import Dict, List
 
 import crcpp
+import crmonitor
 from commonroad.common.file_reader import CommonRoadFileReader
 
-from src.evaluation.predicate_collection import Argument, Side, predicate_collection_args
+from src.evaluation.predicate_collection import extract_arg_combinations
 
 
 @dataclasses.dataclass
@@ -22,61 +22,30 @@ class PredicateCost:
     median_comp_time: float = 0.0
 
     def __str__(self):
-        print(f"num executions: {self.num_executions}")
-        print(f"num satisfactions: {self.satisfactions}")
-        print(f"total comp time: {self.total_comp_time}")
-        print(f"min.: {self.min_comp_time}")
-        print(f"max.: {self.max_comp_time}")
-        print(f"avg.: {self.avg_comp_time}")
-        print(f"median: {self.median_comp_time}")
+        return f"num executions: {self.num_executions}\nnum satisfactions: {self.satisfactions}\ntotal comp time: {self.total_comp_time}\nmin.: {self.min_comp_time}\nmax.: {self.max_comp_time}\navg.: {self.avg_comp_time}\nmedian: {self.median_comp_time}"
 
 
 pred_cost_collection: Dict[str, PredicateCost] = {}
-
-
-def extract_arg_combinations(pred_name: str) -> List[List[str]]:
-    """
-    Extract argument combinations for a given predicate name.
-    """
-    args = []
-    if pred_name in predicate_collection_args:
-        for arg in predicate_collection_args[pred_name]:
-            if arg is Argument.LANELET_TYPE:
-                args.append([lt.name for lt in crcpp.LaneletType])
-            if arg is Argument.TRAFFIC_LIGHT_TYPE:
-                args.append([tl.name for tl in crcpp.TrafficLightState])
-            if arg is Argument.INTERSECTION_TYPE:
-                args.append([it.name for it in crcpp.IntersectionType])
-            if arg is Argument.INTERSECTION_TYPE:
-                args.append([it.name for it in crcpp.IntersectionType])
-            if arg is Argument.TRAFFIC_SIGN_TYPE:
-                print("TODO")
-                break
-            if arg is Argument.OBSTACLE_TYPE:
-                args.append([ot.name for ot in crcpp.ObstacleType])
-            if arg is Argument.SIDE:
-                args.append([side.value for side in Side])
-            if arg is Argument.THRESHOLD:
-                print("TODO")
-                break
-            if arg is Argument.TURNING_DIRECTION:
-                args.append([side.value for side in Side])
-
-        return [list(comb) for comb in itertools.product(*args)]
-    return [["0.0"]]
 
 
 def execute_dateset_eval(paths: List[str]):
     """
     Execute the dataset evaluation for all scenarios in the CommonRoad dataset.
     """
-    idx = 0
-    for pred_name, pred in crcpp.predicates().items():
+    rules = ["R_G1", "R_G2"]
+    rel_predicates = []
+    for elem in crmonitor.get_traffic_rules_complete():
+        for rule in rules:
+            if elem[0] != rule:
+                continue
+            for pred in crcpp.predicates().keys():
+                if pred[:-10] in elem[1]:
+                    rel_predicates.append(pred)
+
+    for pred_name in rel_predicates:
         #     if pred_name in predicate_collection_args.keys():
         #        continue
-        if idx == 5:
-            break
-        idx += 1
+        pred = crcpp.predicates()[pred_name]
         print(f"-------------Evaluating predicate: {pred_name}---------------")
         pred_cost_collection[pred_name] = PredicateCost()
         timer = crcpp.Timer()
