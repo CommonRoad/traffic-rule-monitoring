@@ -1,7 +1,9 @@
 import copy
 import dataclasses
 import glob
+import logging
 import statistics
+import csv
 from typing import Dict, List
 import concurrent.futures
 import crcpp
@@ -29,7 +31,7 @@ pred_cost_collection: Dict[str, PredicateCost] = {}
 
 def evaluate_predicate(pred_name, paths):
     pred = crcpp.predicates()[pred_name]
-    print(f"-------------Evaluating predicate: {pred_name}---------------")
+    logging.debug(f"-------------Evaluating predicate: {pred_name}---------------")
     pred_cost_collection[pred_name] = PredicateCost()
     timer = crcpp.Timer()
     pred_stat = crcpp.PredicateStatistics()
@@ -46,7 +48,7 @@ def evaluate_predicate(pred_name, paths):
     pred_cost_collection[pred_name].max_comp_time = max(pred_stat.computation_time)
     pred_cost_collection[pred_name].avg_comp_time = statistics.mean(pred_stat.computation_time)
     pred_cost_collection[pred_name].median_comp_time = statistics.median(pred_stat.computation_time)
-    print(pred_cost_collection[pred_name])
+
 
 def execute_dateset_eval(paths: List[str]):
     """
@@ -59,19 +61,48 @@ def execute_dateset_eval(paths: List[str]):
             if elem[0] != rule:
                 continue
             for pred in crcpp.predicates().keys():
-                if pred[:-10] in elem[1]:
+                if pred[:-10] in elem[1] and pred == "orientation_towards_predicate" or pred == "in_front_of_predicate":
                     rel_predicates.append(pred)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
         futures = [executor.submit(evaluate_predicate, pred_name, paths) for pred_name in rel_predicates]
         concurrent.futures.wait(futures)
 
+    with open('predicate_costs.csv', 'w', newline='') as csvfile:
+        fieldnames = [
+            'predicate',
+            'num_executions',
+            'satisfactions',
+            'total_comp_time',
+            'min_comp_time',
+            'max_comp_time',
+            'avg_comp_time',
+            'median_comp_time'
+        ]
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        for pred_name, pred_cost in pred_cost_collection.items():
+            writer.writerow({
+                'predicate': pred_name,
+                'num_executions': pred_cost.num_executions,
+                'satisfactions': pred_cost.satisfactions,
+                'total_comp_time': pred_cost.total_comp_time,
+                'min_comp_time': pred_cost.min_comp_time,
+                'max_comp_time': pred_cost.max_comp_time,
+                'avg_comp_time': pred_cost.avg_comp_time,
+                'median_comp_time': pred_cost.median_comp_time
+            })
+    for pred_name, pred_cost in pred_cost_collection.items():
+        print(f"Predicate: {pred_name}")
+        print(pred_cost)
+        print("--------------------------------------------------")
+
 
 def evaluate_scenario(additional_function_parameters, pred, pred_name, pred_stat, sc_path, timer):
     sc, _ = CommonRoadFileReader(sc_path).open()
-    print(f"Evaluating scenario: {sc.scenario_id}")
+    logging.debug(f"Evaluating scenario: {sc.scenario_id}")
     for ego in sc.dynamic_obstacles:
-        print(f"Evaluating ego: {ego.obstacle_id}")
+        logging.debug(f"Evaluating ego: {ego.obstacle_id}")
         sc_temp = copy.deepcopy(sc)
         sc_temp.remove_obstacle(ego)
 
@@ -89,7 +120,7 @@ def evaluate_scenario(additional_function_parameters, pred, pred_name, pred_stat
                         False,
                     )
                 except Exception as e:
-                    print(f"Error evaluating predicate {pred_name} for obstacle {ego.obstacle_id}: {e}")
+                    logging.error(f"Error evaluating predicate {pred_name} for obstacle {ego.obstacle_id}: {e}")
         else:
             try:
                 pred.statistic_boolean_evaluation(
@@ -103,7 +134,7 @@ def evaluate_scenario(additional_function_parameters, pred, pred_name, pred_stat
                     False,
                 )
             except Exception as e:
-                print(f"Error evaluating predicate {pred_name} for obstacle {ego.obstacle_id}: {e}")
+                logging.error(f"Error evaluating predicate {pred_name} for obstacle {ego.obstacle_id}: {e}")
 
 
 if __name__ == "__main__":
