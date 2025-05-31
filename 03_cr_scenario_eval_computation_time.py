@@ -5,14 +5,15 @@ from typing import List
 import crcpp
 import crmonitor
 import numpy as np
+import yaml
 from commonroad.common.file_reader import CommonRoadFileReader
 from commonroad.scenario.scenario import Scenario
 from tabulate import tabulate
 
 from src.evaluation.common.config import (
     EvalConfig,
-    activated_rule_set_intersection,
-    activated_rule_set_interstate,
+    activated_intersection_rule_set,
+    activated_interstate_rule_set,
     configs,
 )
 
@@ -38,14 +39,23 @@ def evaluate(
     )
     sim_param.trace_step = [10, 1] if conf.iterative_eval else [1]
     # sim_param.log_level = "debug"
-    predicate_cost = {}
+    if conf.reordering:
+        with open(Path(__file__).parent / "configurations/predicates/predicate_costs.yaml", "r") as f:
+            data = yaml.safe_load(f)
+    else:
+        with open(Path(__file__).parent / "configurations/predicates/predicate_costs_inverted.yaml", "r") as f:
+            data = yaml.safe_load(f)
+    predicate_cost = {
+        key: [value["cost"], value["probability"], value["priority"]]
+        for key, value in data.get("predicateCost", {}).items()
+    }
     temporal_parameters = {}
     predicate_parameter = {}
 
     monitor_config = crmonitor.MonitorConfiguration()
     monitor_config.shortCircuiting = conf.short_circuiting
     monitor_config.hydraReordering = conf.reordering
-    monitor_config.earlyTermination = conf.early_termination
+    monitor_config.formulaEvaluationMode = crmonitor.FormulaEvaluationMode.globally_early_termination
     monitor_config.hydraConnectedEvaluation = conf.connected_eval
     monitor_config.performanceMeasurement = False
     monitor = crmonitor.Monitor()
@@ -102,23 +112,23 @@ print("##### Interstate #######")
 comp_summary = eval_scenario(
     comp_summary,
     Path(__file__).parent / "scenarios/planning" / "USA_US101-14_2_T-1.xml",
-    activated_rule_set_interstate,
+    activated_interstate_rule_set,
     1,
 )
 
-comp_summary = eval_scenario(
-    comp_summary,
-    Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_3_T-1.xml",
-    activated_rule_set_interstate,
-    2,
-)
+# comp_summary = eval_scenario(
+#     comp_summary,
+#     Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_3_T-1.xml",
+#     activated_interstate_rule_set,
+#     2,
+# )
 
 print("##### Intersection #######")
 comp_summary = eval_scenario(
     comp_summary,
     Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1/" / "DEU_TestRightBeforeLeft-1_2_T-1.pb",
-    activated_rule_set_intersection,
-    3,
+    activated_intersection_rule_set,
+    2,
 )
 
 path = Path(__file__).parent / "output/planning"

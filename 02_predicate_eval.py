@@ -159,7 +159,17 @@ def store_result_yaml():
             "probability": float(f"{pred_cost.satisfaction_probability:.4f}"),
             "priority": 1,
         }
-    with open(Path(__file__).parent / "output/predicats/predicate_costs.yaml", "w") as f:
+    with open(Path(__file__).parent / "output/predicates/predicate_costs.yaml", "w") as f:
+        yaml.safe_dump(data, f, sort_keys=False)
+
+    data = {"predicateCost": {}}
+    for pred_name, pred_cost in pred_cost_collection.items():
+        data["predicateCost"][pred_name] = {
+            "cost": float(f"{(1 - pred_cost.cost_median):.4f}"),
+            "probability": float(f"{(1 - pred_cost.satisfaction_probability):.4f}"),
+            "priority": 1,
+        }
+    with open(Path(__file__).parent / "output/predicates/predicate_costs_inverted.yaml", "w") as f:
         yaml.safe_dump(data, f, sort_keys=False)
 
 
@@ -208,4 +218,4 @@ if __name__ == "__main__":
         for path in glob.glob("/home/sebastian/03_code/commonroad-scenarios/scenarios_2020a/NGSIM/US101/*.xml")
         if "_S-" not in path
     ]
-    execute_dateset_eval(scenario_paths[1:8])
+    execute_dateset_eval(scenario_paths[1:2])

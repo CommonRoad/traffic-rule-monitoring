@@ -1,6 +1,6 @@
 import dataclasses
 
-activated_rule_set_intersection = [
+activated_intersection_rule_set = [
     "R_G1",
     "R_G2",
     "R_G3",
