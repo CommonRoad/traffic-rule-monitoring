@@ -1,15 +1,19 @@
+import concurrent.futures
 import copy
+import csv
 import dataclasses
 import glob
 import logging
 import statistics
-import csv
+from pathlib import Path
 from typing import Dict, List
-import concurrent.futures
+
 import crcpp
 import crmonitor
+import yaml
 from commonroad.common.file_reader import CommonRoadFileReader
 
+from src.evaluation.common.config import activated_interstate_rule_set
 from src.evaluation.predicate_collection import extract_arg_combinations
 
 
@@ -22,16 +26,35 @@ class PredicateCost:
     max_comp_time: float = 0.0
     avg_comp_time: float = 0.0
     median_comp_time: float = 0.0
+    satisfaction_probability: float = 0.0
+    cost_total: float = 0.0
+    cost_avg: float = 0.0
+    cost_median: float = 0.0
+    cost_max: float = 0.0
 
     def __str__(self):
-        return f"num executions: {self.num_executions}\nnum satisfactions: {self.satisfactions}\ntotal comp time: {self.total_comp_time}\nmin.: {self.min_comp_time}\nmax.: {self.max_comp_time}\navg.: {self.avg_comp_time}\nmedian: {self.median_comp_time}"
+        return (
+            f"num executions: {self.num_executions}\n"
+            f"num satisfactions: {self.satisfactions}\n"
+            f"total comp time: {self.total_comp_time}\n"
+            f"min.: {self.min_comp_time}\n"
+            f"max.: {self.max_comp_time}\n"
+            f"avg.: {self.avg_comp_time}\n"
+            f"median: {self.median_comp_time}\n"
+            f"satisfaction probability: {self.satisfaction_probability}\n"
+            f"cost total: {self.cost_total}\n"
+            f"cost avg: {self.cost_avg}\n"
+            f"cost median: {self.cost_median}\n"
+            f"cost max: {self.cost_max}\n"
+        )
 
 
 pred_cost_collection: Dict[str, PredicateCost] = {}
 
+
 def evaluate_predicate(pred_name, paths):
     pred = crcpp.predicates()[pred_name]
-    logging.debug(f"-------------Evaluating predicate: {pred_name}---------------")
+    logging.info(f"-------------Evaluating predicate: {pred_name}---------------")
     pred_cost_collection[pred_name] = PredicateCost()
     timer = crcpp.Timer()
     pred_stat = crcpp.PredicateStatistics()
@@ -48,54 +71,96 @@ def evaluate_predicate(pred_name, paths):
     pred_cost_collection[pred_name].max_comp_time = max(pred_stat.computation_time)
     pred_cost_collection[pred_name].avg_comp_time = statistics.mean(pred_stat.computation_time)
     pred_cost_collection[pred_name].median_comp_time = statistics.median(pred_stat.computation_time)
+    if pred_stat.num_executions > 0:
+        pred_cost_collection[pred_name].satisfaction_probability = pred_stat.num_satisfaction / pred_stat.num_executions
 
 
 def execute_dateset_eval(paths: List[str]):
     """
     Execute the dataset evaluation for all scenarios in the CommonRoad dataset.
     """
-    rules = ["R_G1", "R_G2"]
+    rules = activated_interstate_rule_set
     rel_predicates = []
     for elem in crmonitor.get_traffic_rules_complete():
         for rule in rules:
             if elem[0] != rule:
                 continue
             for pred in crcpp.predicates().keys():
-                if pred[:-10] in elem[1] and pred == "orientation_towards_predicate" or pred == "in_front_of_predicate":
+                if pred[:-10] in elem[1]:
                     rel_predicates.append(pred)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
         futures = [executor.submit(evaluate_predicate, pred_name, paths) for pred_name in rel_predicates]
         concurrent.futures.wait(futures)
 
-    with open('predicate_costs.csv', 'w', newline='') as csvfile:
+    max_cost_total = max(pred_eval.total_comp_time for pred_eval in pred_cost_collection.values())
+    max_cost_avg = max(pred_eval.avg_comp_time for pred_eval in pred_cost_collection.values())
+    max_cost_median = max(pred_eval.median_comp_time for pred_eval in pred_cost_collection.values())
+    max_cost_max = max(pred_eval.max_comp_time for pred_eval in pred_cost_collection.values())
+
+    for pred_name in pred_cost_collection.keys():
+        pred_cost_collection[pred_name].cost_total = pred_cost_collection[pred_name].total_comp_time / max_cost_total
+        pred_cost_collection[pred_name].cost_avg = pred_cost_collection[pred_name].avg_comp_time / max_cost_avg
+        pred_cost_collection[pred_name].cost_median = pred_cost_collection[pred_name].median_comp_time / max_cost_median
+        pred_cost_collection[pred_name].cost_max = pred_cost_collection[pred_name].max_comp_time / max_cost_max
+
+    store_result()
+    store_result_yaml()
+    for pred_name, pred_eval in pred_cost_collection.items():
+        print(f"Predicate: {pred_name}")
+        print(pred_eval)
+        print("--------------------------------------------------")
+
+
+def store_result():
+    with open(Path(__file__).parent / "output/predicates/predicate_costs.csv", "w", newline="") as csvfile:
         fieldnames = [
-            'predicate',
-            'num_executions',
-            'satisfactions',
-            'total_comp_time',
-            'min_comp_time',
-            'max_comp_time',
-            'avg_comp_time',
-            'median_comp_time'
+            "predicate",
+            "num_executions",
+            "satisfactions",
+            "total_comp_time",
+            "min_comp_time",
+            "max_comp_time",
+            "avg_comp_time",
+            "median_comp_time",
+            "satisfaction_probability",
+            "cost_total",
+            "cost_avg",
+            "cost_median",
+            "cost_max",
         ]
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=";")
         writer.writeheader()
         for pred_name, pred_cost in pred_cost_collection.items():
-            writer.writerow({
-                'predicate': pred_name,
-                'num_executions': pred_cost.num_executions,
-                'satisfactions': pred_cost.satisfactions,
-                'total_comp_time': pred_cost.total_comp_time,
-                'min_comp_time': pred_cost.min_comp_time,
-                'max_comp_time': pred_cost.max_comp_time,
-                'avg_comp_time': pred_cost.avg_comp_time,
-                'median_comp_time': pred_cost.median_comp_time
-            })
+            writer.writerow(
+                {
+                    "predicate": pred_name,
+                    "num_executions": pred_cost.num_executions,
+                    "satisfactions": pred_cost.satisfactions,
+                    "total_comp_time": pred_cost.total_comp_time,
+                    "min_comp_time": pred_cost.min_comp_time,
+                    "max_comp_time": pred_cost.max_comp_time,
+                    "avg_comp_time": pred_cost.avg_comp_time,
+                    "median_comp_time": pred_cost.median_comp_time,
+                    "satisfaction_probability": pred_cost.satisfaction_probability,
+                    "cost_total": pred_cost.cost_total,
+                    "cost_avg": pred_cost.cost_avg,
+                    "cost_median": pred_cost.cost_median,
+                    "cost_max": pred_cost.cost_max,
+                }
+            )
+
+
+def store_result_yaml():
+    data = {"predicateCost": {}}
     for pred_name, pred_cost in pred_cost_collection.items():
-        print(f"Predicate: {pred_name}")
-        print(pred_cost)
-        print("--------------------------------------------------")
+        data["predicateCost"][pred_name] = {
+            "cost": float(f"{pred_cost.cost_median:.4f}"),
+            "probability": float(f"{pred_cost.satisfaction_probability:.4f}"),
+            "priority": 1,
+        }
+    with open(Path(__file__).parent / "output/predicats/predicate_costs.yaml", "w") as f:
+        yaml.safe_dump(data, f, sort_keys=False)
 
 
 def evaluate_scenario(additional_function_parameters, pred, pred_name, pred_stat, sc_path, timer):

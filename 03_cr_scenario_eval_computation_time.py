@@ -9,7 +9,12 @@ from commonroad.common.file_reader import CommonRoadFileReader
 from commonroad.scenario.scenario import Scenario
 from tabulate import tabulate
 
-from src.evaluation.common.config import EvalConfig, configs
+from src.evaluation.common.config import (
+    EvalConfig,
+    activated_rule_set_intersection,
+    activated_rule_set_interstate,
+    configs,
+)
 
 comp_summary = np.array(
     ["Scenario Name", "num_vehicles", "num_time_steps", "C1", "C2", "C3", "C4", "C5", "C6"]
@@ -94,36 +99,25 @@ def eval_scenario(res, scenario_path, activated_traffic_rule_sets, base_idx):
 
 
 print("##### Interstate #######")
-interstate_rule_set = ["R_G1", "R_G2", "R_G3", "R_G4", "R_G5", "R_I1", "R_I2", "R_I3", "R_I4", "R_I5"]
 comp_summary = eval_scenario(
-    comp_summary, Path(__file__).parent / "scenarios/planning" / "USA_US101-14_2_T-1.xml", interstate_rule_set, 1
+    comp_summary,
+    Path(__file__).parent / "scenarios/planning" / "USA_US101-14_2_T-1.xml",
+    activated_rule_set_interstate,
+    1,
 )
 
 comp_summary = eval_scenario(
     comp_summary,
     Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_3_T-1.xml",
-    interstate_rule_set,
+    activated_rule_set_interstate,
     2,
 )
 
 print("##### Intersection #######")
-activated_traffic_rule_set_intersection = [
-    "R_G1",
-    "R_G2",
-    "R_G3",
-    "R_G4",
-    "R_G5",
-    "R_U1",
-    "R_U2",
-    "R_U3",
-    "R_U4",
-    "R_U5",
-]
-
 comp_summary = eval_scenario(
     comp_summary,
     Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1/" / "DEU_TestRightBeforeLeft-1_2_T-1.pb",
-    activated_traffic_rule_set_intersection,
+    activated_rule_set_intersection,
     3,
 )
 

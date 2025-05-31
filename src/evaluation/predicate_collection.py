@@ -14,6 +14,7 @@ class Argument(Enum):
     SIDE = 6
     THRESHOLD = 7
     TURNING_DIRECTION = 8
+    LINE_MARKING_TYPE = 9
 
 
 class Side(Enum):
@@ -32,7 +33,7 @@ predicate_collection_args: Dict[str, List[Argument]] = {
     # "braking_at_intersection_possible_predicate",
     # "causes_braking_intersection_predicate",
     "close_to_intersection_predicate": [Argument.INTERSECTION_TYPE],
-    "close_to_lane_border_predicate": [Argument.THRESHOLD],
+    "close_to_lane_border_predicate": [Argument.SIDE],
     # "close_to_stop_line_predicate",
     "completely_on_lanelet_type_predicate": [Argument.LANELET_TYPE],
     "decelerates_predicate": [Argument.THRESHOLD],
@@ -74,7 +75,7 @@ predicate_collection_args: Dict[str, List[Argument]] = {
     "on_similar_oriented_lanelet_without_type_predicate": [Argument.LANELET_TYPE],
     # "orientation_towards_predicate",
     # "overtaking_allowed_predicate",
-    "parallel_to_lane_marking_of_type_on_side_predicate": [Argument.SIDE],
+    "parallel_to_lane_marking_of_type_on_side_predicate": [Argument.SIDE, Argument.LINE_MARKING_TYPE],
     # "preserves_traffic_flow_predicate",
     # "relevant_traffic_light_predicate",
     # "reverses_predicate",
@@ -90,6 +91,10 @@ predicate_collection_args: Dict[str, List[Argument]] = {
 param_values: Dict[str, List[str]] = {
     "brakes_stronger_predicate": ["-2.0"],
     "decelerates_predicate": ["-2.0"],
+    "lateral_distance_to_obstacle_above_threshold_predicate": ["1.5"],  # d_min_urban 1.5 d_min_non_urban 2.0
+    "velocity_below_threshold_predicate": [
+        "8.33"
+    ],  # max_congestion_velocity: 2.78, max_slow_moving_traffic_velocity: 8.33, max_queue_of_vehicles_velocity: 3.0
 }
 
 
@@ -119,6 +124,8 @@ def extract_arg_combinations(pred_name: str) -> List[List[str]]:
                 args.append([param_values[pred_name][idx]])
             if arg is Argument.TURNING_DIRECTION:
                 args.append([side.value for side in Side])
+            if arg is Argument.LINE_MARKING_TYPE:
+                args.append([lt.name for lt in crcpp.LineMarking])
 
         return [list(comb) for comb in itertools.product(*args)]
     return [["0.0"]]
