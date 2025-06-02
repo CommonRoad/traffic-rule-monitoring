@@ -89,7 +89,7 @@ def execute_dateset_eval(paths: List[str]):
                 if pred[:-10] in elem[1]:
                     rel_predicates.append(pred)
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=24) as executor:
         futures = [executor.submit(evaluate_predicate, pred_name, paths) for pred_name in rel_predicates]
         concurrent.futures.wait(futures)
 
@@ -104,8 +104,12 @@ def execute_dateset_eval(paths: List[str]):
         pred_cost_collection[pred_name].cost_median = pred_cost_collection[pred_name].median_comp_time / max_cost_median
         pred_cost_collection[pred_name].cost_max = pred_cost_collection[pred_name].max_comp_time / max_cost_max
 
+    path = Path(__file__).parent / "output/predicates/"
+    if not path.exists():
+        path.mkdir(parents=True, exist_ok=True)
     store_result()
     store_result_yaml()
+    store_selected_results_tex()
     for pred_name, pred_eval in pred_cost_collection.items():
         print(f"Predicate: {pred_name}")
         print(pred_eval)
@@ -149,6 +153,75 @@ def store_result():
                     "cost_max": pred_cost.cost_max,
                 }
             )
+
+
+def store_selected_results_tex():
+    hardcoded = {
+        "a": (1.0, 100.0),
+        "b": (1.0, 100.0),
+        "c": (100.0, 0.0),
+        "d": (100.0, 0.0),
+    }
+
+    selected = [
+        ("a", *hardcoded["a"]),
+        ("b", *hardcoded["b"]),
+        ("c", *hardcoded["c"]),
+        ("d", *hardcoded["d"]),
+        ("velocity_below_threshold_predicate", None, None),
+        ("in_front_of_predicate", None, None),
+        ("in_same_lane_predicate", None, None),
+        ("lane_based_orientation_similar_predicate", None, None),
+        ("in_neighboring_lane_predicate", None, None),
+        ("in_single_lane_predicate", None, None),
+        ("on_similar_oriented_lanelet_with_type_predicate", None, None),
+        ("drives_faster_predicate", None, None),
+        ("keeps_safe_distance_prec_predicate", None, None),
+        ("velocity_below_threshold_predicate", None, None),
+        ("orientation_towards_predicate", None, None),
+    ]
+
+    def to_latex_macro(pred_name: str) -> str:
+        if pred_name in hardcoded:
+            return f"${pred_name}$"
+        parts = pred_name.split("_")
+        return f"$\\{parts[0]}" + "".join([p.capitalize() for p in parts[1:]]) + "$"
+
+    # Fill in cost/probability for non-hardcoded predicates from pred_cost_collection
+    rows = []
+    for name, cost, prob in selected:
+        if cost is None:
+            if name in pred_cost_collection:
+                cost = pred_cost_collection[name].cost_median
+                prob = pred_cost_collection[name].satisfaction_probability * 100
+            else:
+                cost = ""
+                prob = ""
+        rows.append((to_latex_macro(name), f"{cost:.4f}" if cost != "" else "", f"{prob:.1f}\\%" if prob != "" else ""))
+
+    # Write table, 3 predicates per row
+    output_path = Path(__file__).parent / "output/predicates/predicate_costs_selected.tex"
+    with open(output_path, "w") as f:
+        f.write("\\begin{table*}[!tb]\n")
+        f.write("\t\\centering\n")
+        f.write("\t\\caption{Predicate costs and probabilities.}\n")
+        f.write("\t\\center\n")
+        f.write("\t\\begin{tabular}{@{}lcccccccc@{}} \\toprule\n")
+        f.write("\t\t\\textbf{Name} & \\textbf{$\\costPredicate$} & \\textbf{$\\probabilityPredicate$} & ")
+        f.write("\\textbf{Name} & \\textbf{$\\costPredicate$} & \\textbf{$\\probabilityPredicate$} & ")
+        f.write("\\textbf{Name} & \\textbf{$\\costPredicate$} & \\textbf{$\\probabilityPredicate$}  \\\\ \\midrule\t\n")
+        for i in range(0, len(rows), 3):
+            row = []
+            for j in range(3):
+                if i + j < len(rows):
+                    row.extend(rows[i + j])
+                else:
+                    row.extend(["", "", ""])
+            f.write("\t\t" + " & ".join(row) + " \\\\\n")
+        f.write("\t\\bottomrule\n")
+        f.write("\t\\end{tabular}\n")
+        f.write("\t\\label{tab:predicate_cost_overview}\n")
+        f.write("\\end{table*}\n")
 
 
 def store_result_yaml():
