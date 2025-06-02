@@ -529,7 +529,7 @@ triangle = ">=20230923"
 type = "git"
 url = "ssh://git@gitlab.lrz.de/cps/reactive-planner.git"
 reference = "integration_crmonitor"
-resolved_reference = "ad5ad02dd0f744556a1fa340910520e37e678326"
+resolved_reference = "703a78bdbd8926830d3f9115a996d05e43b48d83"
 
 [[package]]
 name = "commonroad-route-planner"
@@ -568,7 +568,7 @@ omegaconf = ">=2.1.1"
 
 [[package]]
 name = "commonroad-velocity-planner"
-version = "0.1.1"
+version = "0.2.1"
 description = "CommonRoad Velocity Planner Toolbox"
 optional = false
 python-versions = ">=3.9,<3.12"
@@ -587,7 +587,7 @@ numpy = ">=1.17.4,<2.0"
 type = "git"
 url = "ssh://git@gitlab.lrz.de/cps/commonroad/commonroad-velocity-planner.git"
 reference = "develop"
-resolved_reference = "34adad13f36955fc0f91272026b3fb433fd47431"
+resolved_reference = "d772749e75701f670ef19f382f260a98f8b9c15f"
 
 [[package]]
 name = "contourpy"
@@ -2806,14 +2806,14 @@ typing-extensions = ">=3.7.4.3"
 
 [[package]]
 name = "typing-extensions"
-version = "4.13.2"
-description = "Backported and Experimental Type Hints for Python 3.8+"
+version = "4.14.0"
+description = "Backported and Experimental Type Hints for Python 3.9+"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "typing_extensions-4.13.2-py3-none-any.whl", hash = "sha256:a439e7c04b49fec3e5d3e2beaa21755cadbbdc391694e28ccdd36ca4a1408f8c"},
-    {file = "typing_extensions-4.13.2.tar.gz", hash = "sha256:e6c81219bd689f51865d9e372991c540bda33a0379d5573cddb9a3a23f7caaef"},
+    {file = "typing_extensions-4.14.0-py3-none-any.whl", hash = "sha256:a1514509136dd0b477638fc68d6a91497af5076466ad0fa6c338e44e359944af"},
+    {file = "typing_extensions-4.14.0.tar.gz", hash = "sha256:8676b788e32f02ab42d9e7c61324048ae4c6d844a399eebace3d4979d75ceef4"},
 ]
 
 [[package]]

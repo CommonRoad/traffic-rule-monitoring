@@ -1,7 +1,6 @@
 from pathlib import Path
 from typing import List
 
-import crcpp
 import crmonitor
 import numpy as np
 import yaml
@@ -11,7 +10,6 @@ from tabulate import tabulate
 from src.evaluation.common.config import (
     EvalConfig,
     activated_intersection_rule_set,
-    activated_interstate_rule_set,
     configs,
 )
 from src.evaluation.planning.rp_planner import run_planner_cr_scenario
@@ -32,42 +30,24 @@ def evaluate(
     config_path = Path(__file__).parent / "configurations/planning/planning_base_comp_time.yaml"
 
     rp_config = ReactivePlannerConfiguration.load(config_path, str(sc_path))
-    rp_config.update()
-
-    sim_param = crmonitor.MonitorSimulationParameters()
-    sim_param.world_parameters = crcpp.WorldParameters(
-        crcpp.RoadNetworkParameters(),
-        crcpp.SensorParameters(250.0, 250.0),
-        crcpp.ActuatorParameters.ego_defaults(),
-        crcpp.TimeParameters(50, 0.3, 0.1),
-        crcpp.ActuatorParameters.vehicle_defaults(),
-    )
-    sim_param.trace_step = [10, 1] if conf.iterative_eval else [1]
-    # sim_param.log_level = "debug"
+    rp_config.monitor.activated_traffic_rules = rule_set
+    rp_config.monitor.trace_step = [10, 1] if conf.iterative_eval else [1]
+    rp_config.monitor.shortCircuiting = conf.short_circuiting
+    rp_config.monitor.hydraReordering = conf.reordering
+    rp_config.monitor.formulaEvaluationMode = crmonitor.FormulaEvaluationMode.globally_early_termination
+    rp_config.monitor.hydraConnectedEvaluation = conf.connected_eval
+    rp_config.monitor.performanceMeasurement = False
     if conf.reordering:
         with open(Path(__file__).parent / "configurations/predicates/predicate_costs.yaml", "r") as f:
             data = yaml.safe_load(f)
     else:
         with open(Path(__file__).parent / "configurations/predicates/predicate_costs_inverted.yaml", "r") as f:
             data = yaml.safe_load(f)
-    predicate_cost = {
+    rp_config.monitor.predicate_cost = {
         key: [value["cost"], value["probability"], value["priority"]]
         for key, value in data.get("predicateCost", {}).items()
     }
-    temporal_parameters = {}
-    predicate_parameter = {}
-
-    monitor_config = crmonitor.MonitorConfiguration()
-    monitor_config.shortCircuiting = conf.short_circuiting
-    monitor_config.hydraReordering = conf.reordering
-    monitor_config.formulaEvaluationMode = crmonitor.FormulaEvaluationMode.globally_early_termination
-    monitor_config.hydraConnectedEvaluation = conf.connected_eval
-    monitor_config.performanceMeasurement = False
-
-    rp_config.rule_monitor.set_config(
-        sim_param, monitor_config, predicate_cost, predicate_parameter, temporal_parameters
-    )
-    rp_config.rule_monitor.activate_rule_sets(rule_set)
+    rp_config.update()
 
     run_planner_cr_scenario(rp_config)
 
@@ -108,7 +88,7 @@ def eval_scenario(res, scenario_path, activated_traffic_rule_sets, base_idx):
         evaluate(f"C{idx}", scenario_path, config, activated_traffic_rule_sets)
 
 
-print("##### Interstate #######")
+# print("##### Interstate #######")
 # this scenario does not work as goal region time interval not reachable
 # eval_scenario(
 #     comp_summary,
@@ -117,19 +97,19 @@ print("##### Interstate #######")
 #     1,
 # )
 
-eval_scenario(
-    comp_summary,
-    Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_3_T-1.xml",
-    activated_interstate_rule_set,
-    1,
-)
+# eval_scenario(
+#     comp_summary,
+#     Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_3_T-1.xml",
+#     activated_interstate_rule_set,
+#     1,
+# )
 
 print("##### Intersection #######")
 eval_scenario(
     comp_summary,
     Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1_2_T-1.xml",
     activated_intersection_rule_set,
-    2,
+    1,
 )
 
 path = Path(__file__).parent / "output/planning"
