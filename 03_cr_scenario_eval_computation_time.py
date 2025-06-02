@@ -116,12 +116,12 @@ comp_summary = eval_scenario(
     1,
 )
 
-# comp_summary = eval_scenario(
-#     comp_summary,
-#     Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_3_T-1.xml",
-#     activated_interstate_rule_set,
-#     2,
-# )
+comp_summary = eval_scenario(
+    comp_summary,
+    Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_3_T-1.xml",
+    activated_interstate_rule_set,
+    2,
+)
 
 print("##### Intersection #######")
 comp_summary = eval_scenario(
