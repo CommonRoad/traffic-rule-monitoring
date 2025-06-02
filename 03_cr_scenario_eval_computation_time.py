@@ -128,7 +128,7 @@ comp_summary = eval_scenario(
     comp_summary,
     Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1/" / "DEU_TestRightBeforeLeft-1_2_T-1.pb",
     activated_intersection_rule_set,
-    2,
+    3,
 )
 
 path = Path(__file__).parent / "output/planning"
