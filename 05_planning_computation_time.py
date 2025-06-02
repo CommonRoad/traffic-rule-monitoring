@@ -11,6 +11,7 @@ from tabulate import tabulate
 from src.evaluation.common.config import (
     EvalConfig,
     activated_intersection_rule_set,
+    activated_interstate_rule_set,
     configs,
 )
 from src.evaluation.planning.rp_planner import run_planner_cr_scenario
@@ -25,7 +26,7 @@ def evaluate(
     sc_path: Path,
     conf: EvalConfig,
     rule_set: List[str],
-) -> float:
+):
     print(f"Evaluating scenario {eval_name} - {conf}")
 
     config_path = Path(__file__).parent / "configurations/planning/planning_base_comp_time.yaml"
@@ -104,32 +105,31 @@ def eval_scenario(res, scenario_path, activated_traffic_rule_sets, base_idx):
     # )
 
     for idx, config in enumerate(configs[1:7]):
-        res[base_idx, idx + 3] = evaluate(f"C{idx}", scenario_path, config, activated_traffic_rule_sets)
-
-    return res
+        evaluate(f"C{idx}", scenario_path, config, activated_traffic_rule_sets)
 
 
-# print("##### Interstate #######")
-# comp_summary = eval_scenario(
+print("##### Interstate #######")
+# this scenario does not work as goal region time interval not reachable
+# eval_scenario(
 #     comp_summary,
 #     Path(__file__).parent / "scenarios/planning" / "USA_US101-14_2_T-1.xml",
 #     activated_interstate_rule_set,
 #     1,
 # )
 
-# comp_summary = eval_scenario(
-#     comp_summary,
-#     Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_3_T-1.xml",
-#     activated_interstate_rule_set,
-#     2,
-# )
+eval_scenario(
+    comp_summary,
+    Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_3_T-1.xml",
+    activated_interstate_rule_set,
+    1,
+)
 
 print("##### Intersection #######")
-comp_summary = eval_scenario(
+eval_scenario(
     comp_summary,
     Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1_2_T-1.xml",
     activated_intersection_rule_set,
-    1,
+    2,
 )
 
 path = Path(__file__).parent / "output/planning"
