@@ -74,7 +74,7 @@ def eval_scenario(res, scenario_path: Path, activated_traffic_rule_sets: List[st
         axis=0,
     )
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
         futures = []
         for idx, config in enumerate(configs[1:7]):
             futures.append(
