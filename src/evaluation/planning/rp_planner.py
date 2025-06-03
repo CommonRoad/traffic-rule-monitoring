@@ -1,3 +1,4 @@
+import statistics
 from copy import deepcopy
 
 from commonroad_rp.reactive_planner import ReactivePlanner
@@ -12,33 +13,19 @@ from commonroad_rp.utility.utils_coordinate_system import (
 from commonroad_rp.utility.visualization import visualize_planner_at_timestep
 
 
-def run_planner_cr_scenario(config: ReactivePlannerConfiguration) -> None:
-    # initialize and get logger
+def run_planner_cr_scenario(config: ReactivePlannerConfiguration) -> float:
+    # Initialization
     initialize_logger(config)
-
-    # *************************************
-    # Initialize Planner
-    # *************************************
-    # create initial reference path via route planner
     ref_path_orig = create_initial_ref_path(config.scenario.lanelet_network, config.planning_problem)
-
-    # pre-process reference path and create coordinate system
     rp_cosys: CoordinateSystem = create_coordinate_system(ref_path_orig)
-
-    # initialize reactive planner
     planner = ReactivePlanner(config)
-
-    # set coordinate system in planner
     planner.set_reference_path(coordinate_system=rp_cosys)
 
-    # **************************
+    comp_times = []
+
     # Run Planning
-    # **************************
-    # Add first state to recorded state and input list
     planner.record_state_and_input(planner.x_0)
-
-    SAMPLING_ITERATION_IN_PLANNER = True
-
+    sampling_iteration_in_planner = True
     while not planner.goal_reached():
         current_count = len(planner.record_state_list) - 1
 
@@ -47,7 +34,7 @@ def run_planner_cr_scenario(config: ReactivePlannerConfiguration) -> None:
         if plan_new_trajectory:
             # new planning cycle -> plan a new optimal trajectory
             planner.set_desired_velocity(current_speed=planner.x_0.velocity)
-            if SAMPLING_ITERATION_IN_PLANNER:
+            if sampling_iteration_in_planner:
                 optimal = planner.plan()
             else:
                 optimal = None
@@ -59,6 +46,7 @@ def run_planner_cr_scenario(config: ReactivePlannerConfiguration) -> None:
                 break
 
             # record state and input
+            comp_times.append(planner.journal["rule_check"])
             planner.record_state_and_input(optimal[0].state_list[1])
 
             # reset planner state for re-planning
@@ -108,12 +96,13 @@ def run_planner_cr_scenario(config: ReactivePlannerConfiguration) -> None:
             )
         planner.prepare_monitor()
 
-    # make gif
-    # make_gif(config, range(0, planner.record_state_list[-1].time_step))
+    cleaned_times = [comp_times[0]]
+    for idx in range(len(comp_times) - 1):
+        cleaned_times.append(comp_times[idx + 1] - comp_times[idx])
 
-    # **************************
     # Evaluate results
-    # **************************
-    evaluate = True
+    evaluate = False
     if evaluate:
         run_evaluation(planner.config, planner.record_state_list, planner.record_input_list)
+
+    return statistics.median(cleaned_times)
