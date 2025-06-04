@@ -19,12 +19,11 @@ from src.evaluation.common.config import (
 
 
 def evaluate(
-    eval_name: str,
     sc: Scenario,
     conf: EvalConfig,
     rule_set: List[str],
 ) -> float:
-    print(f"Evaluating scenario {eval_name} - {conf}")
+    print(f"Evaluating scenario {sc.scenario_id} - {conf}")
     sim_param = crmonitor.MonitorSimulationParameters()
     sim_param.world_parameters = crcpp.WorldParameters(
         crcpp.RoadNetworkParameters(),
@@ -67,7 +66,7 @@ def evaluate(
     average_time = sum(computation_times) / len(computation_times)
     print(actual_result)
     print(
-        f"Average computation time {eval_name}: {average_time:.6f} seconds / Num. vehicles: {len(sc.obstacles)} / Num. time steps: {sum([obs.prediction.final_time_step - obs.initial_state.time_step for obs in sc.obstacles])}"
+        f"Average computation time {conf.name}: {average_time:.6f} seconds / Num. vehicles: {len(sc.obstacles)} / Num. time steps: {sum([obs.prediction.final_time_step - obs.initial_state.time_step for obs in sc.obstacles])}"
     )
     return np.round(average_time, 4)
 
@@ -110,9 +109,7 @@ def eval_scenario(config_settings: List[Tuple]):
             evaluations.append((scenario, activated_traffic_rule_sets, base_idx, eval_config, idx))
 
     with concurrent.futures.ProcessPoolExecutor(max_workers=24) as executor:
-        future_to_conf = {
-            executor.submit(evaluate, f"C{conf[4]}", conf[0], conf[3], conf[1]): conf for conf in evaluations
-        }
+        future_to_conf = {executor.submit(evaluate, conf[0], conf[3], conf[1]): conf for conf in evaluations}
         for future in concurrent.futures.as_completed(future_to_conf):
             conf = future_to_conf[future]
             res[conf[2], conf[4] + 3] = future.result()

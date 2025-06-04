@@ -17,6 +17,7 @@ activated_interstate_rule_set = ["R_G1", "R_G2", "R_G3", "R_G4", "R_G5", "R_I1",
 
 @dataclasses.dataclass
 class EvalConfig:
+    name: str = ""
     with_monitor: bool = False
     reordering: bool = False
     short_circuiting: bool = True
@@ -26,35 +27,38 @@ class EvalConfig:
     visualization: bool = False
 
 
-# TODO change re-ordering Boolean values; temporary change to get better re-ordering results
 configs = [
-    EvalConfig(),
-    EvalConfig(with_monitor=True, visualization=True, reordering=True),  # C1: Baseline
-    EvalConfig(with_monitor=True, short_circuiting=True, reordering=True),  # C2: Baseline with short-circuiting
+    EvalConfig(name="C0"),
+    EvalConfig(name="C1", with_monitor=True, visualization=True, reordering=False),  # C1: Baseline
     EvalConfig(
-        with_monitor=True, short_circuiting=True, reordering=False
+        name="C2", with_monitor=True, short_circuiting=True, reordering=False
+    ),  # C2: Baseline with short-circuiting
+    EvalConfig(
+        name="C3", with_monitor=True, short_circuiting=True, reordering=True
     ),  # C3: Ours without connected evaluation, iterative evaluation, and early termination
     EvalConfig(
-        with_monitor=True, short_circuiting=True, connected_eval=True, reordering=False
+        name="C4", with_monitor=True, short_circuiting=True, connected_eval=True, reordering=True
     ),  # C4: Ours without iterative evaluation and early termination
     EvalConfig(
-        with_monitor=True, short_circuiting=True, connected_eval=True, iterative_eval=True, reordering=False
+        name="C5", with_monitor=True, short_circuiting=True, connected_eval=True, iterative_eval=True, reordering=True
     ),  # C5: Ours without iterative evaluation
     EvalConfig(
+        name="C6",
         with_monitor=True,
         short_circuiting=True,
         connected_eval=True,
         early_termination=True,
         iterative_eval=True,
-        reordering=False,
+        reordering=True,
     ),  # C6: Our approach
     EvalConfig(
+        name="C7",
         with_monitor=True,
         short_circuiting=True,
         connected_eval=True,
         early_termination=True,
         iterative_eval=True,
         visualization=True,
-        reordering=False,
+        reordering=True,
     ),
 ]
