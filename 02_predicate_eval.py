@@ -99,9 +99,13 @@ def execute_dateset_eval(paths: List[str]):
     max_cost_max = max(pred_eval.max_comp_time for pred_eval in pred_cost_collection.values())
 
     for pred_name in pred_cost_collection.keys():
-        pred_cost_collection[pred_name].cost_total = 100 * pred_cost_collection[pred_name].total_comp_time / max_cost_total
+        pred_cost_collection[pred_name].cost_total = (
+            100 * pred_cost_collection[pred_name].total_comp_time / max_cost_total
+        )
         pred_cost_collection[pred_name].cost_avg = 100 * pred_cost_collection[pred_name].avg_comp_time / max_cost_avg
-        pred_cost_collection[pred_name].cost_median = 100 * pred_cost_collection[pred_name].median_comp_time / max_cost_median
+        pred_cost_collection[pred_name].cost_median = (
+            100 * pred_cost_collection[pred_name].median_comp_time / max_cost_median
+        )
         pred_cost_collection[pred_name].cost_max = 100 * pred_cost_collection[pred_name].max_comp_time / max_cost_max
 
     path = Path(__file__).parent / "output/predicates/"

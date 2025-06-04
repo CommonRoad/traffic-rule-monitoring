@@ -1,7 +1,7 @@
 import concurrent.futures
 import time
 from pathlib import Path
-from typing import List, Tuple, Optional
+from typing import List, Optional, Tuple
 
 import crcpp
 import crmonitor
