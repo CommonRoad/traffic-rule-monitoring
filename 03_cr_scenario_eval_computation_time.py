@@ -1,7 +1,7 @@
 import concurrent.futures
 import time
 from pathlib import Path
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 import crcpp
 import crmonitor
@@ -35,11 +35,11 @@ def evaluate(
     sim_param.trace_step = [10, 1] if conf.iterative_eval else [1]
     # sim_param.log_level = "debug"
     if conf.reordering:
-        with open(Path(__file__).parent / "configurations/predicates/predicate_costs.yaml", "r") as f:
-            data = yaml.safe_load(f)
+        with open(Path(__file__).parent / "configurations/predicates/predicate_costs.yaml", "r") as file:
+            data = yaml.safe_load(file)
     else:
-        with open(Path(__file__).parent / "configurations/predicates/predicate_costs_inverted.yaml", "r") as f:
-            data = yaml.safe_load(f)
+        with open(Path(__file__).parent / "configurations/predicates/predicate_costs_inverted.yaml", "r") as file:
+            data = yaml.safe_load(file)
     predicate_cost = {
         key: [value["cost"], value["probability"], value["priority"]]
         for key, value in data.get("predicateCost", {}).items()
@@ -78,23 +78,24 @@ def eval_scenario(config_settings: List[Tuple]):
     evaluations = []
     for base_idx, setting in enumerate(config_settings):
         scenario_path, activated_traffic_rule_sets = setting
+        sc: Optional[Scenario] = None
         if scenario_path.suffix == ".pb":
             map_path = (
                 scenario_path.parent / f"{scenario_path.stem.split('_')[0]}_{scenario_path.stem.split('_')[1]}.pb"
             )
-            scenario = CommonRoadFileReader(
+            sc = CommonRoadFileReader(
                 filename_map=map_path,
                 filename_dynamic=scenario_path,
             ).open_map_dynamic()
         else:
-            scenario, _ = CommonRoadFileReader(filename_2020a=scenario_path).open()
+            sc, _ = CommonRoadFileReader(filename_2020a=scenario_path).open()
         res = np.append(
             res,
             np.array(
                 [
-                    str(scenario.scenario_id),
-                    len(scenario.obstacles),
-                    sum([obs.prediction.final_time_step - obs.initial_state.time_step for obs in scenario.obstacles]),
+                    str(sc.scenario_id),
+                    len(sc.obstacles),
+                    sum([obs.prediction.final_time_step - obs.initial_state.time_step for obs in sc.obstacles]),
                     None,
                     None,
                     None,
@@ -106,13 +107,13 @@ def eval_scenario(config_settings: List[Tuple]):
             axis=0,
         )
         for idx, eval_config in enumerate(configs[1:7]):
-            evaluations.append((scenario, activated_traffic_rule_sets, base_idx, eval_config, idx))
+            evaluations.append((sc, activated_traffic_rule_sets, base_idx, eval_config, idx))
 
     with concurrent.futures.ProcessPoolExecutor(max_workers=24) as executor:
         future_to_conf = {executor.submit(evaluate, conf[0], conf[3], conf[1]): conf for conf in evaluations}
         for future in concurrent.futures.as_completed(future_to_conf):
             conf = future_to_conf[future]
-            res[conf[2], conf[4] + 3] = future.result()
+            res[conf[2] + 1, conf[4] + 3] = future.result()
 
     return res
 
@@ -127,7 +128,7 @@ scenario_configs = [
         activated_interstate_rule_set,
     ),
     (
-        Path(__file__).parent / "scenarios/planning/" / "DEU_TestRightBeforeLeft-1_2_T-1.xml",
+        Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1/" / "DEU_TestRightBeforeLeft-1_2_T-1.pb",
         activated_intersection_rule_set,
     ),
 ]

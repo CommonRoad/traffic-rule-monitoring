@@ -20,7 +20,7 @@ class EvalConfig:
     name: str = ""
     with_monitor: bool = False
     reordering: bool = False
-    short_circuiting: bool = True
+    short_circuiting: bool = False
     connected_eval: bool = False
     iterative_eval: bool = False
     early_termination: bool = False
