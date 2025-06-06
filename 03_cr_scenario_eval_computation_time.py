@@ -1,7 +1,7 @@
 import concurrent.futures
 import time
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 import crcpp
 import crmonitor
@@ -18,10 +18,47 @@ from src.evaluation.common.config import (
 )
 
 
+def remove_non_divisible_copy(expected_result: Dict[int, Dict[str, Dict[int, List[int]]]], divisor: float):
+    result = {
+        ego_id: {
+            rule_id: {
+                obs_id: [value for value in obs_result if value % divisor == 0]
+                for obs_id, obs_result in rule_result.items()
+            }
+            for rule_id, rule_result in ego_result.items()
+        }
+        for ego_id, ego_result in expected_result.items()
+    }
+    return result
+
+
+def check_result_empty_combined(res: dict[str, dict[int, list[int]]]) -> bool:
+    for inner_map in res.values():
+        for vec in inner_map.values():
+            if vec:  # Return False if any list is not empty
+                return False
+    return True  # Return True if all lists are empty
+
+
+def compare_result(
+    exp_res: Dict[int, Dict[str, Dict[int, List[int]]]], actual_res: Dict[int, Dict[str, Dict[int, List[int]]]]
+) -> bool:
+    if len(exp_res) != len(actual_res):
+        return False
+    for ego_id, ego_result in exp_res.items():
+        for rule_id, rule_result in ego_result.items():
+            for obs_id, obs_result in rule_result.items():
+                if (
+                    actual_res[ego_id].get(rule_id) is not None
+                    and actual_res[ego_id][rule_id].get(obs_id) is not None
+                    and sorted(obs_result) != sorted(actual_res[ego_id][rule_id][obs_id])
+                ):
+                    return False
+    return True
+
+
 def evaluate(
-    sc: Scenario,
-    conf: EvalConfig,
-    rule_set: List[str],
+    sc: Scenario, conf: EvalConfig, rule_set: List[str], exp_result: Dict[int, Dict[str, Dict[int, List[int]]]]
 ) -> float:
     print(f"Evaluating scenario {sc.scenario_id} - {conf}")
     sim_param = crmonitor.MonitorSimulationParameters()
@@ -33,7 +70,7 @@ def evaluate(
         crcpp.ActuatorParameters.vehicle_defaults(),
     )
     sim_param.trace_step = [10, 1] if conf.iterative_eval else [1]
-    # sim_param.log_level = "debug"
+
     if conf.reordering:
         with open(Path(__file__).parent / "configurations/predicates/predicate_costs.yaml", "r") as file:
             data = yaml.safe_load(file)
@@ -50,18 +87,59 @@ def evaluate(
     monitor_config = crmonitor.MonitorConfiguration()
     monitor_config.shortCircuiting = conf.short_circuiting
     monitor_config.hydraReordering = conf.reordering
-    monitor_config.formulaEvaluationMode = crmonitor.FormulaEvaluationMode.globally_early_termination
+    monitor_config.formulaEvaluationMode = (
+        crmonitor.FormulaEvaluationMode.globally_early_termination
+        if conf.early_termination
+        else crmonitor.FormulaEvaluationMode.globally
+    )
     monitor_config.hydraConnectedEvaluation = conf.connected_eval
     monitor_config.performanceMeasurement = False
     monitor = crmonitor.Monitor()
     monitor.set_config(sim_param, monitor_config, predicate_cost, predicate_parameter, temporal_parameters)
     monitor.activate_rule_sets(rule_set)
 
+    exp_res = {}
+    if conf.iterative_eval:
+        for step in sim_param.trace_step:
+            tmp = remove_non_divisible_copy(exp_result, step)
+            for ego_id, ego_result in tmp.items():
+                if not check_result_empty_combined(ego_result) and ego_id not in exp_res:
+                    exp_res[ego_id] = tmp[ego_id]
+
+        for ego_id, ego_result in exp_result.items():
+            if exp_res.get(ego_id) is None:
+                exp_res[ego_id] = exp_result[ego_id]
+    else:
+        exp_res = exp_result
+
+    if conf.early_termination:
+        expected_result_early_termination = {}
+        for ego_id, ego_result in exp_res.items():
+            min_rule = ""
+            min_ego_time_step = float("inf")
+            for rule_id, rule_result in ego_result.items():
+                expected_result_early_termination.setdefault(ego_id, {})[rule_id] = {ego_id: []}
+                for obs_id, obs_result in rule_result.items():
+                    if obs_result and min_ego_time_step > min(obs_result):
+                        min_rule = rule_id
+                        min_ego_time_step = min(obs_result)
+            if min_rule:
+                expected_result_early_termination[ego_id][min_rule][ego_id] = [min_ego_time_step]
+        exp_res = expected_result_early_termination
+
     computation_times = []
     for _ in range(5):
         start_time = time.time()
-        actual_result = monitor.evaluate_scenarios_on_given_egos([crcpp.World(sc)], [])
+        actual_result = list(monitor.evaluate_scenarios_on_given_egos([crcpp.World(sc)], []).values())[0]
         end_time = time.time()
+        if not compare_result(exp_res, actual_result) and not conf.early_termination and not conf.iterative_eval:
+            raise RuntimeError("Evaluation result does not match expected result.")
+        elif not compare_result(exp_res, actual_result) and conf.early_termination and conf.iterative_eval:
+            raise RuntimeError("Evaluation result does not match expected result.")
+        elif not compare_result(exp_res, actual_result) and conf.iterative_eval and not conf.iterative_eval:
+            raise RuntimeError("Evaluation result does not match expected result.")
+        elif not compare_result(exp_res, actual_result) and not conf.early_termination and conf.iterative_eval:
+            raise RuntimeError("Evaluation result does not match expected result.")
         computation_times.append(end_time - start_time)
     average_time = sum(computation_times) / len(computation_times)
     print(actual_result)
@@ -78,7 +156,6 @@ def eval_scenario(config_settings: List[Tuple]):
     evaluations = []
     for base_idx, setting in enumerate(config_settings):
         scenario_path, activated_traffic_rule_sets = setting
-        sc: Optional[Scenario] = None
         if scenario_path.suffix == ".pb":
             map_path = (
                 scenario_path.parent / f"{scenario_path.stem.split('_')[0]}_{scenario_path.stem.split('_')[1]}.pb"
@@ -106,11 +183,37 @@ def eval_scenario(config_settings: List[Tuple]):
             ).reshape(1, -1),
             axis=0,
         )
+
+        # compute default eval result
+        monitor = crmonitor.Monitor()
+        monitor_config = crmonitor.MonitorConfiguration()
+        monitor_config.formulaEvaluationMode = crmonitor.FormulaEvaluationMode.globally
+        monitor_config.shortCircuiting = False
+        monitor_config.hydraConnectedEvaluation = False
+        monitor_config.hydraReordering = False
+        sim_param = crmonitor.MonitorSimulationParameters()
+        sim_param.world_parameters = crcpp.WorldParameters(
+            crcpp.RoadNetworkParameters(),
+            crcpp.SensorParameters(250.0, 250.0),
+            crcpp.ActuatorParameters.ego_defaults(),
+            crcpp.TimeParameters(50, 0.3, 0.1),
+            crcpp.ActuatorParameters.vehicle_defaults(),
+        )
+        with open(Path(__file__).parent / "configurations/predicates/predicate_costs_inverted.yaml", "r") as file:
+            data = yaml.safe_load(file)
+        predicate_cost = {
+            key: [value["cost"], value["probability"], value["priority"]]
+            for key, value in data.get("predicateCost", {}).items()
+        }
+        monitor.set_config(sim_param, monitor_config, predicate_cost, {}, {})
+        monitor.activate_rule_sets(activated_traffic_rule_sets)
+        result = monitor.evaluate_scenarios_on_given_egos([crcpp.World(sc)], [])
+
         for idx, eval_config in enumerate(configs[1:7]):
-            evaluations.append((sc, activated_traffic_rule_sets, base_idx, eval_config, idx))
+            evaluations.append((sc, activated_traffic_rule_sets, base_idx, eval_config, idx, list(result.values())[0]))
 
     with concurrent.futures.ProcessPoolExecutor(max_workers=24) as executor:
-        future_to_conf = {executor.submit(evaluate, conf[0], conf[3], conf[1]): conf for conf in evaluations}
+        future_to_conf = {executor.submit(evaluate, conf[0], conf[3], conf[1], conf[5]): conf for conf in evaluations}
         for future in concurrent.futures.as_completed(future_to_conf):
             conf = future_to_conf[future]
             res[conf[2] + 1, conf[4] + 3] = future.result()
