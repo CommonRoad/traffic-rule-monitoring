@@ -130,7 +130,13 @@ def evaluate(
     computation_times = []
     for _ in range(5):
         start_time = time.time()
-        actual_result = list(monitor.evaluate_scenarios_on_given_egos([crcpp.World(sc)], []).values())[0]
+        try:
+            actual_result = list(monitor.evaluate_scenarios_on_given_egos([crcpp.World(sc)], []).values())[0]
+        except Exception as e:
+            print(f"Error during evaluation: {e}")
+            actual_result = "Error during evaluation."
+            computation_times.append(0.0)
+            break
         end_time = time.time()
         if not compare_result(exp_res, actual_result) and not conf.early_termination and not conf.iterative_eval:
             raise RuntimeError("Evaluation result does not match expected result.")
@@ -188,9 +194,9 @@ def eval_scenario(config_settings: List[Tuple]):
         monitor = crmonitor.Monitor()
         monitor_config = crmonitor.MonitorConfiguration()
         monitor_config.formulaEvaluationMode = crmonitor.FormulaEvaluationMode.globally
-        monitor_config.shortCircuiting = False
+        monitor_config.shortCircuiting = True
         monitor_config.hydraConnectedEvaluation = False
-        monitor_config.hydraReordering = False
+        monitor_config.hydraReordering = True
         sim_param = crmonitor.MonitorSimulationParameters()
         sim_param.world_parameters = crcpp.WorldParameters(
             crcpp.RoadNetworkParameters(),
@@ -199,7 +205,7 @@ def eval_scenario(config_settings: List[Tuple]):
             crcpp.TimeParameters(50, 0.3, 0.1),
             crcpp.ActuatorParameters.vehicle_defaults(),
         )
-        with open(Path(__file__).parent / "configurations/predicates/predicate_costs_inverted.yaml", "r") as file:
+        with open(Path(__file__).parent / "configurations/predicates/predicate_costs.yaml", "r") as file:
             data = yaml.safe_load(file)
         predicate_cost = {
             key: [value["cost"], value["probability"], value["priority"]]
