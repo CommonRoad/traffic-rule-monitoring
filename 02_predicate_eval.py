@@ -142,7 +142,7 @@ def store_result():
         for pred_name, pred_cost in pred_cost_collection.items():
             writer.writerow(
                 {
-                    "predicate": pred_name,
+                    "predicate": pred_name[:-10],
                     "num_executions": pred_cost.num_executions,
                     "satisfactions": pred_cost.satisfactions,
                     "total_comp_time": pred_cost.total_comp_time,
@@ -231,7 +231,7 @@ def store_selected_results_tex():
 def store_result_yaml():
     data = {"predicateCost": {}}
     for pred_name, pred_cost in pred_cost_collection.items():
-        data["predicateCost"][pred_name] = {
+        data["predicateCost"][pred_name[:-10]] = {
             "cost": float(f"{pred_cost.cost_median:.4f}"),
             "probability": float(f"{pred_cost.satisfaction_probability:.4f}"),
             "priority": 1,
@@ -241,7 +241,7 @@ def store_result_yaml():
 
     data = {"predicateCost": {}}
     for pred_name, pred_cost in pred_cost_collection.items():
-        data["predicateCost"][pred_name] = {
+        data["predicateCost"][pred_name[:-10]] = {
             "cost": float(f"{(100 - pred_cost.cost_median):.4f}"),
             "probability": float(f"{(1 - pred_cost.satisfaction_probability):.4f}"),
             "priority": 1,
