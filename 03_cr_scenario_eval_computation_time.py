@@ -86,7 +86,9 @@ def evaluate(
 
     monitor_config = crmonitor.MonitorConfiguration()
     monitor_config.shortCircuiting = conf.short_circuiting
-    monitor_config.hydraReordering = conf.reordering
+    monitor_config.hydraReordering = (
+        True  # we need to set this to True to also set a bad reordering for demonstration purposes
+    )
     monitor_config.formulaEvaluationMode = (
         crmonitor.FormulaEvaluationMode.globally_early_termination
         if conf.early_termination
@@ -98,60 +100,65 @@ def evaluate(
     monitor.set_config(sim_param, monitor_config, predicate_cost, predicate_parameter, temporal_parameters)
     monitor.activate_rule_sets(rule_set)
 
-    exp_res = {}
-    if conf.iterative_eval:
-        for step in sim_param.trace_step:
-            tmp = remove_non_divisible_copy(exp_result, step)
-            for ego_id, ego_result in tmp.items():
-                if not check_result_empty_combined(ego_result) and ego_id not in exp_res:
-                    exp_res[ego_id] = tmp[ego_id]
+    if conf.check_results:
+        exp_res = {}
+        if conf.iterative_eval:
+            for step in sim_param.trace_step:
+                tmp = remove_non_divisible_copy(exp_result, step)
+                for ego_id, ego_result in tmp.items():
+                    if not check_result_empty_combined(ego_result) and ego_id not in exp_res:
+                        exp_res[ego_id] = tmp[ego_id]
 
-        for ego_id, ego_result in exp_result.items():
-            if exp_res.get(ego_id) is None:
-                exp_res[ego_id] = exp_result[ego_id]
-    else:
-        exp_res = exp_result
+            for ego_id, ego_result in exp_result.items():
+                if exp_res.get(ego_id) is None:
+                    exp_res[ego_id] = exp_result[ego_id]
+        else:
+            exp_res = exp_result
 
-    if conf.early_termination:
-        expected_result_early_termination = {}
-        for ego_id, ego_result in exp_res.items():
-            min_rule = ""
-            min_ego_time_step = float("inf")
-            for rule_id, rule_result in ego_result.items():
-                expected_result_early_termination.setdefault(ego_id, {})[rule_id] = {ego_id: []}
-                for obs_id, obs_result in rule_result.items():
-                    if obs_result and min_ego_time_step > min(obs_result):
-                        min_rule = rule_id
-                        min_ego_time_step = min(obs_result)
-            if min_rule:
-                expected_result_early_termination[ego_id][min_rule][ego_id] = [min_ego_time_step]
-        exp_res = expected_result_early_termination
+        if conf.early_termination:
+            expected_result_early_termination = {}
+            for ego_id, ego_result in exp_res.items():
+                min_rule = ""
+                min_ego_time_step = float("inf")
+                for rule_id, rule_result in ego_result.items():
+                    expected_result_early_termination.setdefault(ego_id, {})[rule_id] = {ego_id: []}
+                    for obs_id, obs_result in rule_result.items():
+                        if obs_result and min_ego_time_step > min(obs_result):
+                            min_rule = rule_id
+                            min_ego_time_step = min(obs_result)
+                if min_rule:
+                    expected_result_early_termination[ego_id][min_rule][ego_id] = [min_ego_time_step]
+            exp_res = expected_result_early_termination
 
     computation_times = []
+    failure = False
     for _ in range(5):
-        start_time = time.time()
         try:
+            start_time = time.time()
             actual_result = list(monitor.evaluate_scenarios_on_given_egos([crcpp.World(sc)], []).values())[0]
+            end_time = time.time()
         except Exception as e:
             print(f"Error during evaluation: {e}")
-            actual_result = "Error during evaluation."
-            computation_times.append(0.0)
+            failure = True
             break
-        end_time = time.time()
-        if not compare_result(exp_res, actual_result) and not conf.early_termination and not conf.iterative_eval:
-            raise RuntimeError("Evaluation result does not match expected result.")
-        elif not compare_result(exp_res, actual_result) and conf.early_termination and conf.iterative_eval:
-            raise RuntimeError("Evaluation result does not match expected result.")
-        elif not compare_result(exp_res, actual_result) and conf.iterative_eval and not conf.iterative_eval:
-            raise RuntimeError("Evaluation result does not match expected result.")
-        elif not compare_result(exp_res, actual_result) and not conf.early_termination and conf.iterative_eval:
-            raise RuntimeError("Evaluation result does not match expected result.")
+        if conf.check_results:
+            if not compare_result(exp_res, actual_result) and not conf.early_termination and not conf.iterative_eval:
+                raise RuntimeError("Evaluation result does not match expected result.")
+            elif not compare_result(exp_res, actual_result) and conf.early_termination and conf.iterative_eval:
+                raise RuntimeError("Evaluation result does not match expected result.")
+            elif not compare_result(exp_res, actual_result) and conf.iterative_eval and not conf.iterative_eval:
+                raise RuntimeError("Evaluation result does not match expected result.")
+            elif not compare_result(exp_res, actual_result) and not conf.early_termination and conf.iterative_eval:
+                raise RuntimeError("Evaluation result does not match expected result.")
         computation_times.append(end_time - start_time)
-    average_time = sum(computation_times) / len(computation_times)
-    print(actual_result)
-    print(
-        f"Average computation time {conf.name}: {average_time:.6f} seconds / Num. vehicles: {len(sc.obstacles)} / Num. time steps: {sum([obs.prediction.final_time_step - obs.initial_state.time_step for obs in sc.obstacles])}"
-    )
+    if not failure:
+        average_time = sum(computation_times) / len(computation_times)
+        print(actual_result)
+        print(
+            f"Average computation time {conf.name}: {average_time:.6f} seconds / Num. vehicles: {len(sc.obstacles)} / Num. time steps: {sum([obs.prediction.final_time_step - obs.initial_state.time_step for obs in sc.obstacles])}"
+        )
+    else:
+        average_time = 0.0
     return np.round(average_time, 4)
 
 
@@ -190,33 +197,43 @@ def eval_scenario(config_settings: List[Tuple]):
             axis=0,
         )
 
-        # compute default eval result
-        monitor = crmonitor.Monitor()
-        monitor_config = crmonitor.MonitorConfiguration()
-        monitor_config.formulaEvaluationMode = crmonitor.FormulaEvaluationMode.globally
-        monitor_config.shortCircuiting = True
-        monitor_config.hydraConnectedEvaluation = False
-        monitor_config.hydraReordering = True
-        sim_param = crmonitor.MonitorSimulationParameters()
-        sim_param.world_parameters = crcpp.WorldParameters(
-            crcpp.RoadNetworkParameters(),
-            crcpp.SensorParameters(250.0, 250.0),
-            crcpp.ActuatorParameters.ego_defaults(),
-            crcpp.TimeParameters(50, 0.3, 0.1),
-            crcpp.ActuatorParameters.vehicle_defaults(),
-        )
-        with open(Path(__file__).parent / "configurations/predicates/predicate_costs.yaml", "r") as file:
-            data = yaml.safe_load(file)
-        predicate_cost = {
-            key: [value["cost"], value["probability"], value["priority"]]
-            for key, value in data.get("predicateCost", {}).items()
-        }
-        monitor.set_config(sim_param, monitor_config, predicate_cost, {}, {})
-        monitor.activate_rule_sets(activated_traffic_rule_sets)
-        result = monitor.evaluate_scenarios_on_given_egos([crcpp.World(sc)], [])
+        if any([conf.check_results for conf in configs]):
+            # compute default eval result
+            monitor = crmonitor.Monitor()
+            monitor_config = crmonitor.MonitorConfiguration()
+            monitor_config.formulaEvaluationMode = crmonitor.FormulaEvaluationMode.globally
+            monitor_config.shortCircuiting = True
+            monitor_config.hydraConnectedEvaluation = False
+            monitor_config.hydraReordering = True
+            sim_param = crmonitor.MonitorSimulationParameters()
+            sim_param.world_parameters = crcpp.WorldParameters(
+                crcpp.RoadNetworkParameters(),
+                crcpp.SensorParameters(250.0, 250.0),
+                crcpp.ActuatorParameters.ego_defaults(),
+                crcpp.TimeParameters(50, 0.3, 0.1),
+                crcpp.ActuatorParameters.vehicle_defaults(),
+            )
+            with open(Path(__file__).parent / "configurations/predicates/predicate_costs.yaml", "r") as file:
+                data = yaml.safe_load(file)
+            predicate_cost = {
+                key: [value["cost"], value["probability"], value["priority"]]
+                for key, value in data.get("predicateCost", {}).items()
+            }
+            monitor.set_config(sim_param, monitor_config, predicate_cost, {}, {})
+            monitor.activate_rule_sets(activated_traffic_rule_sets)
+            result = monitor.evaluate_scenarios_on_given_egos([crcpp.World(sc)], [])
 
         for idx, eval_config in enumerate(configs[1:7]):
-            evaluations.append((sc, activated_traffic_rule_sets, base_idx, eval_config, idx, list(result.values())[0]))
+            evaluations.append(
+                (
+                    sc,
+                    activated_traffic_rule_sets,
+                    base_idx,
+                    eval_config,
+                    idx,
+                    list(result.values())[0] if eval_config.check_results else {},
+                )
+            )
 
     with concurrent.futures.ProcessPoolExecutor(max_workers=24) as executor:
         future_to_conf = {executor.submit(evaluate, conf[0], conf[3], conf[1], conf[5]): conf for conf in evaluations}
