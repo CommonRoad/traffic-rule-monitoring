@@ -78,8 +78,7 @@ def evaluate(
         with open(Path(__file__).parent / "configurations/predicates/predicate_costs_inverted.yaml", "r") as file:
             data = yaml.safe_load(file)
     predicate_cost = {
-        key: [value["cost"], value["probability"], value["priority"]]
-        for key, value in data.get("predicateCost", {}).items()
+        key: [value["cost"], value["probability"]] for key, value in data.get("predicateCost", {}).items()
     }
     temporal_parameters = {}
     predicate_parameter = {}

@@ -234,7 +234,6 @@ def store_result_yaml():
         data["predicateCost"][pred_name[:-10]] = {
             "cost": float(f"{pred_cost.cost_median:.4f}"),
             "probability": float(f"{pred_cost.satisfaction_probability:.4f}"),
-            "priority": 1,
         }
     with open(Path(__file__).parent / "output/predicates/predicate_costs.yaml", "w") as f:
         yaml.safe_dump(data, f, sort_keys=False)
@@ -244,7 +243,6 @@ def store_result_yaml():
         data["predicateCost"][pred_name[:-10]] = {
             "cost": float(f"{(100 - pred_cost.cost_median):.4f}"),
             "probability": float(f"{(1 - pred_cost.satisfaction_probability):.4f}"),
-            "priority": 1,
         }
     with open(Path(__file__).parent / "output/predicates/predicate_costs_inverted.yaml", "w") as f:
         yaml.safe_dump(data, f, sort_keys=False)
