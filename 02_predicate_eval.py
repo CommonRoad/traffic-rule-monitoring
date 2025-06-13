@@ -13,7 +13,7 @@ import crmonitor
 import yaml
 from commonroad.common.file_reader import CommonRoadFileReader
 
-from src.evaluation.common.config import activated_interstate_rule_set
+from src.evaluation.common.config import activated_intersection_rule_set, activated_interstate_rule_set
 from src.evaluation.predicate_collection import extract_arg_combinations
 
 
@@ -79,7 +79,7 @@ def execute_dateset_eval(paths: List[str]):
     """
     Execute the dataset evaluation for all scenarios in the CommonRoad dataset.
     """
-    rules = activated_interstate_rule_set
+    rules = activated_intersection_rule_set + activated_interstate_rule_set
     rel_predicates = []
     for elem in crmonitor.get_traffic_rules_complete():
         for rule in rules:
@@ -290,7 +290,7 @@ def evaluate_scenario(additional_function_parameters, pred, pred_name, pred_stat
 if __name__ == "__main__":
     scenario_paths = [
         path
-        for path in glob.glob("/home/sebastian/03_code/commonroad-scenarios/scenarios_2020a/NGSIM/US101/*.xml")
+        for path in glob.glob("/home/sebastian/03_code/commonroad-scenarios/scenarios_2020a/NGSIM/Lankershim/*.xml")
         if "_S-" not in path
     ]
     execute_dateset_eval(scenario_paths[1:2])

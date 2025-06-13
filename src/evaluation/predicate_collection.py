@@ -114,8 +114,7 @@ def extract_arg_combinations(pred_name: str) -> List[List[str]]:
             if arg is Argument.INTERSECTION_TYPE:
                 args.append([it.name for it in crcpp.IntersectionType])
             if arg is Argument.TRAFFIC_SIGN_TYPE:
-                print("TODO")
-                break
+                args.append(["stop", "yield", "priority", "max_speed"])
             if arg is Argument.OBSTACLE_TYPE:
                 args.append([ot.name for ot in crcpp.ObstacleType])
             if arg is Argument.SIDE:

@@ -20,12 +20,11 @@ comp_summary = np.array(["Scenario Name", "C1", "C2", "C3", "C4", "C5", "C6"]).r
 
 
 def evaluate(
-    eval_name: str,
     sc_path: Path,
     conf: EvalConfig,
     rule_set: List[str],
 ):
-    print(f"Evaluating scenario {eval_name} - {conf}")
+    print(f"Evaluating scenario {sc_path} - {conf}")
 
     computation_times = []
     for _ in range(1):
@@ -35,19 +34,24 @@ def evaluate(
         rp_config.monitor.activated_traffic_rules = rule_set
         rp_config.monitor.trace_step = [10, 1] if conf.iterative_eval else [1]
         rp_config.monitor.shortCircuiting = conf.short_circuiting
-        rp_config.monitor.hydraReordering = conf.reordering
-        rp_config.monitor.formulaEvaluationMode = crmonitor.FormulaEvaluationMode.globally_early_termination
+        rp_config.monitor.hydraReordering = (
+            True  # we need to set this to True to also set a bad reordering for demonstration purposes
+        )
+        rp_config.monitor.formulaEvaluationMode = (
+            crmonitor.FormulaEvaluationMode.globally_early_termination
+            if conf.early_termination
+            else crmonitor.FormulaEvaluationMode.globally
+        )
         rp_config.monitor.hydraConnectedEvaluation = conf.connected_eval
         rp_config.monitor.performanceMeasurement = False
         if conf.reordering:
-            with open(Path(__file__).parent / "configurations/predicates/predicate_costs.yaml", "r") as f:
-                data = yaml.safe_load(f)
+            with open(Path(__file__).parent / "configurations/predicates/predicate_costs.yaml", "r") as file:
+                data = yaml.safe_load(file)
         else:
-            with open(Path(__file__).parent / "configurations/predicates/predicate_costs_inverted.yaml", "r") as f:
-                data = yaml.safe_load(f)
+            with open(Path(__file__).parent / "configurations/predicates/predicate_costs_inverted.yaml", "r") as file:
+                data = yaml.safe_load(file)
         rp_config.monitor.predicate_cost = {
-            key: [value["cost"], value["probability"], value["priority"]]
-            for key, value in data.get("predicateCost", {}).items()
+            key: [value["cost"], value["probability"]] for key, value in data.get("predicateCost", {}).items()
         }
         rp_config.update()
         computation_times.append(run_planner_cr_scenario(rp_config))
@@ -77,9 +81,7 @@ def eval_scenario(res, scenario_path: Path, activated_traffic_rule_sets: List[st
     with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
         futures = []
         for idx, config in enumerate(configs[1:7]):
-            futures.append(
-                (idx, executor.submit(evaluate, f"C{idx}", scenario_path, config, activated_traffic_rule_sets))
-            )
+            futures.append((idx, executor.submit(evaluate, scenario_path, config, activated_traffic_rule_sets)))
         for idx, future in futures:
             res[base_idx, idx + 1] = future.result()
 
@@ -105,9 +107,9 @@ eval_scenario(
 print("##### Intersection #######")
 comp_summary = eval_scenario(
     comp_summary,
-    Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1_2_T-1.xml",
+    Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1/" / "DEU_TestRightBeforeLeft-1_2_T-1.pb",
     activated_intersection_rule_set,
-    2,
+    1,
 )
 
 path = Path(__file__).parent / "output/planning"
