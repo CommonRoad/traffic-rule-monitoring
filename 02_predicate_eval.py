@@ -2,7 +2,6 @@ import concurrent.futures
 import copy
 import csv
 import dataclasses
-import glob
 import logging
 import statistics
 from pathlib import Path
@@ -52,7 +51,7 @@ class PredicateCost:
 pred_cost_collection: Dict[str, PredicateCost] = {}
 
 
-def evaluate_predicate(pred_name, paths):
+def evaluate_predicate(pred_name: str, paths: List[Path]):
     pred = crcpp.predicates()[pred_name]
     logging.info(f"-------------Evaluating predicate: {pred_name}---------------")
     pred_cost_collection[pred_name] = PredicateCost()
@@ -75,7 +74,7 @@ def evaluate_predicate(pred_name, paths):
         pred_cost_collection[pred_name].satisfaction_probability = pred_stat.num_satisfaction / pred_stat.num_executions
 
 
-def execute_dateset_eval(paths: List[str]):
+def execute_dateset_eval(paths: List[Path]):
     """
     Execute the dataset evaluation for all scenarios in the CommonRoad dataset.
     """
@@ -248,7 +247,7 @@ def store_result_yaml():
         yaml.safe_dump(data, f, sort_keys=False)
 
 
-def evaluate_scenario(additional_function_parameters, pred, pred_name: Path, pred_stat, sc_path, timer):
+def evaluate_scenario(additional_function_parameters, pred, pred_name: str, pred_stat, sc_path: Path, timer):
     sc = load_scenario(sc_path)
     logging.debug(f"Evaluating scenario: {sc.scenario_id}")
     for ego in sc.dynamic_obstacles:
@@ -296,11 +295,9 @@ def evaluate_scenario(additional_function_parameters, pred, pred_name: Path, pre
 
 if __name__ == "__main__":
     scenario_paths = [
-        Path(path)
+        path
         for ext in ("xml", "pb")
-        for path in glob.glob(
-            f"/home/sebastian/03_code/runtime-verification-motion-planners/scenarios/**/*.{ext}", recursive=True
-        )
-        if "_S-" not in path and ("_T-" in path and "-SC" not in path)
+        for path in (Path(__file__).parent / "scenarios").rglob(f"*.{ext}")
+        if "_S-" not in str(path) and ("_T-" in str(path) and "-SC" not in str(path))
     ]
     execute_dateset_eval(scenario_paths)
