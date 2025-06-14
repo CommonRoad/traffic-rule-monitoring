@@ -33,17 +33,17 @@ def evaluate(
         rp_config = ReactivePlannerConfiguration.load(config_path, str(sc_path))
         rp_config.monitor.activated_traffic_rules = rule_set
         rp_config.monitor.trace_step = [10, 1] if conf.iterative_eval else [1]
-        rp_config.monitor.shortCircuiting = conf.short_circuiting
-        rp_config.monitor.hydraReordering = (
+        rp_config.monitor.short_circuiting = conf.short_circuiting
+        rp_config.monitor.hydra_reordering = (
             True  # we need to set this to True to also set a bad reordering for demonstration purposes
         )
-        rp_config.monitor.formulaEvaluationMode = (
+        rp_config.monitor.formula_evaluation_mode = (
             crmonitor.FormulaEvaluationMode.globally_early_termination
             if conf.early_termination
             else crmonitor.FormulaEvaluationMode.globally
         )
-        rp_config.monitor.hydraConnectedEvaluation = conf.connected_eval
-        rp_config.monitor.performanceMeasurement = False
+        rp_config.monitor.hydra_connected_evaluation = conf.connected_eval
+        rp_config.monitor.performance_measurement = False
         if conf.reordering:
             with open(Path(__file__).parent / "configurations/predicates/predicate_costs.yaml", "r") as file:
                 data = yaml.safe_load(file)
