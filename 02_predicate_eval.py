@@ -11,9 +11,9 @@ from typing import Dict, List
 import crcpp
 import crmonitor
 import yaml
-from commonroad.common.file_reader import CommonRoadFileReader
 
 from src.evaluation.common.config import activated_intersection_rule_set, activated_interstate_rule_set
+from src.evaluation.common.scenario_eval import load_scenario
 from src.evaluation.predicate_collection import extract_arg_combinations
 
 
@@ -249,7 +249,7 @@ def store_result_yaml():
 
 
 def evaluate_scenario(additional_function_parameters, pred, pred_name, pred_stat, sc_path, timer):
-    sc, _ = CommonRoadFileReader(sc_path).open()
+    sc = load_scenario(sc_path)
     logging.debug(f"Evaluating scenario: {sc.scenario_id}")
     for ego in sc.dynamic_obstacles:
         logging.debug(f"Evaluating ego: {ego.obstacle_id}")
@@ -297,7 +297,10 @@ def evaluate_scenario(additional_function_parameters, pred, pred_name, pred_stat
 if __name__ == "__main__":
     scenario_paths = [
         path
-        for path in glob.glob("/home/sebastian/03_code/runtime-verification-motion-planners/scenarios/**/*.xml")
-        if "_S-" not in path
+        for ext in ("xml", "pb")
+        for path in glob.glob(
+            f"/home/sebastian/03_code/runtime-verification-motion-planners/scenarios/**/*.{ext}", recursive=True
+        )
+        if "_S-" not in path and ("_T-" in path and "-SC" not in path)
     ]
     execute_dateset_eval(scenario_paths)

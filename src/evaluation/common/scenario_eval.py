@@ -12,6 +12,18 @@ from commonroad.visualization.mp_renderer import MPRenderer
 from matplotlib import pyplot as plt
 
 
+def load_scenario(sc_path):
+    if sc_path.suffix == ".pb":
+        map_path = sc_path.parent / f"{sc_path.stem.split('_')[0]}_{sc_path.stem.split('_')[1]}.pb"
+        sc = CommonRoadFileReader(
+            filename_map=map_path,
+            filename_dynamic=sc_path,
+        ).open_map_dynamic()
+    else:
+        sc, _ = CommonRoadFileReader(filename_2020a=sc_path).open()
+    return sc
+
+
 def time_step_violated(
     rel_time_step: int, obs_id: int, res: Dict[str, Dict[int, Dict[str, Dict[int, List[int]]]]], sc: Scenario
 ) -> bool:

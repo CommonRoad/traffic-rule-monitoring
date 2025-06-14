@@ -7,7 +7,6 @@ import crcpp
 import crmonitor
 import numpy as np
 import yaml
-from commonroad.common.file_reader import CommonRoadFileReader
 from commonroad.scenario.scenario import Scenario
 
 from src.evaluation.common.config import (
@@ -16,6 +15,7 @@ from src.evaluation.common.config import (
     activated_interstate_rule_set,
     configs,
 )
+from src.evaluation.common.scenario_eval import load_scenario
 
 
 def remove_non_divisible_copy(expected_result: Dict[int, Dict[str, Dict[int, List[int]]]], divisor: float):
@@ -168,16 +168,7 @@ def eval_scenario(config_settings: List[Tuple]):
     evaluations = []
     for base_idx, setting in enumerate(config_settings):
         scenario_path, activated_traffic_rule_sets = setting
-        if scenario_path.suffix == ".pb":
-            map_path = (
-                scenario_path.parent / f"{scenario_path.stem.split('_')[0]}_{scenario_path.stem.split('_')[1]}.pb"
-            )
-            sc = CommonRoadFileReader(
-                filename_map=map_path,
-                filename_dynamic=scenario_path,
-            ).open_map_dynamic()
-        else:
-            sc, _ = CommonRoadFileReader(filename_2020a=scenario_path).open()
+        sc = load_scenario(scenario_path)
         res = np.append(
             res,
             np.array(
