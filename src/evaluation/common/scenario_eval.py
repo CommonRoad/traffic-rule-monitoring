@@ -12,7 +12,7 @@ from commonroad.visualization.mp_renderer import MPRenderer
 from matplotlib import pyplot as plt
 
 
-def load_scenario(sc_path):
+def load_scenario(sc_path: Path):
     if sc_path.suffix == ".pb":
         map_path = sc_path.parent / f"{sc_path.stem.split('_')[0]}_{sc_path.stem.split('_')[1]}.pb"
         sc = CommonRoadFileReader(

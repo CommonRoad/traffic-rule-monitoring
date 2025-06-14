@@ -248,7 +248,7 @@ def store_result_yaml():
         yaml.safe_dump(data, f, sort_keys=False)
 
 
-def evaluate_scenario(additional_function_parameters, pred, pred_name, pred_stat, sc_path, timer):
+def evaluate_scenario(additional_function_parameters, pred, pred_name: Path, pred_stat, sc_path, timer):
     sc = load_scenario(sc_path)
     logging.debug(f"Evaluating scenario: {sc.scenario_id}")
     for ego in sc.dynamic_obstacles:
@@ -296,7 +296,7 @@ def evaluate_scenario(additional_function_parameters, pred, pred_name, pred_stat
 
 if __name__ == "__main__":
     scenario_paths = [
-        path
+        Path(path)
         for ext in ("xml", "pb")
         for path in glob.glob(
             f"/home/sebastian/03_code/runtime-verification-motion-planners/scenarios/**/*.{ext}", recursive=True
