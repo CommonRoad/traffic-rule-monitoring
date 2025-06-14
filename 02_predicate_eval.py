@@ -256,41 +256,48 @@ def evaluate_scenario(additional_function_parameters, pred, pred_name, pred_stat
         sc_temp = copy.deepcopy(sc)
         sc_temp.remove_obstacle(ego)
 
-        if pred.is_vehicle_dependent:
-            for obs in sc_temp.dynamic_obstacles:
+        for time_step in range(ego.initial_state.time_step, ego.prediction.final_time_step):
+            if pred.is_vehicle_dependent:
+                for obs in sc_temp.dynamic_obstacles:
+                    if obs.state_at_time(time_step) is None:
+                        continue
+                    try:
+                        pred.statistic_boolean_evaluation(
+                            time_step,
+                            crcpp.World(sc_temp),
+                            crcpp.Obstacle(ego),
+                            timer,
+                            pred_stat,
+                            crcpp.Obstacle(obs),
+                            additional_function_parameters,
+                            False,
+                        )
+                    except Exception as e:
+                        logging.error(
+                            f"Error evaluating predicate {pred_name} for ego {ego.obstacle_id} and obstacle {obs.obstacle_id} at time step {time_step}: {e}"
+                        )
+            else:
                 try:
                     pred.statistic_boolean_evaluation(
-                        0,
+                        time_step,
                         crcpp.World(sc_temp),
                         crcpp.Obstacle(ego),
                         timer,
                         pred_stat,
-                        crcpp.Obstacle(obs),
+                        crcpp.Obstacle(sc.dynamic_obstacles[0]),  # use random obstacle as it won't be used
                         additional_function_parameters,
                         False,
                     )
                 except Exception as e:
-                    logging.error(f"Error evaluating predicate {pred_name} for obstacle {ego.obstacle_id}: {e}")
-        else:
-            try:
-                pred.statistic_boolean_evaluation(
-                    0,
-                    crcpp.World(sc_temp),
-                    crcpp.Obstacle(ego),
-                    timer,
-                    pred_stat,
-                    crcpp.Obstacle(sc.dynamic_obstacles[0]),
-                    additional_function_parameters,
-                    False,
-                )
-            except Exception as e:
-                logging.error(f"Error evaluating predicate {pred_name} for obstacle {ego.obstacle_id}: {e}")
+                    logging.error(
+                        f"Error evaluating predicate {pred_name} for ego vehicle {ego.obstacle_id} at time step {time_step}: {e}"
+                    )
 
 
 if __name__ == "__main__":
     scenario_paths = [
         path
-        for path in glob.glob("/home/sebastian/03_code/commonroad-scenarios/scenarios_2020a/NGSIM/Lankershim/*.xml")
+        for path in glob.glob("/home/sebastian/03_code/runtime-verification-motion-planners/scenarios/**/*.xml")
         if "_S-" not in path
     ]
-    execute_dateset_eval(scenario_paths[1:2])
+    execute_dateset_eval(scenario_paths)
