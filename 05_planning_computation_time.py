@@ -1,6 +1,6 @@
 import concurrent.futures
 from pathlib import Path
-from typing import List
+from typing import List, Tuple
 
 import crmonitor
 import numpy as np
@@ -15,8 +15,6 @@ from src.evaluation.common.config import (
     configs,
 )
 from src.evaluation.planning.rp_planner import run_planner_cr_scenario
-
-comp_summary = np.array(["Scenario Name", "C1", "C2", "C3", "C4", "C5", "C6"]).reshape(1, -1)
 
 
 def evaluate(
@@ -59,58 +57,64 @@ def evaluate(
     return np.round(average_time, 4)
 
 
-def eval_scenario(res, scenario_path: Path, activated_traffic_rule_sets: List[str], base_idx: int):
-    res = np.append(
-        res,
-        np.array(
-            [
-                str(scenario_path.stem),
-                # len(scenario.obstacles),
-                # sum([obs.prediction.final_time_step - obs.initial_state.time_step for obs in scenario.obstacles]),
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-            ]
-        ).reshape(1, -1),
-        axis=0,
-    )
+def eval_scenario(config_settings: List[Tuple]):
+    res = np.array(["Scenario Name", "C1", "C2", "C3", "C4", "C5", "C6"]).reshape(1, -1)
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
-        futures = []
-        for idx, config in enumerate(configs[1:7]):
-            futures.append((idx, executor.submit(evaluate, scenario_path, config, activated_traffic_rule_sets)))
-        for idx, future in futures:
-            res[base_idx, idx + 1] = future.result()
+    evaluations = []
+    for base_idx, setting in enumerate(config_settings):
+        scenario_path, activated_traffic_rule_sets = setting
+        res = np.append(
+            res,
+            np.array(
+                [
+                    str(scenario_path.stem),
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                ]
+            ).reshape(1, -1),
+            axis=0,
+        )
+        for idx, eval_config in enumerate(configs[1:7]):
+            evaluations.append(
+                (
+                    scenario_path,
+                    activated_traffic_rule_sets,
+                    base_idx,
+                    eval_config,
+                    idx,
+                )
+            )
+
+    with concurrent.futures.ProcessPoolExecutor(max_workers=24) as executor:
+        future_to_conf = {executor.submit(evaluate, conf[0], conf[3], conf[1]): conf for conf in evaluations}
+        for future in concurrent.futures.as_completed(future_to_conf):
+            conf = future_to_conf[future]
+            res[conf[2] + 1, conf[4] + 1] = future.result()
 
     return res
 
 
-# print("##### Interstate #######")
-# this scenario does not work as goal region time interval not reachable
-# eval_scenario(
-#     comp_summary,
-#     Path(__file__).parent / "scenarios/planning" / "USA_US101-14_2_T-1.xml",
-#     activated_interstate_rule_set,
-#     1,
-# )
+scenario_configs = [
+    (
+        Path(__file__).parent / "scenarios/planning" / "USA_US101-14_2_T-1.xml",
+        activated_interstate_rule_set,
+    ),
+    (
+        Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_3_T-1.xml",
+        activated_interstate_rule_set,
+    ),
+    (
+        Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1/" / "DEU_TestRightBeforeLeft-1_2_T-1.pb",
+        activated_intersection_rule_set,
+    ),
+]
 
-eval_scenario(
-    comp_summary,
-    Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_3_T-1.xml",
-    activated_interstate_rule_set,
-    1,
-)
 
-print("##### Intersection #######")
-comp_summary = eval_scenario(
-    comp_summary,
-    Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1/" / "DEU_TestRightBeforeLeft-1_2_T-1.pb",
-    activated_intersection_rule_set,
-    1,
-)
+comp_summary = eval_scenario(scenario_configs)
 
 path = Path(__file__).parent / "output/planning"
 if not path.exists():
