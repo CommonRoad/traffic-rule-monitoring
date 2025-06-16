@@ -3,6 +3,7 @@ import concurrent.futures
 import copy
 import csv
 import dataclasses
+import enum
 import logging
 import statistics
 from pathlib import Path
@@ -75,22 +76,23 @@ def evaluate_predicate(pred_name: str, paths: List[Path]):
         pred_cost_collection[pred_name].satisfaction_probability = pred_stat.num_satisfaction / pred_stat.num_executions
 
 
-def execute_dateset_eval(paths: List[Path], max_workers: int = 24):
+class ScenarioType(enum.Enum):
+    INTERSTATE = "interstate"
+    INTERSECTION = "intersection"
+
+
+def execute_dateset_eval(paths: List[Path], scenario_type: ScenarioType, max_workers: int = 24):
     """
     Execute the dataset evaluation for all scenarios in the CommonRoad dataset.
     """
-    rules = activated_intersection_rule_set + activated_interstate_rule_set
-    rel_predicates = []
-    for elem in crmonitor.get_traffic_rules_complete():
-        for rule in rules:
-            if elem[0] != rule:
-                continue
-            for pred in crcpp.predicates().keys():
-                if pred[:-10] in elem[1]:
-                    rel_predicates.append(pred)
+    if scenario_type == ScenarioType.INTERSTATE:
+        rel_predicates = extract_relevant_predicates(activated_interstate_rule_set)
+    else:
+        rel_predicates = extract_relevant_predicates(activated_intersection_rule_set)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = [executor.submit(evaluate_predicate, pred_name, paths) for pred_name in rel_predicates]
+        futures += [executor.submit(evaluate_predicate, pred_name, paths) for pred_name in rel_predicates]
         concurrent.futures.wait(futures)
 
     max_cost_total = max(pred_eval.total_comp_time for pred_eval in pred_cost_collection.values())
@@ -120,8 +122,22 @@ def execute_dateset_eval(paths: List[Path], max_workers: int = 24):
         print("--------------------------------------------------")
 
 
-def store_result():
-    with open(Path(__file__).parent / "output/predicates/predicate_costs.csv", "w", newline="") as csvfile:
+def extract_relevant_predicates(rules: List[str]) -> List[str]:
+    rel_predicates = []
+    for elem in crmonitor.get_traffic_rules_complete():
+        for rule in rules:
+            if elem[0] != rule:
+                continue
+            for pred in crcpp.predicates().keys():
+                if pred[:-10] in elem[1]:
+                    rel_predicates.append(pred)
+    return rel_predicates
+
+
+def store_result(scenario_type: ScenarioType):
+    with open(
+        Path(__file__).parent / f"output/predicates/predicate_{scenario_type.value}_costs.csv", "w", newline=""
+    ) as csvfile:
         fieldnames = [
             "predicate",
             "num_executions",
@@ -159,7 +175,7 @@ def store_result():
             )
 
 
-def store_selected_results_tex():
+def store_selected_results_tex(scenario_type: ScenarioType):
     hardcoded = {
         "a": (1.0, 100.0),
         "b": (1.0, 100.0),
@@ -204,7 +220,7 @@ def store_selected_results_tex():
         rows.append((to_latex_macro(name), f"{cost:.4f}" if cost != "" else "", f"{prob:.1f}\\%" if prob != "" else ""))
 
     # Write table, 3 predicates per row
-    output_path = Path(__file__).parent / "output/predicates/predicate_costs_selected.tex"
+    output_path = Path(__file__).parent / f"output/predicates/predicate_costs_{scenario_type.value}_selected.tex"
     with open(output_path, "w") as f:
         f.write("\\begin{table*}[!tb]\n")
         f.write("\t\\centering\n")
@@ -228,14 +244,14 @@ def store_selected_results_tex():
         f.write("\\end{table*}\n")
 
 
-def store_result_yaml():
+def store_result_yaml(scenario_type: ScenarioType):
     data = {"predicateCost": {}}
     for pred_name, pred_cost in pred_cost_collection.items():
         data["predicateCost"][pred_name[:-10]] = {
             "cost": float(f"{pred_cost.cost_median:.4f}"),
             "probability": float(f"{pred_cost.satisfaction_probability:.4f}"),
         }
-    with open(Path(__file__).parent / "output/predicates/predicate_costs.yaml", "w") as f:
+    with open(Path(__file__).parent / f"output/predicates/predicate_costs_{scenario_type.value}.yaml", "w") as f:
         yaml.safe_dump(data, f, sort_keys=False)
 
     data = {"predicateCost": {}}
@@ -244,7 +260,9 @@ def store_result_yaml():
             "cost": float(f"{(100 - pred_cost.cost_median):.4f}"),
             "probability": float(f"{(1 - pred_cost.satisfaction_probability):.4f}"),
         }
-    with open(Path(__file__).parent / "output/predicates/predicate_costs_inverted.yaml", "w") as f:
+    with open(
+        Path(__file__).parent / f"output/predicates/predicate_costs_{scenario_type.value}_inverted.yaml", "w"
+    ) as f:
         yaml.safe_dump(data, f, sort_keys=False)
 
 
@@ -299,10 +317,18 @@ if __name__ == "__main__":
     parser.add_argument("--threads", type=int, default=24, help="Number of threads to use.")
     args = parser.parse_args()
 
-    scenario_paths = [
+    intersection_paths = [
         path
         for ext in ("xml", "pb")
-        for path in (Path(__file__).parent / "scenarios").rglob(f"*.{ext}")
+        for path in (Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1").rglob(f"*.{ext}")
         if "_S-" not in str(path) and ("_T-" in str(path) and "-SC" not in str(path))
     ]
-    execute_dateset_eval(scenario_paths, max_workers=args.threads)
+    execute_dateset_eval(intersection_paths, ScenarioType.INTERSECTION, max_workers=args.threads)
+
+    interstate_paths = [
+        path
+        for ext in ("xml", "pb")
+        for path in (Path(__file__).parent / "scenarios/").rglob(f"*.{ext}")
+        if "_S-" not in str(path) and ("_T-" in str(path) and "-SC" not in str(path)) and path not in intersection_paths
+    ]
+    execute_dateset_eval(interstate_paths, ScenarioType.INTERSTATE, max_workers=args.threads)
