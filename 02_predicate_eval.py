@@ -1,3 +1,4 @@
+import argparse
 import concurrent.futures
 import copy
 import csv
@@ -74,7 +75,7 @@ def evaluate_predicate(pred_name: str, paths: List[Path]):
         pred_cost_collection[pred_name].satisfaction_probability = pred_stat.num_satisfaction / pred_stat.num_executions
 
 
-def execute_dateset_eval(paths: List[Path]):
+def execute_dateset_eval(paths: List[Path], max_workers: int = 24):
     """
     Execute the dataset evaluation for all scenarios in the CommonRoad dataset.
     """
@@ -88,7 +89,7 @@ def execute_dateset_eval(paths: List[Path]):
                 if pred[:-10] in elem[1]:
                     rel_predicates.append(pred)
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=24) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = [executor.submit(evaluate_predicate, pred_name, paths) for pred_name in rel_predicates]
         concurrent.futures.wait(futures)
 
@@ -294,6 +295,10 @@ def evaluate_scenario(additional_function_parameters, pred, pred_name: str, pred
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Evaluate predicates on scenarios.")
+    parser.add_argument("--threads", type=int, default=24, help="Number of threads to use.")
+    args = parser.parse_args()
+
     scenario_paths = [
         path
         for ext in ("xml", "pb")
