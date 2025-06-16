@@ -1,3 +1,4 @@
+import argparse
 import concurrent.futures
 from pathlib import Path
 from typing import List, Tuple
@@ -99,11 +100,11 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.nda
 
 
 scenario_configs = [
-(
+    (
         Path(__file__).parent / "scenarios/planning" / "DEU_LocationALower27-1_273419_T-3870.xml",
         activated_interstate_rule_set,
     ),
-(
+    (
         Path(__file__).parent / "scenarios/planning" / "ZAM-Ramp-1_1-T-1.xml",
         activated_interstate_rule_set,
     ),
