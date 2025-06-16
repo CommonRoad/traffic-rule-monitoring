@@ -43,7 +43,8 @@ def run_planner_cr_scenario(config: ReactivePlannerConfiguration) -> float:
                     optimal = planner.plan(i)
 
             if not optimal:
-                break
+                print("No optimal trajectory found, stopping planning.")
+                exit()
 
             # record state and input
             comp_times.append(planner.journal["rule_check"])

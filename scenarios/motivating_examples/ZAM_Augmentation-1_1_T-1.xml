@@ -2286,7 +2286,7 @@
     </initialState>
     <goalState>
       <time>
-        <intervalStart>0</intervalStart>
+        <intervalStart>1</intervalStart>
         <intervalEnd>100</intervalEnd>
       </time>
     </goalState>
