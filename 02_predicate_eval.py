@@ -92,7 +92,6 @@ def execute_dateset_eval(paths: List[Path], scenario_type: ScenarioType, max_wor
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = [executor.submit(evaluate_predicate, pred_name, paths) for pred_name in rel_predicates]
-        futures += [executor.submit(evaluate_predicate, pred_name, paths) for pred_name in rel_predicates]
         concurrent.futures.wait(futures)
 
     max_cost_total = max(pred_eval.total_comp_time for pred_eval in pred_cost_collection.values())
@@ -113,9 +112,9 @@ def execute_dateset_eval(paths: List[Path], scenario_type: ScenarioType, max_wor
     path = Path(__file__).parent / "output/predicates/"
     if not path.exists():
         path.mkdir(parents=True, exist_ok=True)
-    store_result()
-    store_result_yaml()
-    store_selected_results_tex()
+    store_result(scenario_type)
+    store_result_yaml(scenario_type)
+    store_selected_results_tex(scenario_type)
     for pred_name, pred_eval in pred_cost_collection.items():
         print(f"Predicate: {pred_name}")
         print(pred_eval)
