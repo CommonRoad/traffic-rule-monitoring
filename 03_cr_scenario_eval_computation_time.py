@@ -161,7 +161,7 @@ def evaluate(
     return np.round(average_time, 4)
 
 
-def eval_scenario(config_settings: List[Tuple]):
+def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.ndarray:
     res = np.array(["Scenario Name", "num_vehicles", "num_time_steps", "C1", "C2", "C3", "C4", "C5", "C6"]).reshape(
         1, -1
     )
@@ -225,7 +225,7 @@ def eval_scenario(config_settings: List[Tuple]):
                 )
             )
 
-    with concurrent.futures.ProcessPoolExecutor(max_workers=24) as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
         future_to_conf = {executor.submit(evaluate, conf[0], conf[3], conf[1], conf[5]): conf for conf in evaluations}
         for future in concurrent.futures.as_completed(future_to_conf):
             conf = future_to_conf[future]
@@ -250,35 +250,43 @@ scenario_configs = [
 ]
 
 
-comp_summary = eval_scenario(scenario_configs)
+def store_summary_table():
+    global scenario
+    path = Path(__file__).parent / "output/planning"
+    if not path.exists():
+        path.mkdir(parents=True, exist_ok=True)
+    with open(f"{path}/comp_summary.txt", "w") as f:
+        f.write(r"""\begin{table*}[!t]
+     \centering
+     \caption{Computation times for different configurations from \cref{tab:configurations} for evaluating rule-compliance of complete scenarios.}
+     \center
+     \begin{tabular}{@{}lcccccccc@{}}
+      \toprule
+      \textbf{Scenario}                   &   \textbf{\#Vehicles} &   \textbf{\#Time Steps} &   \textbf{C1 [s]} &   \textbf{C2 [s]} &     \textbf{C3 [s]} &   \textbf{C4 [s]} &   \textbf{C5 [s]} & \textbf{C6 [s]} \\
+      \midrule
+    """)
+        # Skip header row (index 0)
+        for row in comp_summary[1:]:
+            # Format each value, keep floats with 4 decimals, others as int or str
+            scenario = row[0].replace("_", "\_")
+            num_vehicles = int(row[1])
+            num_time_steps = int(row[2])
+            c_values = [f"{float(x):.4f}" if x is not None else "" for x in row[3:]]
+            f.write(
+                f"  {scenario} & {num_vehicles:13d} & {num_time_steps:14d} &   {c_values[0]} &   {c_values[1]} &  {c_values[2]} &  {c_values[3]} & {c_values[4]} & {c_values[5]} \\\\\n"
+            )
+        f.write(r"""
+      \bottomrule
+     \end{tabular}
+     \label{tab:artificial_examples_eval}
+    \end{table*}
+    """)
 
 
-path = Path(__file__).parent / "output/planning"
-if not path.exists():
-    path.mkdir(parents=True, exist_ok=True)
-with open(f"{path}/comp_summary.txt", "w") as f:
-    f.write(r"""\begin{table*}[!t]
- \centering
- \caption{Computation times for different configurations from \cref{tab:configurations} for evaluating rule-compliance of complete scenarios.}
- \center
- \begin{tabular}{@{}lcccccccc@{}}
-  \toprule
-  \textbf{Scenario}                   &   \textbf{\#Vehicles} &   \textbf{\#Time Steps} &   \textbf{C1 [s]} &   \textbf{C2 [s]} &     \textbf{C3 [s]} &   \textbf{C4 [s]} &   \textbf{C5 [s]} & \textbf{C6 [s]} \\
-  \midrule
-""")
-    # Skip header row (index 0)
-    for row in comp_summary[1:]:
-        # Format each value, keep floats with 4 decimals, others as int or str
-        scenario = row[0].replace("_", "\_")
-        num_vehicles = int(row[1])
-        num_time_steps = int(row[2])
-        c_values = [f"{float(x):.4f}" if x is not None else "" for x in row[3:]]
-        f.write(
-            f"  {scenario} & {num_vehicles:13d} & {num_time_steps:14d} &   {c_values[0]} &   {c_values[1]} &  {c_values[2]} &  {c_values[3]} & {c_values[4]} & {c_values[5]} \\\\\n"
-        )
-    f.write(r"""
-  \bottomrule
- \end{tabular}
- \label{tab:artificial_examples_eval}
-\end{table*}
-""")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Evaluate predicates on scenarios.")
+    parser.add_argument("--threads", type=int, default=24, help="Number of threads to use.")
+    args = parser.parse_args()
+    comp_summary = eval_scenario(scenario_configs, max_workers=args.threads)
+
+    store_summary_table()

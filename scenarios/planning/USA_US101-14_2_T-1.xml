@@ -9859,8 +9859,8 @@
         <lanelet ref="68"/>
       </position>
       <time>
-        <intervalStart>26</intervalStart>
-        <intervalEnd>26</intervalEnd>
+        <intervalStart>0</intervalStart>
+        <intervalEnd>200</intervalEnd>
       </time>
     </goalState>
   </planningProblem>

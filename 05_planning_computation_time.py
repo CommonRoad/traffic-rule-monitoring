@@ -57,7 +57,7 @@ def evaluate(
     return np.round(average_time, 4)
 
 
-def eval_scenario(config_settings: List[Tuple]):
+def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.ndarray:
     res = np.array(["Scenario Name", "C1", "C2", "C3", "C4", "C5", "C6"]).reshape(1, -1)
 
     evaluations = []
@@ -89,7 +89,7 @@ def eval_scenario(config_settings: List[Tuple]):
                 )
             )
 
-    with concurrent.futures.ProcessPoolExecutor(max_workers=24) as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
         future_to_conf = {executor.submit(evaluate, conf[0], conf[3], conf[1]): conf for conf in evaluations}
         for future in concurrent.futures.as_completed(future_to_conf):
             conf = future_to_conf[future]
@@ -99,6 +99,14 @@ def eval_scenario(config_settings: List[Tuple]):
 
 
 scenario_configs = [
+(
+        Path(__file__).parent / "scenarios/planning" / "DEU_LocationALower27-1_273419_T-3870.xml",
+        activated_interstate_rule_set,
+    ),
+(
+        Path(__file__).parent / "scenarios/planning" / "ZAM-Ramp-1_1-T-1.xml",
+        activated_interstate_rule_set,
+    ),
     (
         Path(__file__).parent / "scenarios/planning" / "USA_US101-14_2_T-1.xml",
         activated_interstate_rule_set,
@@ -113,12 +121,16 @@ scenario_configs = [
     ),
 ]
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Evaluate predicates on scenarios.")
+    parser.add_argument("--threads", type=int, default=24, help="Number of threads to use.")
+    args = parser.parse_args()
 
-comp_summary = eval_scenario(scenario_configs)
+    comp_summary = eval_scenario(scenario_configs, max_workers=args.threads)
 
-path = Path(__file__).parent / "output/planning"
-if not path.exists():
-    path.mkdir(parents=True, exist_ok=True)
-print("##### Overall Summary #######")
-with open(f"{path}/comp_summary.txt", "w") as f:
-    f.write(tabulate(comp_summary, headers="firstrow", tablefmt="latex"))
+    path = Path(__file__).parent / "output/planning"
+    if not path.exists():
+        path.mkdir(parents=True, exist_ok=True)
+    print("##### Overall Summary #######")
+    with open(f"{path}/comp_summary.txt", "w") as f:
+        f.write(tabulate(comp_summary, headers="firstrow", tablefmt="latex"))

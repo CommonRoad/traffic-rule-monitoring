@@ -305,4 +305,4 @@ if __name__ == "__main__":
         for path in (Path(__file__).parent / "scenarios").rglob(f"*.{ext}")
         if "_S-" not in str(path) and ("_T-" in str(path) and "-SC" not in str(path))
     ]
-    execute_dateset_eval(scenario_paths)
+    execute_dateset_eval(scenario_paths, max_workers=args.threads)
