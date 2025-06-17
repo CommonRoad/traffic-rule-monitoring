@@ -26,6 +26,8 @@ class EvalConfig:
     visualization: bool = False
     check_results: bool = False
     with_monitor: bool = False
+    complete_rule_eval: bool = True  # only planning
+    complete_collision_eval: bool = True  # only planning
 
 
 configs = [

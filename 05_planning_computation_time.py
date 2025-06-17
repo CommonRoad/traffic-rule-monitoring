@@ -1,5 +1,6 @@
 import argparse
 import concurrent.futures
+import copy
 from pathlib import Path
 from typing import List, Tuple
 
@@ -30,6 +31,8 @@ def evaluate(
 
         rp_config = ReactivePlannerConfiguration.load(config_path, str(sc_path))
         rp_config.monitor.activated_traffic_rules = rule_set
+        rp_config.debug.complete_rule_eval = conf.complete_rule_eval
+        rp_config.debug.complete_collision_eval = conf.complete_collision_eval
         rp_config.monitor.trace_step = [10, 1] if conf.iterative_eval else [1]
         rp_config.monitor.short_circuiting = conf.short_circuiting
         rp_config.monitor.hydra_reordering = (
@@ -78,13 +81,40 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.nda
             ).reshape(1, -1),
             axis=0,
         )
+        res = np.append(
+            res,
+            np.array(
+                [
+                    str(scenario_path.stem) + "*",
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                ]
+            ).reshape(1, -1),
+            axis=0,
+        )
         for idx, eval_config in enumerate(configs[1:7]):
             evaluations.append(
                 (
                     scenario_path,
                     activated_traffic_rule_sets,
-                    base_idx,
+                    (base_idx + 1) * 2 - 1,
                     eval_config,
+                    idx,
+                )
+            )
+            conf_copy = copy.deepcopy(eval_config)
+            conf_copy.complete_rule_eval = False
+            conf_copy.complete_rule_eval = False
+            evaluations.append(
+                (
+                    scenario_path,
+                    activated_traffic_rule_sets,
+                    (base_idx + 1) * 2,
+                    conf_copy,
                     idx,
                 )
             )
@@ -93,7 +123,7 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.nda
         future_to_conf = {executor.submit(evaluate, conf[0], conf[3], conf[1]): conf for conf in evaluations}
         for future in concurrent.futures.as_completed(future_to_conf):
             conf = future_to_conf[future]
-            res[conf[2] + 1, conf[4] + 1] = future.result()
+            res[conf[2], conf[4] + 1] = future.result()
 
     return res
 

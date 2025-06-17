@@ -21,15 +21,12 @@ debug:
   draw_traj_set: False
   draw_icons: False
   multiproc: False
-  num_workers: 6
   traj_vis_filter: ["INFEASIBLE_KINEMATIC"]
   complete_rule_eval: True  # Evaluate all trajectories to simulate critical scenario
   complete_collision_eval: True  # Evaluate all trajectories to simulate critical scenario
   draw_ref_path: False
   draw_planning_problem: False
-  plots_file_format: "svg"
   draw_prediction_others: False
-  traj_color: { "FEASIBLE": "green", "INFEASIBLE_COLLISION": "red" }
 
 monitor:
   with_rule_monitoring: True
