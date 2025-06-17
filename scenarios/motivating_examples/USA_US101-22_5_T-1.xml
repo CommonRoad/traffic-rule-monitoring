@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<commonRoad affiliation="Technical University of Munich, Germany" author="Moritz Klischat, Lukas Braunstorfer, Lukas Willinger, Markus Koschi, Christian Pek, Stefanie Manzinger, Alexander Zhu" benchmarkID="USA_US101-22_3_T-1" commonRoadVersion="2020a" date="2019-11-07" source="Next Generation Simulation (NGSIM) and OpenStreetMaps (OSM)" timeStepSize="0.1">
+<commonRoad affiliation="Technical University of Munich, Germany" author="Moritz Klischat, Lukas Braunstorfer, Lukas Willinger, Markus Koschi, Christian Pek, Stefanie Manzinger, Alexander Zhu, Sebastian Maierhofer" benchmarkID="USA_US101-22_5_T-1" commonRoadVersion="2020a" date="2025-06-17" source="Next Generation Simulation (NGSIM) and OpenStreetMaps (OSM)" timeStepSize="0.1">
   <location>
     <geoNameId>5404794</geoNameId>
     <gpsLatitude>34.13817</gpsLatitude>
@@ -117174,8 +117174,8 @@
     </initialState>
     <goalState>
       <time>
-        <intervalStart>166</intervalStart>
-        <intervalEnd>166</intervalEnd>
+        <intervalStart>40</intervalStart>
+        <intervalEnd>50</intervalEnd>
       </time>
     </goalState>
   </planningProblem>

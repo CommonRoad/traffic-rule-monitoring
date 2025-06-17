@@ -104,35 +104,15 @@ scenario_configs = [
         activated_interstate_rule_set,
     ),
     # (
-    #     Path(__file__).parent / "scenarios/planning" / "DEU_LocationALower27-1_273419_T-3870.xml",
+    #     Path(__file__).parent / "scenarios/planning" / "USA_US101-14_7_T-1.xml",
     #     activated_interstate_rule_set,
     # ),
-    # (
-    #     Path(__file__).parent / "scenarios/planning" / "ZAM_Over-1_1-T-1.xml",
-    #     activated_interstate_rule_set,
-    # ),
-    # (
-    #     Path(__file__).parent / "scenarios/planning" / "critical_scenario.xml",
-    #     activated_interstate_rule_set,
-    # ),
-    # (
-    #     Path(__file__).parent / "scenarios/planning" / "ZAM_Ramp-1_1-T-1.xml",
-    #     activated_interstate_rule_set,
-    # ),
-    # (
-    #     Path(__file__).parent / "scenarios/planning" / "USA_US101-14_2_T-1.xml",
-    #     activated_interstate_rule_set,
-    # ),
-    # (
-    #     Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_3_T-1.xml",
-    #     activated_interstate_rule_set,
-    # ),
+    (
+        Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_5_T-1.xml",
+        activated_interstate_rule_set,
+    ),
     # (
     #     Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1/" / "DEU_TestRightBeforeLeft-1_2_T-1.pb",
-    #     activated_intersection_rule_set,
-    # ),
-    # (
-    #     Path(__file__).parent / "scenarios/planning/" / "ZAM_Tjunction-1_42_T-1.xml",
     #     activated_intersection_rule_set,
     # ),
 ]

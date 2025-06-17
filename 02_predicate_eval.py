@@ -53,7 +53,7 @@ class PredicateCost:
 pred_cost_collection: Dict[str, PredicateCost] = {}
 
 
-def evaluate_predicate(pred_name: str, paths: List[Path]):
+def evaluate_predicate(pred_name: str, paths: List[Path], step_size: int):
     pred = crcpp.predicates()[pred_name]
     logging.info(f"-------------Evaluating predicate: {pred_name}---------------")
     pred_cost_collection[pred_name] = PredicateCost()
@@ -63,7 +63,7 @@ def evaluate_predicate(pred_name: str, paths: List[Path]):
 
     for param_combi in additional_function_parameters:
         for sc_path in paths:
-            evaluate_scenario(param_combi, pred, pred_name, pred_stat, sc_path, timer)
+            evaluate_scenario(param_combi, pred, pred_name, pred_stat, sc_path, timer, step_size)
 
     pred_cost_collection[pred_name].num_executions = pred_stat.num_executions
     pred_cost_collection[pred_name].satisfactions = pred_stat.num_satisfaction
@@ -81,7 +81,7 @@ class ScenarioType(enum.Enum):
     INTERSECTION = "intersection"
 
 
-def execute_dateset_eval(paths: List[Path], scenario_type: ScenarioType, max_workers: int = 24):
+def execute_dateset_eval(paths: List[Path], scenario_type: ScenarioType, max_workers: int = 24, step_size: int = 4):
     """
     Execute the dataset evaluation for all scenarios in the CommonRoad dataset.
     """
@@ -91,7 +91,7 @@ def execute_dateset_eval(paths: List[Path], scenario_type: ScenarioType, max_wor
         rel_predicates = extract_relevant_predicates(activated_intersection_rule_set)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-        futures = [executor.submit(evaluate_predicate, pred_name, paths) for pred_name in rel_predicates]
+        futures = [executor.submit(evaluate_predicate, pred_name, paths, step_size) for pred_name in rel_predicates]
         concurrent.futures.wait(futures)
 
     max_cost_total = max(pred_eval.total_comp_time for pred_eval in pred_cost_collection.values())
@@ -265,7 +265,15 @@ def store_result_yaml(scenario_type: ScenarioType):
         yaml.safe_dump(data, f, sort_keys=False)
 
 
-def evaluate_scenario(additional_function_parameters, pred, pred_name: str, pred_stat, sc_path: Path, timer):
+def evaluate_scenario(
+    additional_function_parameters: List[str],
+    pred: crcpp.CommonRoadPredicate,
+    pred_name: str,
+    pred_stat: crcpp.PredicateStatistics,
+    sc_path: Path,
+    timer: crcpp.Timer,
+    step_size: int,
+):
     sc = load_scenario(sc_path)
     logging.debug(f"Evaluating scenario: {sc.scenario_id}")
     for ego in sc.dynamic_obstacles:
@@ -273,7 +281,7 @@ def evaluate_scenario(additional_function_parameters, pred, pred_name: str, pred
         sc_temp = copy.deepcopy(sc)
         sc_temp.remove_obstacle(ego)
 
-        for time_step in range(ego.initial_state.time_step, ego.prediction.final_time_step):
+        for time_step in range(ego.initial_state.time_step, ego.prediction.final_time_step, step_size):
             if pred.is_vehicle_dependent:
                 for obs in sc_temp.dynamic_obstacles:
                     if obs.state_at_time(time_step) is None:
@@ -314,6 +322,7 @@ def evaluate_scenario(additional_function_parameters, pred, pred_name: str, pred
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate predicates on scenarios.")
     parser.add_argument("--threads", type=int, default=24, help="Number of threads to use.")
+    parser.add_argument("--step_size", type=int, default=4, help="Time step step size.")
     args = parser.parse_args()
 
     intersection_paths = [
@@ -330,4 +339,4 @@ if __name__ == "__main__":
         for path in (Path(__file__).parent / "scenarios/").rglob(f"*.{ext}")
         if "_S-" not in str(path) and ("_T-" in str(path) and "-SC" not in str(path)) and path not in intersection_paths
     ]
-    execute_dateset_eval(interstate_paths, ScenarioType.INTERSTATE, max_workers=args.threads)
+    execute_dateset_eval(interstate_paths, ScenarioType.INTERSTATE, max_workers=args.threads, step_size=args.step_size)

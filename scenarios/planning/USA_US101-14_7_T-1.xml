@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<commonRoad affiliation="Technical University of Munich, Germany" author="Moritz Klischat, Lukas Braunstorfer, Markus Koschi, Stefanie Manzinger, Lukas Willinger, Alexander Zhu" benchmarkID="USA_US101-14_2_T-1" commonRoadVersion="2018b" date="2019-06-05" source="Next Generation Simulation (NGSIM) and OpenStreetMaps (OSM)" tags="highway multi_lane no_oncoming_traffic parallel_lanes slip_road lane_change critical" timeStepSize="0.1">
+<commonRoad affiliation="Technical University of Munich, Germany" author="Moritz Klischat, Lukas Braunstorfer, Markus Koschi, Stefanie Manzinger, Lukas Willinger, Alexander Zhu, Sebastian Maierhofer" benchmarkID="USA_US101-14_7_T-1" commonRoadVersion="2018b" date="2025-06-17" source="Next Generation Simulation (NGSIM) and OpenStreetMaps (OSM)" tags="highway multi_lane no_oncoming_traffic parallel_lanes slip_road lane_change critical" timeStepSize="0.1">
   <lanelet id="65">
      <leftBound>
         <point>
@@ -9855,12 +9855,9 @@
        </time>
     </initialState>
     <goalState>
-      <position>
-        <lanelet ref="68"/>
-      </position>
       <time>
-        <intervalStart>0</intervalStart>
-        <intervalEnd>200</intervalEnd>
+        <intervalStart>10</intervalStart>
+        <intervalEnd>20</intervalEnd>
       </time>
     </goalState>
   </planningProblem>
