@@ -12,6 +12,7 @@ from tabulate import tabulate
 
 from src.evaluation.common.config import (
     EvalConfig,
+    activated_intersection_rule_set,
     activated_interstate_rule_set,
     configs,
 )
@@ -97,27 +98,28 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.nda
             axis=0,
         )
         for idx, eval_config in enumerate(configs[1:7]):
-            evaluations.append(
-                (
-                    scenario_path,
-                    activated_traffic_rule_sets,
-                    (base_idx + 1) * 2 - 1,
-                    eval_config,
-                    idx,
+            if not any("_U" in rname for rname in activated_traffic_rule_sets) or idx > 1:
+                evaluations.append(
+                    (
+                        scenario_path,
+                        activated_traffic_rule_sets,
+                        (base_idx + 1) * 2 - 1,
+                        eval_config,
+                        idx,
+                    )
                 )
-            )
-            conf_copy = copy.deepcopy(eval_config)
-            conf_copy.complete_rule_eval = False
-            conf_copy.complete_rule_eval = False
-            evaluations.append(
-                (
-                    scenario_path,
-                    activated_traffic_rule_sets,
-                    (base_idx + 1) * 2,
-                    conf_copy,
-                    idx,
+                conf_copy = copy.deepcopy(eval_config)
+                conf_copy.complete_rule_eval = False
+                conf_copy.complete_rule_eval = False
+                evaluations.append(
+                    (
+                        scenario_path,
+                        activated_traffic_rule_sets,
+                        (base_idx + 1) * 2,
+                        conf_copy,
+                        idx,
+                    )
                 )
-            )
 
     with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
         future_to_conf = {executor.submit(evaluate, conf[0], conf[3], conf[1]): conf for conf in evaluations}
@@ -137,14 +139,22 @@ scenario_configs = [
     #     Path(__file__).parent / "scenarios/planning" / "USA_US101-14_7_T-1.xml",
     #     activated_interstate_rule_set,
     # ),
-    (
-        Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_5_T-1.xml",
-        activated_interstate_rule_set,
-    ),
+    # (
+    #     Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_5_T-1.xml",
+    #     activated_interstate_rule_set,
+    # ),
     # (
     #     Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1/" / "DEU_TestRightBeforeLeft-1_2_T-1.pb",
     #     activated_intersection_rule_set,
     # ),
+    (
+        Path(__file__).parent / "scenarios/planning/DEU_Salzwedel-107/" / "DEU_Salzwedel-107_1_T-7.pb",
+        activated_intersection_rule_set,
+    ),
+    (
+        Path(__file__).parent / "scenarios/planning/USA_Peach-4/" / "USA_Peach-4_2_T-1.pb",
+        activated_intersection_rule_set,
+    ),
 ]
 
 if __name__ == "__main__":
