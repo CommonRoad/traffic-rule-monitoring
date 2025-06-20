@@ -55,8 +55,6 @@ pred_cost_collection: Dict[str, PredicateCost] = {}
 
 
 def evaluate_predicate(pred_name: str, paths: List[Path], step_size: int):
-    if pred_name != "in_front_of_predicate":
-        return
     pred = crcpp.predicates()[pred_name]
     logging.info(f"-------------Evaluating predicate: {pred_name}---------------")
     pred_cost_collection[pred_name] = PredicateCost()
@@ -96,7 +94,7 @@ def execute_dateset_eval(paths: List[Path], scenario_type: ScenarioType, max_wor
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = [executor.submit(evaluate_predicate, pred_name, paths, step_size) for pred_name in rel_predicates]
         concurrent.futures.wait(futures)
-    return
+
     max_cost_total = max(pred_eval.total_comp_time for pred_eval in pred_cost_collection.values())
     max_cost_avg = max(pred_eval.avg_comp_time for pred_eval in pred_cost_collection.values())
     max_cost_median = max(pred_eval.median_comp_time for pred_eval in pred_cost_collection.values())
