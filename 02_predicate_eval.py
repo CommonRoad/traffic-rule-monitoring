@@ -1,5 +1,6 @@
 import argparse
 import concurrent.futures
+import copy
 import csv
 import dataclasses
 import enum
@@ -54,6 +55,8 @@ pred_cost_collection: Dict[str, PredicateCost] = {}
 
 
 def evaluate_predicate(pred_name: str, paths: List[Path], step_size: int):
+    if pred_name != "in_front_of_predicate":
+        return
     pred = crcpp.predicates()[pred_name]
     logging.info(f"-------------Evaluating predicate: {pred_name}---------------")
     pred_cost_collection[pred_name] = PredicateCost()
@@ -93,7 +96,7 @@ def execute_dateset_eval(paths: List[Path], scenario_type: ScenarioType, max_wor
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = [executor.submit(evaluate_predicate, pred_name, paths, step_size) for pred_name in rel_predicates]
         concurrent.futures.wait(futures)
-
+    return
     max_cost_total = max(pred_eval.total_comp_time for pred_eval in pred_cost_collection.values())
     max_cost_avg = max(pred_eval.avg_comp_time for pred_eval in pred_cost_collection.values())
     max_cost_median = max(pred_eval.median_comp_time for pred_eval in pred_cost_collection.values())
@@ -275,15 +278,17 @@ def evaluate_scenario(
     step_size: int,
 ):
     sc = load_scenario(sc_path)
-    world = crcpp.World(sc)
     logging.debug(f"Evaluating scenario: {sc.scenario_id}")
     for ego in sc.dynamic_obstacles:
+        sc_tmp = copy.deepcopy(sc)
+        sc.remove_obstacle(ego)
+        world = crcpp.World(sc_tmp)
         logging.debug(f"Evaluating ego: {ego.obstacle_id}")
         for time_step in range(ego.initial_state.time_step, ego.prediction.final_time_step, step_size):
             ego_cpp = crcpp.Obstacle(ego)
             if pred.is_vehicle_dependent:
                 for obs in world.obstacles:
-                    if obs.state_at_time(time_step) is None:
+                    if obs.time_step_exists(time_step) is False:
                         continue
                     try:
                         func_timeout(
