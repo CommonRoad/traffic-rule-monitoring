@@ -289,7 +289,7 @@ def evaluate_scenario(
                         continue
                     try:
                         func_timeout(
-                            1,
+                            0.1,
                             pred.statistic_boolean_evaluation,
                             args=(
                                 time_step,
@@ -313,7 +313,7 @@ def evaluate_scenario(
             else:
                 try:
                     func_timeout(
-                        1,
+                        0.1,
                         pred.statistic_boolean_evaluation,
                         args=(
                             time_step,
@@ -339,7 +339,7 @@ def evaluate_scenario(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate predicates on scenarios.")
     parser.add_argument("--threads", type=int, default=24, help="Number of threads to use.")
-    parser.add_argument("--step_size", type=int, default=4, help="Time step step size.")
+    parser.add_argument("--step_size", type=int, default=10, help="Time step step size.")
     args = parser.parse_args()
 
     intersection_paths = [
@@ -348,7 +348,7 @@ if __name__ == "__main__":
         for path in (Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1").rglob(f"*.{ext}")
         if "_S-" not in str(path) and ("_T-" in str(path) and "-SC" not in str(path))
     ]
-    execute_dateset_eval(intersection_paths, ScenarioType.INTERSECTION, max_workers=args.threads)
+    #  execute_dateset_eval(intersection_paths, ScenarioType.INTERSECTION, max_workers=args.threads)
 
     interstate_paths = [
         path

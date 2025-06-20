@@ -98,6 +98,34 @@ param_values: Dict[str, List[str]] = {
 }
 
 
+rel_obs_types = [
+    crcpp.ObstacleType.vehicle,
+    crcpp.ObstacleType.car,
+    crcpp.ObstacleType.truck,
+    crcpp.ObstacleType.bus,
+    crcpp.ObstacleType.bicycle,
+    crcpp.ObstacleType.motorcycle,
+    crcpp.ObstacleType.pedestrian,
+]
+
+rel_lanelet_types = [
+    crcpp.LaneletType.accessRamp,
+    crcpp.LaneletType.exitRamp,
+    crcpp.LaneletType.highway,
+    crcpp.LaneletType.intersection,
+    crcpp.LaneletType.interstate,
+    crcpp.LaneletType.incoming,
+    crcpp.LaneletType.mainCarriageWay,
+    crcpp.LaneletType.shoulder,
+]
+
+rel_traffic_light_states = [crcpp.TrafficLightState.red, crcpp.TrafficLightState.green, crcpp.TrafficLightState.yellow]
+
+rel_intersection_types = [crcpp.IntersectionType.FOUR_WAY_INTERSECTION, crcpp.IntersectionType.T_INTERSECTION]
+
+rel_line_markings = [crcpp.LineMarking.solid, crcpp.LineMarking.dashed]
+
+
 def extract_arg_combinations(pred_name: str) -> List[List[str]]:
     """
     Extract argument combinations for a given predicate name.
@@ -106,17 +134,15 @@ def extract_arg_combinations(pred_name: str) -> List[List[str]]:
     if pred_name in predicate_collection_args:
         for idx, arg in enumerate(predicate_collection_args[pred_name]):
             if arg is Argument.LANELET_TYPE:
-                args.append([lt.name for lt in crcpp.LaneletType])
+                args.append([lt.name for lt in rel_lanelet_types])
             if arg is Argument.TRAFFIC_LIGHT_TYPE:
-                args.append([tl.name for tl in crcpp.TrafficLightState])
+                args.append([tl.name for tl in rel_traffic_light_states])
             if arg is Argument.INTERSECTION_TYPE:
-                args.append([it.name for it in crcpp.IntersectionType])
-            if arg is Argument.INTERSECTION_TYPE:
-                args.append([it.name for it in crcpp.IntersectionType])
+                args.append([it.name for it in rel_intersection_types])
             if arg is Argument.TRAFFIC_SIGN_TYPE:
                 args.append(["stop", "yield", "priority", "max_speed"])
             if arg is Argument.OBSTACLE_TYPE:
-                args.append([ot.name for ot in crcpp.ObstacleType])
+                args.append([ot.name for ot in rel_obs_types])
             if arg is Argument.SIDE:
                 args.append([side.value for side in Side])
             if arg is Argument.THRESHOLD:
@@ -124,7 +150,7 @@ def extract_arg_combinations(pred_name: str) -> List[List[str]]:
             if arg is Argument.TURNING_DIRECTION:
                 args.append([side.value for side in Side])
             if arg is Argument.LINE_MARKING_TYPE:
-                args.append([lt.name for lt in crcpp.LineMarking])
+                args.append([lt.name for lt in rel_line_markings])
 
         return [list(comb) for comb in itertools.product(*args)]
     return [["0.0"]]
