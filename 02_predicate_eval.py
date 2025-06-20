@@ -1,6 +1,5 @@
 import argparse
 import concurrent.futures
-import copy
 import csv
 import dataclasses
 import enum
@@ -276,13 +275,10 @@ def evaluate_scenario(
     step_size: int,
 ):
     sc = load_scenario(sc_path)
+    world = crcpp.World(sc)
     logging.debug(f"Evaluating scenario: {sc.scenario_id}")
     for ego in sc.dynamic_obstacles:
         logging.debug(f"Evaluating ego: {ego.obstacle_id}")
-        sc_temp = copy.deepcopy(sc)
-        sc_temp.remove_obstacle(ego)
-        world = crcpp.World(sc_temp)
-
         for time_step in range(ego.initial_state.time_step, ego.prediction.final_time_step, step_size):
             ego_cpp = crcpp.Obstacle(ego)
             if pred.is_vehicle_dependent:
@@ -312,6 +308,7 @@ def evaluate_scenario(
                         logging.error(
                             f"Error evaluating predicate {pred_name} for ego {ego.obstacle_id} and obstacle {obs.obstacle_id} at time step {time_step}: {e}"
                         )
+                    world.reset_obstacle_cache()
             else:
                 try:
                     func_timeout(
@@ -336,6 +333,7 @@ def evaluate_scenario(
                     logging.error(
                         f"Error evaluating predicate {pred_name} for ego vehicle {ego.obstacle_id} at time step {time_step}: {e}"
                     )
+                world.reset_obstacle_cache()
 
 
 if __name__ == "__main__":

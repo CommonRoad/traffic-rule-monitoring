@@ -82,26 +82,26 @@ files = [
 
 [[package]]
 name = "cachetools"
-version = "5.5.2"
+version = "6.1.0"
 description = "Extensible memoizing collections and decorators"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "cachetools-5.5.2-py3-none-any.whl", hash = "sha256:d26a22bcc62eb95c3beabd9f1ee5e820d3d2704fe2967cbe350e20c8ffcd3f0a"},
-    {file = "cachetools-5.5.2.tar.gz", hash = "sha256:1a661caa9175d26759571b2e19580f9d6393969e5dfca11fdb1f947a23e640d4"},
+    {file = "cachetools-6.1.0-py3-none-any.whl", hash = "sha256:1c7bb3cf9193deaf3508b7c5f2a79986c13ea38965c5adcff1f84519cf39163e"},
+    {file = "cachetools-6.1.0.tar.gz", hash = "sha256:b4c4f404392848db3ce7aac34950d17be4d864da4b8b66911008e430bc544587"},
 ]
 
 [[package]]
 name = "certifi"
-version = "2025.4.26"
+version = "2025.6.15"
 description = "Python package for providing Mozilla's CA Bundle."
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 groups = ["main"]
 files = [
-    {file = "certifi-2025.4.26-py3-none-any.whl", hash = "sha256:30350364dfe371162649852c63336a15c70c6510c2ad5015b21c2345311805f3"},
-    {file = "certifi-2025.4.26.tar.gz", hash = "sha256:0a816057ea3cdefcef70270d2c515e4506bbc954f417fa5ade2021213bb8f0c6"},
+    {file = "certifi-2025.6.15-py3-none-any.whl", hash = "sha256:2e0c7ce7cb5d8f8634ca55d2ba7e6ec2689a2fd6537d8dec1296a477a4910057"},
+    {file = "certifi-2025.6.15.tar.gz", hash = "sha256:d747aa5a8b9bbbb1bb8c22bb13e22bd1f18e9796defa16bab421f7f7a317323b"},
 ]
 
 [[package]]
@@ -349,17 +349,25 @@ files = [
 
 [[package]]
 name = "commonroad-clcs"
-version = "2025.2.0"
+version = "2025.1.1"
 description = "Curvilinear (Frenet) Coordinate System for motion planning."
 optional = false
-python-versions = "<3.14,>=3.10"
+python-versions = "<3.12,>=3.9"
 groups = ["main"]
 files = [
-    {file = "commonroad_clcs-2025.2.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:f791cf9c70fe681cc177e80420298a3999d3a6ec6588f787c1f6c4a23e2f545e"},
-    {file = "commonroad_clcs-2025.2.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:74462bbd55519950c3f22b43511740eeb94b82bab9480b8e6f4065a290d207a5"},
-    {file = "commonroad_clcs-2025.2.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:de4b876ba4941afbcc709312581929e19674f4dc071041d247d74baf06b0eba9"},
-    {file = "commonroad_clcs-2025.2.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b4bdae23f3230cda55829ef9edf0b52f44f72f7c8dd2fba4cc1f948b6162a7ff"},
-    {file = "commonroad_clcs-2025.2.0.tar.gz", hash = "sha256:f62d05fea6a2558a8f7fde2e717ef4ec8326ae34485fc7a2e5cdb63876559779"},
+    {file = "commonroad_clcs-2025.1.1-cp310-cp310-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:bbdeba22c8314a3997b0dd4a6d77b1d80bbce9ad09a19a3dfe4fa50bd6f05e85"},
+    {file = "commonroad_clcs-2025.1.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:530acaf6803a1bcdd49b9f461848e8747ee3ba91adaec4e6e5f54778684f3e79"},
+    {file = "commonroad_clcs-2025.1.1-cp310-cp310-musllinux_1_1_i686.whl", hash = "sha256:ab9259f7b03025f7e225471acbe7b9ca9a3470cb174a9dc7bf2b632f101b6693"},
+    {file = "commonroad_clcs-2025.1.1-cp310-cp310-musllinux_1_1_x86_64.whl", hash = "sha256:de4b55359da4b601c78f9ff98b19bb60a92c374e26a064d93ca87ff3cf5e3fe4"},
+    {file = "commonroad_clcs-2025.1.1-cp311-cp311-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:7cbf46df76cb26778758064a3b23f4e0542a859d2f8b0fadd00685d59404403d"},
+    {file = "commonroad_clcs-2025.1.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:23f8dbdd9019e5e81ce379ae5720045d76483bbb1ad740bd68471d382366047c"},
+    {file = "commonroad_clcs-2025.1.1-cp311-cp311-musllinux_1_1_i686.whl", hash = "sha256:045f32b8993dbfa6b86dfd34fba28ec67aa8af72982c0a5a00611b0a2d892321"},
+    {file = "commonroad_clcs-2025.1.1-cp311-cp311-musllinux_1_1_x86_64.whl", hash = "sha256:8ebd87564db071956db7809788ca138e7f2f67696f749b4be02e8670649cd5a1"},
+    {file = "commonroad_clcs-2025.1.1-cp39-cp39-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:dcbb3026893ed901d2f9bbfeedff5142c1bd77f00bdcebf427107c4ecef32cf9"},
+    {file = "commonroad_clcs-2025.1.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e441d935263ff2b3e2d69b82b1ef9dff4c85d5575bcae431ad478023d52feaa2"},
+    {file = "commonroad_clcs-2025.1.1-cp39-cp39-musllinux_1_1_i686.whl", hash = "sha256:0c9f5bc2d8ab1954b2748600948299c96489d38afc7470930364043ed287cdcd"},
+    {file = "commonroad_clcs-2025.1.1-cp39-cp39-musllinux_1_1_x86_64.whl", hash = "sha256:cc1c7e21639b3aa8e5fe1a341b307b2d130f31202f1af459f9799c11844586e8"},
+    {file = "commonroad_clcs-2025.1.1.tar.gz", hash = "sha256:6266b56091d0d68cb2081539a18884d8059421538844b6ccc620a47bb12bc6bf"},
 ]
 
 [package.dependencies]
@@ -372,13 +380,13 @@ scipy = ">=1.4.1"
 shapely = ">=2.0.0"
 
 [package.extras]
-build = ["cmake (>=3.24,<4.0)", "nanobind (>=2.2.0,<2.3.0)", "pathspec (>=0.12.1)", "pyproject-metadata (>=0.7.1)", "scikit-build-core (>=0.11.0,<0.12.0)", "typing_extensions (>=4.12.2,<4.13.0)"]
-docs = ["mkdocs (>=1.6.1,<2.0.0)", "mkdocs-material (>=9.5.10,<10.0.0)", "mkdocstrings-python (>=1.8.0,<2.0.0)", "mkdoxy (>=1.2.4,<1.3.0)"]
+build = ["cmake (>=3.24)", "pathspec (>=0.12.1)", "pybind11 (>=2.12.0,<2.13.0)", "pyproject-metadata (>=0.7.1)", "scikit-build-core (>=0.8.0,<0.9.0)"]
+docs = ["mkdocs (>=1.6.1,<2.0.0)", "mkdocs-material (>=9.5.10,<10.0.0)", "mkdocstrings-python (>=1.8.0,<2.0.0)"]
 test = ["parameterized (>=0.9.0,<0.10.0)", "pytest (>=3.8.0)"]
 
 [[package]]
 name = "commonroad_cpp"
-version = "2023.0rc6.dev345+gc7fcf8ad"
+version = "2023.0rc6.dev349+g7f4d65af"
 description = "CommonRoad C++ Environment Model"
 optional = false
 python-versions = "<3.14,>=3.9"
@@ -397,38 +405,31 @@ test = ["numpy (>=1.20.0)", "pytest (>=5.3.2)"]
 type = "git"
 url = "ssh://git@gitlab.lrz.de/cps/commonroad/environment-model"
 reference = "develop"
-resolved_reference = "c7fcf8ad0855da4958df3045b3f59a6e482bab6e"
+resolved_reference = "7f4d65af664a43be9d3bfe0b161c4ed9e7729de5"
 
 [[package]]
 name = "commonroad-drivability-checker"
-version = "2025.3.0"
+version = "2025.1"
 description = "Drivability checker for CommonRoad scenarios."
 optional = false
-python-versions = "<3.14,>=3.10"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "commonroad_drivability_checker-2025.3.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:02252f6e0f7e301d25598a8ab0f98d8bf1e21adcd8f85150ddd8f278eafd6c06"},
-    {file = "commonroad_drivability_checker-2025.3.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:3761961a9acff0338726845889dba9c0ed331692d1f7884d47ac065afe2ce8f8"},
-    {file = "commonroad_drivability_checker-2025.3.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:c7c95ed548f796980dbb468fd06ebc259d4a084e87dd6d6a05c531d5a7f6f67e"},
-    {file = "commonroad_drivability_checker-2025.3.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:8ec84f86cb7fe160e82514b5c979aa08e6557684520a3bd917537471a8be5757"},
-    {file = "commonroad_drivability_checker-2025.3.0.tar.gz", hash = "sha256:e00c34e7f8f9591dd588f00106dae5ce6462ce306588b2b889c920e281c602f2"},
+    {file = "commonroad-drivability-checker-2025.1.tar.gz", hash = "sha256:eaad85c972a4aa52a4d23980fd9001eee0f9be4657e155a5c1a7d91c9c1f9974"},
+    {file = "commonroad_drivability_checker-2025.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:af6d1c161cfd240ae608ee867381b56165e8f5f1510ad836f88fa0247677be15"},
+    {file = "commonroad_drivability_checker-2025.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e5e954d4f122c0949d645210c1dc03c031a47dddad71739a74837e76c55f4049"},
+    {file = "commonroad_drivability_checker-2025.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b2e9a4c9ab8002a074cba5079e8d34a0f96f267403f936a5dda00e00bb128735"},
 ]
 
 [package.dependencies]
-commonroad-io = ">=2023.1,<2025.0"
-commonroad-vehicle-models = ">=3.0.0,<4.0.0"
-matplotlib = ">=3.2.2,<4.0.0"
-numpy = ">=1.20,<3.0"
-polygon3 = ">=3.0.8,<4.0.0"
-scipy = ">=1.7.0,<2.0"
-shapely = ">=2.0.0,<3.0.0"
-
-[package.extras]
-build = ["cmake (>=3.24,<4.0)", "nanobind (>=2.2.0,<2.3.0)", "pathspec (>=0.12.1)", "pyproject-metadata (>=0.7.1)", "scikit-build-core (>=0.11.0,<0.12.0)", "typing_extensions (>=4.12.2,<4.13.0)"]
-clcs = ["commonroad-clcs (>=2025.1.0,<2026.0.0)"]
-docs = ["breathe (>=4.18.0)", "cmake (>=3.24,<4.0)", "ipython (>=8.36.0)", "nbsphinx (>=0.6.1)", "nbsphinx_link (>=1.3.0)", "sphinx (>=3.0.3)", "sphinx_rtd_theme (>=0.4.3)"]
-test = ["pytest (>=5.3.2)"]
-triangle = ["triangle (>=20250106)"]
+commonroad-io = ">=2022.3"
+commonroad-vehicle-models = ">=3.0.0"
+matplotlib = ">=3.2.2"
+numpy = ">=1.19"
+polygon3 = ">=3.0.8"
+scipy = ">=1.4.1"
+setuptools = ">=62.1.0"
+shapely = ">=1.6.4"
 
 [[package]]
 name = "commonroad-io"
@@ -508,13 +509,13 @@ files = []
 develop = false
 
 [package.dependencies]
-commonroad-clcs = "^2025.1.1"
-commonroad-drivability-checker = "^2025.1"
+commonroad-clcs = "=2025.1.1"
+commonroad-drivability-checker = "=2025.1"
 commonroad-io = {git = "https://github.com/commonroad/commonroad-io", branch = "feature/new-format"}
 commonroad-monitor = {git = "ssh://git@gitlab.lrz.de/cps/commonroad/commonroad-monitor.git", branch = "develop"}
-commonroad-route-planner = "^2025.1.0"
+commonroad-route-planner = "=2025.1.0"
 commonroad_vehicle_models = ">=3.0.2"
-commonroad-velocity-planner = {git = "ssh://git@gitlab.lrz.de/cps/commonroad/commonroad-velocity-planner.git", branch = "develop"}
+commonroad-velocity-planner = {git = "ssh://git@gitlab.lrz.de/cps/commonroad/commonroad-velocity-planner.git", rev = "34adad13f36955fc0f91272026b3fb433fd47431"}
 imageio = ">=2.13.5"
 matplotlib = ">=2.2.2"
 methodtools = "^0.4.5"
@@ -528,7 +529,7 @@ triangle = ">=20230923"
 type = "git"
 url = "ssh://git@gitlab.lrz.de/cps/reactive-planner.git"
 reference = "integration_crmonitor"
-resolved_reference = "08304a51d2ddfcb38cbf93cd66c3fe4bc8a6cbac"
+resolved_reference = "eaae42eda5757e01a492e78b13d82cddc540ea96"
 
 [[package]]
 name = "commonroad-route-planner"
@@ -567,7 +568,7 @@ omegaconf = ">=2.1.1"
 
 [[package]]
 name = "commonroad-velocity-planner"
-version = "1.0.0"
+version = "0.1.1"
 description = "CommonRoad Velocity Planner Toolbox"
 optional = false
 python-versions = ">=3.9,<3.12"
@@ -585,8 +586,8 @@ numpy = ">=1.17.4,<2.0"
 [package.source]
 type = "git"
 url = "ssh://git@gitlab.lrz.de/cps/commonroad/commonroad-velocity-planner.git"
-reference = "develop"
-resolved_reference = "a57975cc310badca82c281a692d4371289ae6aa5"
+reference = "34adad13f36955fc0f91272026b3fb433fd47431"
+resolved_reference = "34adad13f36955fc0f91272026b3fb433fd47431"
 
 [[package]]
 name = "contourpy"
@@ -778,54 +779,54 @@ typing = ["typing-extensions (>=4.12.2) ; python_version < \"3.11\""]
 
 [[package]]
 name = "fonttools"
-version = "4.58.2"
+version = "4.58.4"
 description = "Tools to manipulate font files"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "fonttools-4.58.2-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:4baaf34f07013ba9c2c3d7a95d0c391fcbb30748cb86c36c094fab8f168e49bb"},
-    {file = "fonttools-4.58.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:2e26e4a4920d57f04bb2c3b6e9a68b099c7ef2d70881d4fee527896fa4f7b5aa"},
-    {file = "fonttools-4.58.2-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:c0bb956d9d01ea51368415515f664f58abf96557ba3c1aae4e26948ae7c86f29"},
-    {file = "fonttools-4.58.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d40af8493c80ec17a1133ef429d42f1a97258dd9213b917daae9d8cafa6e0e6c"},
-    {file = "fonttools-4.58.2-cp310-cp310-musllinux_1_2_aarch64.whl", hash = "sha256:60b5cde1c76f6ded198da5608dddb1ee197faad7d2f0f6d3348ca0cda0c756c4"},
-    {file = "fonttools-4.58.2-cp310-cp310-musllinux_1_2_x86_64.whl", hash = "sha256:f8df6dc80ecc9033ca25a944ee5db7564fecca28e96383043fd92d9df861a159"},
-    {file = "fonttools-4.58.2-cp310-cp310-win32.whl", hash = "sha256:25728e980f5fbb67f52c5311b90fae4aaec08c3d3b78dce78ab564784df1129c"},
-    {file = "fonttools-4.58.2-cp310-cp310-win_amd64.whl", hash = "sha256:d6997ee7c2909a904802faf44b0d0208797c4d751f7611836011ace165308165"},
-    {file = "fonttools-4.58.2-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:024faaf20811296fd2f83ebdac7682276362e726ed5fea4062480dd36aff2fd9"},
-    {file = "fonttools-4.58.2-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:2faec6e7f2abd80cd9f2392dfa28c02cfd5b1125be966ea6eddd6ca684deaa40"},
-    {file = "fonttools-4.58.2-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:520792629a938c14dd7fe185794b156cfc159c609d07b31bbb5f51af8dc7918a"},
-    {file = "fonttools-4.58.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:12fbc6e0bf0c75ce475ef170f2c065be6abc9e06ad19a13b56b02ec2acf02427"},
-    {file = "fonttools-4.58.2-cp311-cp311-musllinux_1_2_aarch64.whl", hash = "sha256:44a39cf856d52109127d55576c7ec010206a8ba510161a7705021f70d1649831"},
-    {file = "fonttools-4.58.2-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:5390a67c55a835ad5a420da15b3d88b75412cbbd74450cb78c4916b0bd7f0a34"},
-    {file = "fonttools-4.58.2-cp311-cp311-win32.whl", hash = "sha256:f7e10f4e7160bcf6a240d7560e9e299e8cb585baed96f6a616cef51180bf56cb"},
-    {file = "fonttools-4.58.2-cp311-cp311-win_amd64.whl", hash = "sha256:29bdf52bfafdae362570d3f0d3119a3b10982e1ef8cb3a9d3ebb72da81cb8d5e"},
-    {file = "fonttools-4.58.2-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:c6eeaed9c54c1d33c1db928eb92b4e180c7cb93b50b1ee3e79b2395cb01f25e9"},
-    {file = "fonttools-4.58.2-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:bbe1d9c72b7f981bed5c2a61443d5e3127c1b3aca28ca76386d1ad93268a803f"},
-    {file = "fonttools-4.58.2-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:85babe5b3ce2cbe57fc0d09c0ee92bbd4d594fd7ea46a65eb43510a74a4ce773"},
-    {file = "fonttools-4.58.2-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:918a2854537fcdc662938057ad58b633bc9e0698f04a2f4894258213283a7932"},
-    {file = "fonttools-4.58.2-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:3b379cf05bf776c336a0205632596b1c7d7ab5f7135e3935f2ca2a0596d2d092"},
-    {file = "fonttools-4.58.2-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:99ab3547a15a5d168c265e139e21756bbae1de04782ac9445c9ef61b8c0a32ce"},
-    {file = "fonttools-4.58.2-cp312-cp312-win32.whl", hash = "sha256:6764e7a3188ce36eea37b477cdeca602ae62e63ae9fc768ebc176518072deb04"},
-    {file = "fonttools-4.58.2-cp312-cp312-win_amd64.whl", hash = "sha256:41f02182a1d41b79bae93c1551855146868b04ec3e7f9c57d6fef41a124e6b29"},
-    {file = "fonttools-4.58.2-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:829048ef29dbefec35d95cc6811014720371c95bdc6ceb0afd2f8e407c41697c"},
-    {file = "fonttools-4.58.2-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:64998c5993431e45b474ed5f579f18555f45309dd1cf8008b594d2fe0a94be59"},
-    {file = "fonttools-4.58.2-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b887a1cf9fbcb920980460ee4a489c8aba7e81341f6cdaeefa08c0ab6529591c"},
-    {file = "fonttools-4.58.2-cp313-cp313-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:27d74b9f6970cefbcda33609a3bee1618e5e57176c8b972134c4e22461b9c791"},
-    {file = "fonttools-4.58.2-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:ec26784610056a770e15a60f9920cee26ae10d44d1e43271ea652dadf4e7a236"},
-    {file = "fonttools-4.58.2-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:ed0a71d57dd427c0fb89febd08cac9b925284d2a8888e982a6c04714b82698d7"},
-    {file = "fonttools-4.58.2-cp313-cp313-win32.whl", hash = "sha256:994e362b01460aa863ef0cb41a29880bc1a498c546952df465deff7abf75587a"},
-    {file = "fonttools-4.58.2-cp313-cp313-win_amd64.whl", hash = "sha256:f95dec862d7c395f2d4efe0535d9bdaf1e3811e51b86432fa2a77e73f8195756"},
-    {file = "fonttools-4.58.2-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:e6f6ca4337e37d287535fd0089b4520cedc5666023fe4176a74e3415f917b570"},
-    {file = "fonttools-4.58.2-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:b269c7a783ec3be40809dc0dc536230a3d2d2c08e3fb9538d4e0213872b1a762"},
-    {file = "fonttools-4.58.2-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:1902d9b2b84cc9485663f1a72882890cd240f4464e8443af93faa34b095a4444"},
-    {file = "fonttools-4.58.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:3a94a00ffacbb044729c6a5b29e02bf6f0e80681e9275cd374a1d25db3061328"},
-    {file = "fonttools-4.58.2-cp39-cp39-musllinux_1_2_aarch64.whl", hash = "sha256:25d22628f8b6b49b78666415f7cfa60c88138c24d66f3e5818d09ca001810cc5"},
-    {file = "fonttools-4.58.2-cp39-cp39-musllinux_1_2_x86_64.whl", hash = "sha256:4bacb925a045e964a44bdeb9790b8778ce659605c7a2a39ef4f12e06c323406b"},
-    {file = "fonttools-4.58.2-cp39-cp39-win32.whl", hash = "sha256:eb4bc19a3ab45d2b4bb8f4f7c60e55bec53016e402af0b6ff4ef0c0129193671"},
-    {file = "fonttools-4.58.2-cp39-cp39-win_amd64.whl", hash = "sha256:c8d16973f8ab02a5a960afe1cae4db72220ef628bf397499aba8e3caa0c10e33"},
-    {file = "fonttools-4.58.2-py3-none-any.whl", hash = "sha256:84f4b0bcfa046254a65ee7117094b4907e22dc98097a220ef108030eb3c15596"},
-    {file = "fonttools-4.58.2.tar.gz", hash = "sha256:4b491ddbfd50b856e84b0648b5f7941af918f6d32f938f18e62b58426a8d50e2"},
+    {file = "fonttools-4.58.4-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:834542f13fee7625ad753b2db035edb674b07522fcbdd0ed9e9a9e2a1034467f"},
+    {file = "fonttools-4.58.4-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:2e6c61ce330142525296170cd65666e46121fc0d44383cbbcfa39cf8f58383df"},
+    {file = "fonttools-4.58.4-cp310-cp310-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:e9c75f8faa29579c0fbf29b56ae6a3660c6c025f3b671803cb6a9caa7e4e3a98"},
+    {file = "fonttools-4.58.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:88dedcedbd5549e35b2ea3db3de02579c27e62e51af56779c021e7b33caadd0e"},
+    {file = "fonttools-4.58.4-cp310-cp310-musllinux_1_2_aarch64.whl", hash = "sha256:ae80a895adab43586f4da1521d58fd4f4377cef322ee0cc205abcefa3a5effc3"},
+    {file = "fonttools-4.58.4-cp310-cp310-musllinux_1_2_x86_64.whl", hash = "sha256:0d3acc7f0d151da116e87a182aefb569cf0a3c8e0fd4c9cd0a7c1e7d3e7adb26"},
+    {file = "fonttools-4.58.4-cp310-cp310-win32.whl", hash = "sha256:1244f69686008e7e8d2581d9f37eef330a73fee3843f1107993eb82c9d306577"},
+    {file = "fonttools-4.58.4-cp310-cp310-win_amd64.whl", hash = "sha256:2a66c0af8a01eb2b78645af60f3b787de5fe5eb1fd8348163715b80bdbfbde1f"},
+    {file = "fonttools-4.58.4-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:a3841991c9ee2dc0562eb7f23d333d34ce81e8e27c903846f0487da21e0028eb"},
+    {file = "fonttools-4.58.4-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:3c98f91b6a9604e7ffb5ece6ea346fa617f967c2c0944228801246ed56084664"},
+    {file = "fonttools-4.58.4-cp311-cp311-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:ab9f891eb687ddf6a4e5f82901e00f992e18012ca97ab7acd15f13632acd14c1"},
+    {file = "fonttools-4.58.4-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:891c5771e8f0094b7c0dc90eda8fc75e72930b32581418f2c285a9feedfd9a68"},
+    {file = "fonttools-4.58.4-cp311-cp311-musllinux_1_2_aarch64.whl", hash = "sha256:43ba4d9646045c375d22e3473b7d82b18b31ee2ac715cd94220ffab7bc2d5c1d"},
+    {file = "fonttools-4.58.4-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:33d19f16e6d2ffd6669bda574a6589941f6c99a8d5cfb9f464038244c71555de"},
+    {file = "fonttools-4.58.4-cp311-cp311-win32.whl", hash = "sha256:b59e5109b907da19dc9df1287454821a34a75f2632a491dd406e46ff432c2a24"},
+    {file = "fonttools-4.58.4-cp311-cp311-win_amd64.whl", hash = "sha256:3d471a5b567a0d1648f2e148c9a8bcf00d9ac76eb89e976d9976582044cc2509"},
+    {file = "fonttools-4.58.4-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:462211c0f37a278494e74267a994f6be9a2023d0557aaa9ecbcbfce0f403b5a6"},
+    {file = "fonttools-4.58.4-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:0c7a12fb6f769165547f00fcaa8d0df9517603ae7e04b625e5acb8639809b82d"},
+    {file = "fonttools-4.58.4-cp312-cp312-manylinux1_x86_64.manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_5_x86_64.whl", hash = "sha256:2d42c63020a922154add0a326388a60a55504629edc3274bc273cd3806b4659f"},
+    {file = "fonttools-4.58.4-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:8f2b4e6fd45edc6805f5f2c355590b092ffc7e10a945bd6a569fc66c1d2ae7aa"},
+    {file = "fonttools-4.58.4-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:f155b927f6efb1213a79334e4cb9904d1e18973376ffc17a0d7cd43d31981f1e"},
+    {file = "fonttools-4.58.4-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:e38f687d5de97c7fb7da3e58169fb5ba349e464e141f83c3c2e2beb91d317816"},
+    {file = "fonttools-4.58.4-cp312-cp312-win32.whl", hash = "sha256:636c073b4da9db053aa683db99580cac0f7c213a953b678f69acbca3443c12cc"},
+    {file = "fonttools-4.58.4-cp312-cp312-win_amd64.whl", hash = "sha256:82e8470535743409b30913ba2822e20077acf9ea70acec40b10fcf5671dceb58"},
+    {file = "fonttools-4.58.4-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:5f4a64846495c543796fa59b90b7a7a9dff6839bd852741ab35a71994d685c6d"},
+    {file = "fonttools-4.58.4-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:e80661793a5d4d7ad132a2aa1eae2e160fbdbb50831a0edf37c7c63b2ed36574"},
+    {file = "fonttools-4.58.4-cp313-cp313-manylinux1_x86_64.manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_5_x86_64.whl", hash = "sha256:fe5807fc64e4ba5130f1974c045a6e8d795f3b7fb6debfa511d1773290dbb76b"},
+    {file = "fonttools-4.58.4-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:b610b9bef841cb8f4b50472494158b1e347d15cad56eac414c722eda695a6cfd"},
+    {file = "fonttools-4.58.4-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:2daa7f0e213c38f05f054eb5e1730bd0424aebddbeac094489ea1585807dd187"},
+    {file = "fonttools-4.58.4-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:66cccb6c0b944496b7f26450e9a66e997739c513ffaac728d24930df2fd9d35b"},
+    {file = "fonttools-4.58.4-cp313-cp313-win32.whl", hash = "sha256:94d2aebb5ca59a5107825520fde596e344652c1f18170ef01dacbe48fa60c889"},
+    {file = "fonttools-4.58.4-cp313-cp313-win_amd64.whl", hash = "sha256:b554bd6e80bba582fd326ddab296e563c20c64dca816d5e30489760e0c41529f"},
+    {file = "fonttools-4.58.4-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:ca773fe7812e4e1197ee4e63b9691e89650ab55f679e12ac86052d2fe0d152cd"},
+    {file = "fonttools-4.58.4-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:e31289101221910f44245472e02b1a2f7d671c6d06a45c07b354ecb25829ad92"},
+    {file = "fonttools-4.58.4-cp39-cp39-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:90c9e3c01475bb9602cb617f69f02c4ba7ab7784d93f0b0d685e84286f4c1a10"},
+    {file = "fonttools-4.58.4-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:e00a826f2bc745a010341ac102082fe5e3fb9f0861b90ed9ff32277598813711"},
+    {file = "fonttools-4.58.4-cp39-cp39-musllinux_1_2_aarch64.whl", hash = "sha256:bc75e72e9d2a4ad0935c59713bd38679d51c6fefab1eadde80e3ed4c2a11ea84"},
+    {file = "fonttools-4.58.4-cp39-cp39-musllinux_1_2_x86_64.whl", hash = "sha256:f57a795e540059ce3de68508acfaaf177899b39c36ef0a2833b2308db98c71f1"},
+    {file = "fonttools-4.58.4-cp39-cp39-win32.whl", hash = "sha256:a7d04f64c88b48ede655abcf76f2b2952f04933567884d99be7c89e0a4495131"},
+    {file = "fonttools-4.58.4-cp39-cp39-win_amd64.whl", hash = "sha256:5a8bc5dfd425c89b1c38380bc138787b0a830f761b82b37139aa080915503b69"},
+    {file = "fonttools-4.58.4-py3-none-any.whl", hash = "sha256:a10ce13a13f26cbb9f37512a4346bb437ad7e002ff6fa966a7ce7ff5ac3528bd"},
+    {file = "fonttools-4.58.4.tar.gz", hash = "sha256:928a8009b9884ed3aae17724b960987575155ca23c6f0b8146e400cc9e0d44ba"},
 ]
 
 [package.extras]
@@ -841,6 +842,17 @@ type1 = ["xattr ; sys_platform == \"darwin\""]
 ufo = ["fs (>=2.2.0,<3)"]
 unicode = ["unicodedata2 (>=15.1.0) ; python_version <= \"3.12\""]
 woff = ["brotli (>=1.0.1) ; platform_python_implementation == \"CPython\"", "brotlicffi (>=0.8.0) ; platform_python_implementation != \"CPython\"", "zopfli (>=0.1.4)"]
+
+[[package]]
+name = "func-timeout"
+version = "4.3.5"
+description = "Python module which allows you to specify timeouts when calling any existing function. Also provides support for stoppable-threads"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "func_timeout-4.3.5.tar.gz", hash = "sha256:74cd3c428ec94f4edfba81f9b2f14904846d5ffccc27c92433b8b5939b5575dd"},
+]
 
 [[package]]
 name = "gitdb"
@@ -1384,14 +1396,14 @@ test = ["functools32 (>=3.2.3-2) ; python_version < \"3\"", "pytest (>=4.6.7)", 
 
 [[package]]
 name = "narwhals"
-version = "1.42.1"
+version = "1.43.1"
 description = "Extremely lightweight compatibility layer between dataframe libraries"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "narwhals-1.42.1-py3-none-any.whl", hash = "sha256:7a270d44b94ccdb277a799ae890c42e8504c537c1849f195eb14717c6184977a"},
-    {file = "narwhals-1.42.1.tar.gz", hash = "sha256:50a5635b11aeda98cf9c37e839fd34b0a24159f59a4dfae930290ad698320494"},
+    {file = "narwhals-1.43.1-py3-none-any.whl", hash = "sha256:1ee508fa4dc0e05aa5b88717ba11613d8d9ccf0dd1e48513d4a3afb237dba9f2"},
+    {file = "narwhals-1.43.1.tar.gz", hash = "sha256:6ff56d600da67a0a0980b83bd5577d076772fdba96474076ba4e76c920dbc1e5"},
 ]
 
 [package.extras]
@@ -1400,7 +1412,7 @@ dask = ["dask[dataframe] (>=2024.8)"]
 duckdb = ["duckdb (>=1.0)"]
 ibis = ["ibis-framework (>=6.0.0)", "packaging", "pyarrow-hotfix", "rich"]
 modin = ["modin"]
-pandas = ["pandas (>=0.25.3)"]
+pandas = ["pandas (>=1.1.3)"]
 polars = ["polars (>=0.20.3)"]
 pyarrow = ["pyarrow (>=11.0.0)"]
 pyspark = ["pyspark (>=3.5.0)"]
@@ -1583,14 +1595,14 @@ dev = ["scipy (!=1.12.0)"]
 
 [[package]]
 name = "packaging"
-version = "24.2"
+version = "25.0"
 description = "Core utilities for Python packages"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "packaging-24.2-py3-none-any.whl", hash = "sha256:09abb1bccd265c01f4a3aa3f7a7db064b36514d2cba19a2f694fe6150451a759"},
-    {file = "packaging-24.2.tar.gz", hash = "sha256:c228a6dc5e932d346bc5739379109d49e8853dd8223571c7c5b55260edc0b97f"},
+    {file = "packaging-25.0-py3-none-any.whl", hash = "sha256:29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484"},
+    {file = "packaging-25.0.tar.gz", hash = "sha256:d443872c98d677bf60f6a1f2f8c1cb748e8fe762d2bf9d3148b5599295b0fc4f"},
 ]
 
 [[package]]
@@ -2499,6 +2511,27 @@ numpy = "*"
 scipy = "*"
 
 [[package]]
+name = "setuptools"
+version = "80.9.0"
+description = "Easily download, build, install, upgrade, and uninstall Python packages"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "setuptools-80.9.0-py3-none-any.whl", hash = "sha256:062d34222ad13e0cc312a4c02d73f059e86a4acbfbdea8f8f76b28c99f306922"},
+    {file = "setuptools-80.9.0.tar.gz", hash = "sha256:f36b47402ecde768dbfafc46e8e4207b4360c654f1f3bb84475f0a28628fb19c"},
+]
+
+[package.extras]
+check = ["pytest-checkdocs (>=2.4)", "pytest-ruff (>=0.2.1) ; sys_platform != \"cygwin\"", "ruff (>=0.8.0) ; sys_platform != \"cygwin\""]
+core = ["importlib_metadata (>=6) ; python_version < \"3.10\"", "jaraco.functools (>=4)", "jaraco.text (>=3.7)", "more_itertools", "more_itertools (>=8.8)", "packaging (>=24.2)", "platformdirs (>=4.2.2)", "tomli (>=2.0.1) ; python_version < \"3.11\"", "wheel (>=0.43.0)"]
+cover = ["pytest-cov"]
+doc = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "pygments-github-lexers (==0.0.5)", "pyproject-hooks (!=1.1)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-favicon", "sphinx-inline-tabs", "sphinx-lint", "sphinx-notfound-page (>=1,<2)", "sphinx-reredirects", "sphinxcontrib-towncrier", "towncrier (<24.7)"]
+enabler = ["pytest-enabler (>=2.2)"]
+test = ["build[virtualenv] (>=1.0.3)", "filelock (>=3.4.0)", "ini2toml[lite] (>=0.14)", "jaraco.develop (>=7.21) ; python_version >= \"3.9\" and sys_platform != \"cygwin\"", "jaraco.envs (>=2.2)", "jaraco.path (>=3.7.2)", "jaraco.test (>=5.5)", "packaging (>=24.2)", "pip (>=19.1)", "pyproject-hooks (!=1.1)", "pytest (>=6,!=8.1.*)", "pytest-home (>=0.5)", "pytest-perf ; sys_platform != \"cygwin\"", "pytest-subprocess", "pytest-timeout", "pytest-xdist (>=3)", "tomli-w (>=1.0.0)", "virtualenv (>=13.0.0)", "wheel (>=0.44.0)"]
+type = ["importlib_metadata (>=7.0.2) ; python_version < \"3.10\"", "jaraco.develop (>=7.21) ; sys_platform != \"cygwin\"", "mypy (==1.14.*)", "pytest-mypy"]
+
+[[package]]
 name = "shapely"
 version = "2.1.1"
 description = "Manipulation and analysis of geometric objects"
@@ -2594,24 +2627,24 @@ files = [
 
 [[package]]
 name = "streamlit"
-version = "1.45.1"
+version = "1.46.0"
 description = "A faster way to build and share data apps"
 optional = false
 python-versions = "!=3.9.7,>=3.9"
 groups = ["main"]
 files = [
-    {file = "streamlit-1.45.1-py3-none-any.whl", hash = "sha256:9ab6951585e9444672dd650850f81767b01bba5d87c8dac9bc2e1c859d6cc254"},
-    {file = "streamlit-1.45.1.tar.gz", hash = "sha256:e37d56c0af5240dbc240976880e81366689c290a559376417246f9b3f51b4217"},
+    {file = "streamlit-1.46.0-py3-none-any.whl", hash = "sha256:f8624acabafcf18611a0fac2635cf181a7ba922b45bd131ae15fc8f80e1a5482"},
+    {file = "streamlit-1.46.0.tar.gz", hash = "sha256:0b2734b48f11f1e5c8046011b6b1a2274982dc657eef2ade8db70f0e1dc53dda"},
 ]
 
 [package.dependencies]
 altair = ">=4.0,<6"
 blinker = ">=1.5.0,<2"
-cachetools = ">=4.0,<6"
+cachetools = ">=4.0,<7"
 click = ">=7.0,<9"
 gitpython = ">=3.0.7,<3.1.19 || >3.1.19,<4"
 numpy = ">=1.23,<3"
-packaging = ">=20,<25"
+packaging = ">=20,<26"
 pandas = ">=1.4.0,<3"
 pillow = ">=7.1.0,<12"
 protobuf = ">=3.20,<7"
@@ -2620,7 +2653,7 @@ pydeck = ">=0.8.0b4,<1"
 requests = ">=2.27,<3"
 tenacity = ">=8.1.0,<10"
 toml = ">=0.10.1,<2"
-tornado = ">=6.0.3,<7"
+tornado = ">=6.0.3,<6.5.0 || >6.5.0,<7"
 typing-extensions = ">=4.4.0,<5"
 watchdog = {version = ">=2.1.5,<7", markers = "platform_system != \"Darwin\""}
 
@@ -2808,14 +2841,14 @@ files = [
 
 [[package]]
 name = "urllib3"
-version = "2.4.0"
+version = "2.5.0"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "urllib3-2.4.0-py3-none-any.whl", hash = "sha256:4e16665048960a0900c702d4a66415956a584919c03361cac9f1df5c5dd7e813"},
-    {file = "urllib3-2.4.0.tar.gz", hash = "sha256:414bc6535b787febd7567804cc015fee39daab8ad86268f1310a9250697de466"},
+    {file = "urllib3-2.5.0-py3-none-any.whl", hash = "sha256:e6b01673c0fa6a13e374b50871808eb3bf7046c4b125b216f6bf1cc604cff0dc"},
+    {file = "urllib3-2.5.0.tar.gz", hash = "sha256:3fc47733c7e419d4bc3f6b3dc2b4f890bb743906a30d56ba4a5bfa4bbff92760"},
 ]
 
 [package.extras]
@@ -2911,4 +2944,4 @@ test = ["pytest (>=4.6.7)", "pytest-checkdocs (>=1.2.5) ; python_version < \"3\"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.12"
-content-hash = "42c3c3ac7f767dbba16d5f6dce42793e5e26e65532df1f077912835efbf1373f"
+content-hash = "add896d8ed0da900176b48f105895cf5ab403fb6c73873571a8d6338e0fbfc96"
