@@ -289,7 +289,7 @@ def evaluate_scenario(
                         continue
                     try:
                         func_timeout(
-                            0.1,
+                            0.05,
                             pred.statistic_boolean_evaluation,
                             args=(
                                 time_step,
@@ -313,7 +313,7 @@ def evaluate_scenario(
             else:
                 try:
                     func_timeout(
-                        0.1,
+                        0.05,
                         pred.statistic_boolean_evaluation,
                         args=(
                             time_step,
@@ -344,16 +344,14 @@ if __name__ == "__main__":
 
     intersection_paths = [
         path
-        for ext in ("xml", "pb")
-        for path in (Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1").rglob(f"*.{ext}")
+        for path in (Path(__file__).parent / "scenarios/planning/intersection").rglob("*.pb")
         if "_S-" not in str(path) and ("_T-" in str(path) and "-SC" not in str(path))
     ]
-    #  execute_dateset_eval(intersection_paths, ScenarioType.INTERSECTION, max_workers=args.threads)
+    execute_dateset_eval(intersection_paths, ScenarioType.INTERSECTION, max_workers=args.threads)
 
     interstate_paths = [
         path
-        for ext in ("xml", "pb")
-        for path in (Path(__file__).parent / "scenarios/").rglob(f"*.{ext}")
+        for path in (Path(__file__).parent / "scenarios/").rglob("*.xml")
         if "_S-" not in str(path) and ("_T-" in str(path) and "-SC" not in str(path)) and path not in intersection_paths
     ]
     execute_dateset_eval(interstate_paths, ScenarioType.INTERSTATE, max_workers=args.threads, step_size=args.step_size)

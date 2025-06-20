@@ -152,5 +152,5 @@ def extract_arg_combinations(pred_name: str) -> List[List[str]]:
             if arg is Argument.LINE_MARKING_TYPE:
                 args.append([lt.name for lt in rel_line_markings])
 
-        return [list(comb) for comb in itertools.product(*args)]
+        return [[list(comb) for comb in itertools.product(*args)][0]]
     return [["0.0"]]
