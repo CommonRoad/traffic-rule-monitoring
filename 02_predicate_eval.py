@@ -281,23 +281,25 @@ def evaluate_scenario(
         logging.debug(f"Evaluating ego: {ego.obstacle_id}")
         sc_temp = copy.deepcopy(sc)
         sc_temp.remove_obstacle(ego)
+        world = crcpp.World(sc_temp)
 
         for time_step in range(ego.initial_state.time_step, ego.prediction.final_time_step, step_size):
+            ego_cpp = crcpp.Obstacle(ego)
             if pred.is_vehicle_dependent:
-                for obs in sc_temp.dynamic_obstacles:
+                for obs in world.obstacles:
                     if obs.state_at_time(time_step) is None:
                         continue
                     try:
                         func_timeout(
-                            0.05,
+                            0.5,
                             pred.statistic_boolean_evaluation,
                             args=(
                                 time_step,
-                                crcpp.World(sc_temp),
-                                crcpp.Obstacle(ego),
+                                world,
+                                ego_cpp,
                                 timer,
                                 pred_stat,
-                                crcpp.Obstacle(obs),
+                                obs,
                                 additional_function_parameters,
                                 False,
                             ),
@@ -313,15 +315,15 @@ def evaluate_scenario(
             else:
                 try:
                     func_timeout(
-                        0.05,
+                        0.5,
                         pred.statistic_boolean_evaluation,
                         args=(
                             time_step,
-                            crcpp.World(sc_temp),
+                            world,
                             crcpp.Obstacle(ego),
                             timer,
                             pred_stat,
-                            crcpp.Obstacle(sc.dynamic_obstacles[0]),  # use random obstacle as it won't be used
+                            world.obstacles[0],  # use random obstacle as it won't be used
                             additional_function_parameters,
                             False,
                         ),
