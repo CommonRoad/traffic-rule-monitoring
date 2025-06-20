@@ -12,6 +12,7 @@ from typing import Dict, List
 import crcpp
 import crmonitor
 import yaml
+from func_timeout import FunctionTimedOut, func_timeout
 
 from src.evaluation.common.config import activated_intersection_rule_set, activated_interstate_rule_set
 from src.evaluation.common.scenario_eval import load_scenario
@@ -287,15 +288,23 @@ def evaluate_scenario(
                     if obs.state_at_time(time_step) is None:
                         continue
                     try:
-                        pred.statistic_boolean_evaluation(
-                            time_step,
-                            crcpp.World(sc_temp),
-                            crcpp.Obstacle(ego),
-                            timer,
-                            pred_stat,
-                            crcpp.Obstacle(obs),
-                            additional_function_parameters,
-                            False,
+                        func_timeout(
+                            1,
+                            pred.statistic_boolean_evaluation,
+                            args=(
+                                time_step,
+                                crcpp.World(sc_temp),
+                                crcpp.Obstacle(ego),
+                                timer,
+                                pred_stat,
+                                crcpp.Obstacle(obs),
+                                additional_function_parameters,
+                                False,
+                            ),
+                        )
+                    except FunctionTimedOut:
+                        logging.error(
+                            f"Timout during evaluating predicate {pred_name} for ego vehicle {ego.obstacle_id} at time step {time_step}."
                         )
                     except Exception as e:
                         logging.error(
@@ -303,15 +312,23 @@ def evaluate_scenario(
                         )
             else:
                 try:
-                    pred.statistic_boolean_evaluation(
-                        time_step,
-                        crcpp.World(sc_temp),
-                        crcpp.Obstacle(ego),
-                        timer,
-                        pred_stat,
-                        crcpp.Obstacle(sc.dynamic_obstacles[0]),  # use random obstacle as it won't be used
-                        additional_function_parameters,
-                        False,
+                    func_timeout(
+                        1,
+                        pred.statistic_boolean_evaluation,
+                        args=(
+                            time_step,
+                            crcpp.World(sc_temp),
+                            crcpp.Obstacle(ego),
+                            timer,
+                            pred_stat,
+                            crcpp.Obstacle(sc.dynamic_obstacles[0]),  # use random obstacle as it won't be used
+                            additional_function_parameters,
+                            False,
+                        ),
+                    )
+                except FunctionTimedOut:
+                    logging.error(
+                        f"Timout during evaluating predicate {pred_name} for ego vehicle {ego.obstacle_id} at time step {time_step}."
                     )
                 except Exception as e:
                     logging.error(
