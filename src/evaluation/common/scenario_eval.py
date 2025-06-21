@@ -13,22 +13,18 @@ from commonroad.visualization.mp_renderer import MPRenderer
 from matplotlib import pyplot as plt
 
 
-def load_pred_costs(conf, rule_set: List[str]):
+def load_pred_costs(conf, rule_set: List[str], base_path: Path):
     if conf.reordering and any(["_U" in rule for rule in rule_set]):
-        with open(Path(__file__).parent / "configurations/predicates/predicate_costs_intersection.yaml", "r") as file:
+        with open(base_path / "configurations/predicates/predicate_costs_intersection.yaml", "r") as file:
             data = yaml.safe_load(file)
     elif not conf.reordering and any(["_U" in rule for rule in rule_set]):
-        with open(
-            Path(__file__).parent / "configurations/predicates/predicate_costs_intersection_inverted.yaml", "r"
-        ) as file:
+        with open(base_path / "configurations/predicates/predicate_costs_intersection_inverted.yaml", "r") as file:
             data = yaml.safe_load(file)
     elif conf.reordering and any(["_I" in rule for rule in rule_set]):
-        with open(Path(__file__).parent / "configurations/predicates/predicate_costs_interstate.yaml", "r") as file:
+        with open(base_path / "configurations/predicates/predicate_costs_interstate.yaml", "r") as file:
             data = yaml.safe_load(file)
     elif not conf.reordering and any(["_I" in rule for rule in rule_set]):
-        with open(
-            Path(__file__).parent / "configurations/predicates/predicate_costs_interstate_inverted.yaml", "r"
-        ) as file:
+        with open(base_path / "configurations/predicates/predicate_costs_interstate_inverted.yaml", "r") as file:
             data = yaml.safe_load(file)
     else:
         raise RuntimeError("No predicate costs found for the given rule set.")

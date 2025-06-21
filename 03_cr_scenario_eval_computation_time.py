@@ -72,7 +72,7 @@ def evaluate(
     )
     sim_param.trace_step = [10, 1] if conf.iterative_eval else [1]
 
-    data = load_pred_costs(conf, rule_set)
+    data = load_pred_costs(conf, rule_set, Path(__file__).parent)
     predicate_cost = {
         key: [value["cost"], value["probability"]] for key, value in data.get("predicateCost", {}).items()
     }

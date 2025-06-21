@@ -46,7 +46,7 @@ def evaluate(
         )
         rp_config.monitor.hydra_connected_evaluation = conf.connected_eval
         rp_config.monitor.performance_measurement = False
-        data = load_pred_costs(conf, rule_set)
+        data = load_pred_costs(conf, rule_set, Path(__file__).parent)
         rp_config.monitor.predicate_cost = {
             key: [value["cost"], value["probability"]] for key, value in data.get("predicateCost", {}).items()
         }
