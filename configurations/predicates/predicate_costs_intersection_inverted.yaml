@@ -1,97 +1,97 @@
 predicateCost:
   in_front_of:
-    cost: 97.6869
+    cost: 97.8333
     probability: 0.7406
   in_same_lane:
-    cost: 97.3092
+    cost: 97.7138
     probability: 0.4964
   in_single_lane:
-    cost: 97.8271
+    cost: 97.9525
     probability: 0.1704
   keeps_safe_distance_prec:
-    cost: 97.6051
+    cost: 97.7401
     probability: 0.0019
   lane_based_orientation_similar:
-    cost: 97.5669
-    probability: 0.4351
+    cost: 97.7273
+    probability: 0.4352
   on_same_road:
-    cost: 97.3315
-    probability: 0.2245
+    cost: 97.7372
+    probability: 0.2246
   orientation_towards:
     cost: 0.0
     probability: 0.5669
   brakes_stronger:
-    cost: 99.7798
-    probability: 0.9726
+    cost: 99.8152
+    probability: 0.9727
   decelerates:
-    cost: 99.8012
+    cost: 99.8206
     probability: 0.9486
   keeps_braking_speed_limit:
-    cost: 99.6908
+    cost: 99.7167
     probability: 0.0
   keeps_fov_speed_limit:
-    cost: 99.7695
+    cost: 99.7759
     probability: 0.0
   keeps_lane_speed_limit:
-    cost: 95.5933
+    cost: 96.0022
     probability: 0.0
   keeps_type_speed_limit:
-    cost: 99.9023
+    cost: 99.9126
     probability: 0.0
   causes_braking_intersection:
-    cost: 99.6314
+    cost: 99.6981
     probability: 0.9765
   in_intersection_conflict_area:
-    cost: 24.541
+    cost: 24.1574
     probability: 0.9939
   preserves_traffic_flow:
-    cost: 95.2431
+    cost: 95.5147
     probability: 0.0593
   slow_other_vehicle:
-    cost: 95.2642
+    cost: 95.6262
     probability: 0.9407
   keeps_min_speed_limit:
-    cost: 95.7457
+    cost: 96.0232
     probability: 0.0
   at_traffic_sign:
-    cost: 97.6812
+    cost: 97.8194
     probability: 1.0
   close_to_stop_line:
-    cost: 95.7773
+    cost: 96.0481
     probability: 0.9818
   in_standstill:
-    cost: 99.6412
-    probability: 0.6944
+    cost: 99.6724
+    probability: 0.694
   relevant_traffic_light:
-    cost: 97.3527
-    probability: 0.8763
+    cost: 97.5344
+    probability: 0.8757
   stop_line_in_front:
-    cost: 95.7594
+    cost: 96.0591
     probability: 0.9704
   at_traffic_light:
-    cost: 97.386
+    cost: 97.5475
     probability: 0.9994
   braking_at_intersection_possible:
-    cost: 94.5216
+    cost: 94.6493
     probability: 0.3453
   on_lanelet_with_type:
-    cost: 97.4923
+    cost: 97.6322
     probability: 1.0
   on_similar_oriented_lanelet_with_type:
-    cost: 95.5837
+    cost: 95.8305
     probability: 1.0
   on_similar_oriented_lanelet_without_type:
-    cost: 95.5825
+    cost: 95.7933
     probability: 0.0
   has_priority:
-    cost: 97.1909
+    cost: 97.5134
     probability: 1.0
   left_of:
-    cost: 99.1299
+    cost: 99.2573
     probability: 0.9851
   on_incoming_left_of:
-    cost: 91.5887
+    cost: 91.9999
     probability: 0.9123
   on_oncoming_of:
-    cost: 94.3859
+    cost: 94.9674
     probability: 1.0
