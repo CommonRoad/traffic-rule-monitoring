@@ -16,7 +16,7 @@ from src.evaluation.common.config import (
     activated_interstate_rule_set,
     configs,
 )
-from src.evaluation.common.scenario_eval import load_scenario
+from src.evaluation.common.scenario_eval import load_pred_costs, load_scenario
 
 
 def remove_non_divisible_copy(expected_result: Dict[int, Dict[str, Dict[int, List[int]]]], divisor: float):
@@ -72,20 +72,7 @@ def evaluate(
     )
     sim_param.trace_step = [10, 1] if conf.iterative_eval else [1]
 
-    if conf.reordering and any(["_U" in rule for rule in rule_set]):
-        with open(Path(__file__).parent / "configurations/predicates/predicate_costs_intersection.yaml", "r") as file:
-            data = yaml.safe_load(file)
-    elif not conf.reordering and any(["_U" in rule for rule in rule_set]):
-        with open(Path(__file__).parent / "configurations/predicates/predicate_costs_intersection_inverted.yaml", "r") as file:
-            data = yaml.safe_load(file)
-    elif conf.reordering and any(["_I" in rule for rule in rule_set]):
-        with open(Path(__file__).parent / "configurations/predicates/predicate_costs_interstate.yaml", "r") as file:
-            data = yaml.safe_load(file)
-    elif not conf.reordering and any(["_I" in rule for rule in rule_set]):
-        with open(Path(__file__).parent / "configurations/predicates/predicate_costs_interstate_inverted.yaml", "r") as file:
-            data = yaml.safe_load(file)
-    else:
-        raise RuntimeError("No predicate costs found for the given rule set.")
+    data = load_pred_costs(conf, rule_set)
     predicate_cost = {
         key: [value["cost"], value["probability"]] for key, value in data.get("predicateCost", {}).items()
     }
@@ -261,7 +248,9 @@ scenario_configs = [
         activated_intersection_rule_set,
     ),
     (
-        Path(__file__).parent / "scenarios/planning/intersection/DEU_TestRightBeforeLeft-1/" / "DEU_TestRightBeforeLeft-1_2_T-1.pb",
+        Path(__file__).parent
+        / "scenarios/planning/intersection/DEU_TestRightBeforeLeft-1/"
+        / "DEU_TestRightBeforeLeft-1_2_T-1.pb",
         activated_intersection_rule_set,
     ),
     (

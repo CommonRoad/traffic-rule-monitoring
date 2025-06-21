@@ -6,8 +6,8 @@ from typing import List, Tuple
 
 import crmonitor
 import numpy as np
-import yaml
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
+from evaluation.common.scenario_eval import load_pred_costs
 from tabulate import tabulate
 
 from src.evaluation.common.config import (
@@ -46,12 +46,7 @@ def evaluate(
         )
         rp_config.monitor.hydra_connected_evaluation = conf.connected_eval
         rp_config.monitor.performance_measurement = False
-        if conf.reordering:
-            with open(Path(__file__).parent / "configurations/predicates/predicate_costs.yaml", "r") as file:
-                data = yaml.safe_load(file)
-        else:
-            with open(Path(__file__).parent / "configurations/predicates/predicate_costs_inverted.yaml", "r") as file:
-                data = yaml.safe_load(file)
+        data = load_pred_costs(conf, rule_set)
         rp_config.monitor.predicate_cost = {
             key: [value["cost"], value["probability"]] for key, value in data.get("predicateCost", {}).items()
         }
@@ -135,18 +130,18 @@ scenario_configs = [
         Path(__file__).parent / "scenarios/motivating_examples" / "ZAM_Augmentation-1_1_T-1.xml",
         activated_interstate_rule_set,
     ),
-    # (
-    #     Path(__file__).parent / "scenarios/planning" / "USA_US101-14_7_T-1.xml",
-    #     activated_interstate_rule_set,
-    # ),
-    # (
-    #     Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_5_T-1.xml",
-    #     activated_interstate_rule_set,
-    # ),
-    # (
-    #     Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1/" / "DEU_TestRightBeforeLeft-1_2_T-1.pb",
-    #     activated_intersection_rule_set,
-    # ),
+    (
+        Path(__file__).parent / "scenarios/planning" / "USA_US101-14_7_T-1.xml",
+        activated_interstate_rule_set,
+    ),
+    (
+        Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_5_T-1.xml",
+        activated_interstate_rule_set,
+    ),
+    (
+        Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1/" / "DEU_TestRightBeforeLeft-1_2_T-1.pb",
+        activated_intersection_rule_set,
+    ),
     (
         Path(__file__).parent / "scenarios/planning/DEU_Salzwedel-107/" / "DEU_Salzwedel-107_1_T-7.pb",
         activated_intersection_rule_set,
