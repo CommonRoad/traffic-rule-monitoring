@@ -55,6 +55,7 @@ pred_cost_collection: Dict[str, PredicateCost] = {}
 
 
 def evaluate_predicate(pred_name: str, paths: List[Path], step_size: int):
+    global pred_cost_collection
     pred = crcpp.predicates()[pred_name]
     logging.info(f"-------------Evaluating predicate: {pred_name}---------------")
     pred_cost_collection[pred_name] = PredicateCost()
@@ -95,6 +96,8 @@ def execute_dateset_eval(paths: List[Path], scenario_type: ScenarioType, max_wor
         futures = [executor.submit(evaluate_predicate, pred_name, paths, step_size) for pred_name in rel_predicates]
         concurrent.futures.wait(futures)
 
+    global pred_cost_collection
+
     max_cost_total = max(pred_eval.total_comp_time for pred_eval in pred_cost_collection.values())
     max_cost_avg = max(pred_eval.avg_comp_time for pred_eval in pred_cost_collection.values())
     max_cost_median = max(pred_eval.median_comp_time for pred_eval in pred_cost_collection.values())
@@ -120,6 +123,7 @@ def execute_dateset_eval(paths: List[Path], scenario_type: ScenarioType, max_wor
         print(f"Predicate: {pred_name}")
         print(pred_eval)
         print("--------------------------------------------------")
+    pred_cost_collection = {}
 
 
 def extract_relevant_predicates(rules: List[str]) -> List[str]:
@@ -155,6 +159,9 @@ def store_result(scenario_type: ScenarioType):
         ]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=";")
         writer.writeheader()
+
+        global pred_cost_collection
+
         for pred_name, pred_cost in pred_cost_collection.items():
             writer.writerow(
                 {
@@ -176,6 +183,8 @@ def store_result(scenario_type: ScenarioType):
 
 
 def store_selected_results_tex(scenario_type: ScenarioType):
+    global pred_cost_collection
+
     hardcoded = {
         "a": (1.0, 100.0),
         "b": (1.0, 100.0),
@@ -192,9 +201,9 @@ def store_selected_results_tex(scenario_type: ScenarioType):
         ("in_front_of_predicate", None, None),
         ("in_same_lane_predicate", None, None),
         ("lane_based_orientation_similar_predicate", None, None),
-        ("in_neighboring_lane_predicate", None, None),
+        ("left_of", None, None),
         ("in_single_lane_predicate", None, None),
-        ("on_similar_oriented_lanelet_with_type_predicate", None, None),
+        ("close_to_lane_border", None, None),
         ("drives_faster_predicate", None, None),
         ("keeps_safe_distance_prec_predicate", None, None),
         ("velocity_below_threshold_predicate", None, None),
@@ -245,6 +254,7 @@ def store_selected_results_tex(scenario_type: ScenarioType):
 
 
 def store_result_yaml(scenario_type: ScenarioType):
+    global pred_cost_collection
     data = {"predicateCost": {}}
     for pred_name, pred_cost in pred_cost_collection.items():
         data["predicateCost"][pred_name[:-10]] = {
