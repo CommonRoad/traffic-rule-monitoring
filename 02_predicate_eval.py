@@ -309,7 +309,7 @@ def evaluate_scenario(
                         )
                     except Exception as e:
                         logging.error(
-                            f"Error evaluating predicate {pred_name} for ego {ego.obstacle_id} and obstacle {obs.obstacle_id} at time step {time_step}: {e}"
+                            f"Error evaluating predicate {pred_name} for ego {ego.obstacle_id} and obstacle {obs.id} at time step {time_step}: {e}"
                         )
                     world.reset_obstacle_cache()
             else:
