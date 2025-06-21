@@ -1,0 +1,97 @@
+predicateCost:
+  in_front_of:
+    cost: 97.6869
+    probability: 0.7406
+  in_same_lane:
+    cost: 97.3092
+    probability: 0.4964
+  in_single_lane:
+    cost: 97.8271
+    probability: 0.1704
+  keeps_safe_distance_prec:
+    cost: 97.6051
+    probability: 0.0019
+  lane_based_orientation_similar:
+    cost: 97.5669
+    probability: 0.4351
+  on_same_road:
+    cost: 97.3315
+    probability: 0.2245
+  orientation_towards:
+    cost: 0.0
+    probability: 0.5669
+  brakes_stronger:
+    cost: 99.7798
+    probability: 0.9726
+  decelerates:
+    cost: 99.8012
+    probability: 0.9486
+  keeps_braking_speed_limit:
+    cost: 99.6908
+    probability: 0.0
+  keeps_fov_speed_limit:
+    cost: 99.7695
+    probability: 0.0
+  keeps_lane_speed_limit:
+    cost: 95.5933
+    probability: 0.0
+  keeps_type_speed_limit:
+    cost: 99.9023
+    probability: 0.0
+  causes_braking_intersection:
+    cost: 99.6314
+    probability: 0.9765
+  in_intersection_conflict_area:
+    cost: 24.541
+    probability: 0.9939
+  preserves_traffic_flow:
+    cost: 95.2431
+    probability: 0.0593
+  slow_other_vehicle:
+    cost: 95.2642
+    probability: 0.9407
+  keeps_min_speed_limit:
+    cost: 95.7457
+    probability: 0.0
+  at_traffic_sign:
+    cost: 97.6812
+    probability: 1.0
+  close_to_stop_line:
+    cost: 95.7773
+    probability: 0.9818
+  in_standstill:
+    cost: 99.6412
+    probability: 0.6944
+  relevant_traffic_light:
+    cost: 97.3527
+    probability: 0.8763
+  stop_line_in_front:
+    cost: 95.7594
+    probability: 0.9704
+  at_traffic_light:
+    cost: 97.386
+    probability: 0.9994
+  braking_at_intersection_possible:
+    cost: 94.5216
+    probability: 0.3453
+  on_lanelet_with_type:
+    cost: 97.4923
+    probability: 1.0
+  on_similar_oriented_lanelet_with_type:
+    cost: 95.5837
+    probability: 1.0
+  on_similar_oriented_lanelet_without_type:
+    cost: 95.5825
+    probability: 0.0
+  has_priority:
+    cost: 97.1909
+    probability: 1.0
+  left_of:
+    cost: 99.1299
+    probability: 0.9851
+  on_incoming_left_of:
+    cost: 91.5887
+    probability: 0.9123
+  on_oncoming_of:
+    cost: 94.3859
+    probability: 1.0

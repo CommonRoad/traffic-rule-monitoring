@@ -1,0 +1,136 @@
+predicateCost:
+  in_front_of:
+    cost: 8.6982
+    probability: 0.0368
+  in_same_lane:
+    cost: 20.7848
+    probability: 0.2778
+  in_single_lane:
+    cost: 20.1978
+    probability: 0.7145
+  keeps_safe_distance_prec:
+    cost: 9.038
+    probability: 0.9935
+  lane_based_orientation_similar:
+    cost: 9.2115
+    probability: 1.0
+  on_same_road:
+    cost: 21.0033
+    probability: 0.983
+  orientation_towards:
+    cost: 95.98
+    probability: 0.4155
+  brakes_stronger:
+    cost: 1.0834
+    probability: 0.0546
+  decelerates:
+    cost: 1.0604
+    probability: 0.0606
+  keeps_braking_speed_limit:
+    cost: 1.5776
+    probability: 1.0
+  keeps_fov_speed_limit:
+    cost: 1.2678
+    probability: 1.0
+  keeps_lane_speed_limit:
+    cost: 43.4612
+    probability: 1.0
+  keeps_type_speed_limit:
+    cost: 0.527
+    probability: 1.0
+  causes_braking_intersection:
+    cost: 1.6392
+    probability: 0.0468
+  in_intersection_conflict_area:
+    cost: 88.956
+    probability: 0.0
+  preserves_traffic_flow:
+    cost: 45.9738
+    probability: 1.0
+  slow_other_vehicle:
+    cost: 45.5144
+    probability: 0.0
+  keeps_min_speed_limit:
+    cost: 43.9161
+    probability: 1.0
+  at_traffic_sign:
+    cost: 11.4601
+    probability: 0.0
+  close_to_stop_line:
+    cost: 43.4043
+    probability: 0.0
+  in_standstill:
+    cost: 1.7663
+    probability: 0.0
+  relevant_traffic_light:
+    cost: 13.0833
+    probability: 0.1237
+  stop_line_in_front:
+    cost: 20.9581
+    probability: 0.0296
+  at_traffic_light:
+    cost: 12.9188
+    probability: 0.0006
+  braking_at_intersection_possible:
+    cost: 27.0755
+    probability: 0.6547
+  on_lanelet_with_type:
+    cost: 21.7937
+    probability: 0.0
+  on_similar_oriented_lanelet_with_type:
+    cost: 21.8264
+    probability: 0.0
+  on_similar_oriented_lanelet_without_type:
+    cost: 21.8324
+    probability: 1.0
+  has_priority:
+    cost: 13.8833
+    probability: 0.0
+  left_of:
+    cost: 3.8936
+    probability: 0.0109
+  on_incoming_left_of:
+    cost: 41.5707
+    probability: 0.0877
+  on_oncoming_of:
+    cost: 27.746
+    probability: 0.0
+  velocity_below_threshold:
+    cost: 1.1786
+    probability: 0.0113
+  drives_faster:
+    cost: 0.5305
+    probability: 0.6147
+  drives_with_slightly_higher_speed:
+    cost: 1.5891
+    probability: 0.5666
+  parallel_to_lane_marking_of_type_on_side:
+    cost: 46.8555
+    probability: 0.0
+  makes_u_turn:
+    cost: 100.0
+    probability: 0.0
+  reverses:
+    cost: 1.1878
+    probability: 0.0
+  adjacent_lanelet_of_type:
+    cost: 23.4394
+    probability: 0.0
+  close_to_lane_border:
+    cost: 64.9836
+    probability: 0.0341
+  in_outermost_lane:
+    cost: 21.6567
+    probability: 0.2355
+  interstate_broad_enough:
+    cost: 15.8266
+    probability: 0.9806
+  lateral_distance_to_obstacle_above_threshold:
+    cost: 10.4604
+    probability: 0.788
+  neighboring_lane_opp_driving_dir:
+    cost: 21.0427
+    probability: 0.0
+  right_of:
+    cost: 4.0084
+    probability: 0.0249
