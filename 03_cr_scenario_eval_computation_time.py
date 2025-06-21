@@ -72,12 +72,20 @@ def evaluate(
     )
     sim_param.trace_step = [10, 1] if conf.iterative_eval else [1]
 
-    if conf.reordering:
-        with open(Path(__file__).parent / "configurations/predicates/predicate_costs.yaml", "r") as file:
+    if conf.reordering and any(["_U" in rule for rule in rule_set]):
+        with open(Path(__file__).parent / "configurations/predicates/predicate_costs_intersection.yaml", "r") as file:
+            data = yaml.safe_load(file)
+    elif not conf.reordering and any(["_U" in rule for rule in rule_set]):
+        with open(Path(__file__).parent / "configurations/predicates/predicate_costs_intersection_inverted.yaml", "r") as file:
+            data = yaml.safe_load(file)
+    elif conf.reordering and any(["_I" in rule for rule in rule_set]):
+        with open(Path(__file__).parent / "configurations/predicates/predicate_costs_interstate.yaml", "r") as file:
+            data = yaml.safe_load(file)
+    elif not conf.reordering and any(["_I" in rule for rule in rule_set]):
+        with open(Path(__file__).parent / "configurations/predicates/predicate_costs_interstate_inverted.yaml", "r") as file:
             data = yaml.safe_load(file)
     else:
-        with open(Path(__file__).parent / "configurations/predicates/predicate_costs_inverted.yaml", "r") as file:
-            data = yaml.safe_load(file)
+        raise RuntimeError("No predicate costs found for the given rule set.")
     predicate_cost = {
         key: [value["cost"], value["probability"]] for key, value in data.get("predicateCost", {}).items()
     }
@@ -237,15 +245,27 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.nda
 
 scenario_configs = [
     (
-        Path(__file__).parent / "scenarios/planning" / "USA_US101-14_7_T-1.xml",
-        activated_interstate_rule_set,
-    ),
-    (
         Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_5_T-1.xml",
         activated_interstate_rule_set,
     ),
     (
-        Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1/" / "DEU_TestRightBeforeLeft-1_2_T-1.pb",
+        Path(__file__).parent / "scenarios/motivating_examples" / "ZAM_Augmentation-1_1_T-1.xml",
+        activated_interstate_rule_set,
+    ),
+    (
+        Path(__file__).parent / "scenarios/planning" / "USA_US101-14_7_T-1.xml",
+        activated_interstate_rule_set,
+    ),
+    (
+        Path(__file__).parent / "scenarios/planning/intersection/DEU_Salzwedel-107/" / "DEU_Salzwedel-107_1_T-7.pb",
+        activated_intersection_rule_set,
+    ),
+    (
+        Path(__file__).parent / "scenarios/planning/intersection/DEU_TestRightBeforeLeft-1/" / "DEU_TestRightBeforeLeft-1_2_T-1.pb",
+        activated_intersection_rule_set,
+    ),
+    (
+        Path(__file__).parent / "scenarios/planning/intersection/USA_Peach-4/" / "USA_Peach-4_2_T-1.pb",
         activated_intersection_rule_set,
     ),
 ]

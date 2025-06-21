@@ -14,3 +14,4 @@ path/to/log/file
 /src/evaluation/monitor/logs/
 /traffic_rule_evaluation.txt
 /src/evaluation/monitor/fmlas/
+/crMonitorLogging.log
