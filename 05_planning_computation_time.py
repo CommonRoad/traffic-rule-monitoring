@@ -7,7 +7,6 @@ from typing import List, Tuple
 import crmonitor
 import numpy as np
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
-from evaluation.common.scenario_eval import load_pred_costs
 from tabulate import tabulate
 
 from src.evaluation.common.config import (
@@ -16,6 +15,7 @@ from src.evaluation.common.config import (
     activated_interstate_rule_set,
     configs,
 )
+from src.evaluation.common.scenario_eval import load_pred_costs
 from src.evaluation.planning.rp_planner import run_planner_cr_scenario
 
 
