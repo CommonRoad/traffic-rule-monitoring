@@ -9,7 +9,7 @@ def motivation_scenario_eval_example():
         [6],
         ["R_G1"],
         rotation=0.725,
-    )  # alternatives: USA_Peach-4_5_T-1.xml DEU_TestSafeDistance-1_1_T-1.xml
+    )
 
 
 if __name__ == "__main__":
