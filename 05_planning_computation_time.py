@@ -125,6 +125,8 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.nda
     return res
 
 
+# working: ZAM_Augmentation-1_1_T-1, USA_US101-22_5_T-1, USA_US101-14_7_T-1, DEU_Salzwedel-107_1_T-7
+# working with all except "R_G1", "R_G2", "R_G4": USA_Peach-4_2_T-1
 scenario_configs = [
     (
         Path(__file__).parent / "scenarios/motivating_examples" / "ZAM_Augmentation-1_1_T-1.xml",
@@ -139,15 +141,11 @@ scenario_configs = [
         activated_interstate_rule_set,
     ),
     (
-        Path(__file__).parent / "scenarios/planning/DEU_TestRightBeforeLeft-1/" / "DEU_TestRightBeforeLeft-1_2_T-1.pb",
+        Path(__file__).parent / "scenarios/planning/intersection/DEU_Salzwedel-107/" / "DEU_Salzwedel-107_1_T-7.pb",
         activated_intersection_rule_set,
     ),
     (
-        Path(__file__).parent / "scenarios/planning/DEU_Salzwedel-107/" / "DEU_Salzwedel-107_1_T-7.pb",
-        activated_intersection_rule_set,
-    ),
-    (
-        Path(__file__).parent / "scenarios/planning/USA_Peach-4/" / "USA_Peach-4_2_T-1.pb",
+        Path(__file__).parent / "scenarios/planning/intersection/USA_Peach-4/" / "USA_Peach-4_2_T-1.pb",
         activated_intersection_rule_set,
     ),
 ]
