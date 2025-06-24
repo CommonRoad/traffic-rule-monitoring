@@ -73,6 +73,7 @@ def visualize_time_step(
     rnd.draw_params.axis_visible = False
     rnd.draw_params.dynamic_obstacle.trajectory.draw_trajectory = False
     draw_params = MPDrawParams()
+    draw_params.axis_visible = False
     draw_params.time_begin = time_step
     draw_params.time_end = max_time_step
     draw_params.dynamic_obstacle.draw_icon = True
@@ -88,11 +89,11 @@ def visualize_time_step(
         sel_obstacle = obstacle_ids
     for obs in sel_obstacle:
         if time_step_violated(time_step, obs, result, scenario_copy):
-            draw_params.dynamic_obstacle.vehicle_shape.occupancy.shape.facecolor = "#f5abbb"
-            draw_params.dynamic_obstacle.vehicle_shape.occupancy.shape.edgecolor = "#de0232"
+            draw_params.dynamic_obstacle.vehicle_shape.occupancy.shape.facecolor = "#ff0000"
+            draw_params.dynamic_obstacle.vehicle_shape.occupancy.shape.edgecolor = "black"
         else:
-            draw_params.dynamic_obstacle.vehicle_shape.occupancy.shape.facecolor = "#a8f0c6"
-            draw_params.dynamic_obstacle.vehicle_shape.occupancy.shape.edgecolor = "#3a5e49"
+            draw_params.dynamic_obstacle.vehicle_shape.occupancy.shape.facecolor = "#009933"
+            draw_params.dynamic_obstacle.vehicle_shape.occupancy.shape.edgecolor = "black"
         obstacle = sc.obstacle_by_id(obs)
         obstacle.draw(rnd, draw_params=draw_params)
         scenario_copy.remove_obstacle(obstacle)

@@ -1,6 +1,8 @@
 from copy import deepcopy
 from pathlib import Path
 
+from commonroad.visualization.draw_params import DynamicObstacleParams
+from commonroad.visualization.mp_renderer import MPRenderer
 from commonroad_rp.reactive_planner import ReactivePlanner
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
 from commonroad_rp.utility.utils_coordinate_system import (
@@ -62,6 +64,19 @@ def motivation_planning_example() -> None:
     # visualization: create ego Vehicle for planned trajectory and store sampled trajectory set
     ego_vehicle = planner.convert_state_list_to_commonroad_object(optimal[0].state_list)
     sampled_trajectory_bundle = deepcopy(planner.stored_trajectories)
+    rnd = MPRenderer(figsize=(20, 10))
+    rnd.draw_params.axis_visible = False
+    ego_params = DynamicObstacleParams()
+    ego_params.time_begin = current_count
+    ego_params.time_end = 1000
+    ego_params.draw_icon = True
+    ego_params.vehicle_shape.occupancy.shape.facecolor = "#E37222"
+    ego_params.vehicle_shape.occupancy.shape.edgecolor = "black"
+    ego_params.vehicle_shape.occupancy.shape.zorder = 50
+    ego_params.vehicle_shape.occupancy.shape.opacity = 1
+    ego_params.trajectory.draw_trajectory = False
+
+    rnd.draw_params.dynamic_obstacle.vehicle_shape.occupancy.shape.edgecolor = "black"
     visualize_planner_at_timestep(
         scenario=rp_config.scenario,
         planning_problem=rp_config.planning_problem,
@@ -71,6 +86,8 @@ def motivation_planning_example() -> None:
         timestep=current_count,
         config=rp_config,
         plot_limits=[22, 117, -5, 10],
+        rnd=rnd,
+        ego_params=ego_params,
     )
 
 
