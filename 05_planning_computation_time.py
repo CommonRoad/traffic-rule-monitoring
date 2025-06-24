@@ -1,12 +1,14 @@
 import argparse
 import concurrent.futures
 import copy
+import logging
 from pathlib import Path
 from typing import List, Tuple
 
 import crmonitor
 import numpy as np
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
+from func_timeout import FunctionTimedOut, func_timeout
 from tabulate import tabulate
 
 from src.evaluation.common.config import (
@@ -40,9 +42,9 @@ def evaluate(
             True  # we need to set this to True to also set a bad reordering for demonstration purposes
         )
         rp_config.monitor.formula_evaluation_mode = (
-            crmonitor.FormulaEvaluationMode.globally_early_termination
+            crmonitor.FormulaEvaluationMode.globally_early_termination.value
             if conf.early_termination
-            else crmonitor.FormulaEvaluationMode.globally
+            else crmonitor.FormulaEvaluationMode.globally.value
         )
         rp_config.monitor.hydra_connected_evaluation = conf.connected_eval
         rp_config.monitor.performance_measurement = False
@@ -51,7 +53,23 @@ def evaluate(
             key: [value["cost"], value["probability"]] for key, value in data.get("predicateCost", {}).items()
         }
         rp_config.update()
-        computation_times.append(run_planner_cr_scenario(rp_config))
+
+        try:
+            computation_times.append(
+                func_timeout(
+                    900,
+                    run_planner_cr_scenario,
+                    args=(rp_config,),
+                )
+            )
+        except FunctionTimedOut:
+            logging.error(
+                f"Timout during evaluating of scenario {str(rp_config.scenario.scenario_id)} with config {str(conf)}."
+            )
+        except Exception:
+            logging.error(
+                f"Error evaluating predicate scenario {str(rp_config.scenario.scenario_id)} with config {str(conf)}."
+            )
     average_time = sum(computation_times) / len(computation_times)
     return np.round(average_time, 4)
 
