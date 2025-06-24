@@ -66,10 +66,12 @@ def evaluate(
             logging.error(
                 f"Timout during evaluating of scenario {str(rp_config.scenario.scenario_id)} with config {str(conf)}."
             )
+            computation_times.append(0.0)
         except Exception:
             logging.error(
                 f"Error evaluating predicate scenario {str(rp_config.scenario.scenario_id)} with config {str(conf)}."
             )
+            computation_times.append(0.0)
     average_time = sum(computation_times) / len(computation_times)
     return np.round(average_time, 4)
 
