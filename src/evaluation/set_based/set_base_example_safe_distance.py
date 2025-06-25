@@ -3,26 +3,19 @@ from typing import List, Union
 
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
 
-from src.evaluation.common.config import EvalConfig, configs
 from src.evaluation.set_based.set_based_common import execute_rp, set_scenario_id
 
 
-def set_based_safe_distance(scenario_path: str, conf_path: Path, eval_config: EvalConfig, pl: List[Union[int, float]]):
+def set_based_safe_distance(
+    scenario_path: str, conf_path: Path, pl: List[Union[int, float]], with_monitor: bool
+) -> None:
     rp_config = ReactivePlannerConfiguration.load(conf_path, scenario_path)
     rp_config.general.path_output = str(Path(__file__).parent.parent.parent.parent / "output/set_based")
-    rp_config.monitor.short_circuiting = eval_config.short_circuiting
-    rp_config.monitor.hydraReordering = eval_config.reordering
-    rp_config.monitor.earlyTermination = eval_config.early_termination
-    rp_config.monitor.hydraConnectedEvaluation = eval_config.connected_eval
-    rp_config.monitor.trace_step = [1] if not eval_config.iterative_eval else [10, 1]
     rp_config.update()
 
-    if eval_config.visualization:
-        rp_config.debug.complete_rule_eval = True
-    else:
-        rp_config.debug.complete_rule_eval = False
+    rp_config.debug.complete_rule_eval = True
 
-    if not eval_config.with_monitor:
+    if not with_monitor:
         sc_id = set_scenario_id(rp_config)
         rp_config.scenario.scenario_id = sc_id
         rp_config.monitor.with_rule_monitoring = False
@@ -37,8 +30,8 @@ def eval_set_based_safe_dist():
     )
     plot_limits = [0, 80, -5, 10]
 
-    for config in configs:
-        set_based_safe_distance(str(scenario), config_path, config, plot_limits)
+    set_based_safe_distance(str(scenario), config_path, plot_limits, True)
+    set_based_safe_distance(str(scenario), config_path, plot_limits, False)
 
 
 if __name__ == "__main__":

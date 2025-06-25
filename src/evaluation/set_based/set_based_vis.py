@@ -6,11 +6,13 @@ from commonroad.geometry.shape import Circle
 from commonroad.planning.planning_problem import PlanningProblem
 from commonroad.scenario.obstacle import DynamicObstacle
 from commonroad.scenario.scenario import Scenario
-from commonroad.visualization.draw_params import DynamicObstacleParams, ShapeParams
+from commonroad.visualization.draw_params import ShapeParams
 from commonroad.visualization.mp_renderer import MPRenderer
 from commonroad_rp.trajectories import TrajectorySample
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
 from matplotlib import pyplot as plt
+
+from src.evaluation.common.scenario_eval import create_ego_draw_params
 
 
 def draw_traffic_cone(rnd: MPRenderer, position: np.ndarray) -> None:
@@ -52,15 +54,7 @@ def draw_figure(
     rnd.draw_params.planning_problem.initial_state.state.draw_arrow = False
     rnd.draw_params.planning_problem.initial_state.state.radius = 0.5
 
-    ego_params = DynamicObstacleParams()
-    ego_params.time_begin = timestep
-    ego_params.time_end = 1000
-    ego_params.draw_icon = config.debug.draw_icons
-    ego_params.vehicle_shape.occupancy.shape.facecolor = "#E37222"
-    ego_params.vehicle_shape.occupancy.shape.edgecolor = "#9C4100"
-    ego_params.vehicle_shape.occupancy.shape.zorder = 50
-    ego_params.vehicle_shape.occupancy.shape.opacity = 1
-    ego_params.trajectory.draw_trajectory = False
+    ego_params = create_ego_draw_params(timestep)
 
     # draw traffic cones
     draw_traffic_cones(rnd)
