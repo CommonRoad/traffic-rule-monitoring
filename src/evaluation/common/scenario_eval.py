@@ -125,7 +125,11 @@ def vis_scenario(
     if rotation != 0.0:
         scenario.translate_rotate(np.array([np.array(0), np.array(0)]), rotation)
     world = crcpp.World(scenario)
-    obstacle_ids = [obs.obstacle_id for obs in scenario.obstacles if obs.obstacle_type in [ObstacleType.CAR, ObstacleType.BUS, ObstacleType.TRUCK]]
+    obstacle_ids = [
+        obs.obstacle_id
+        for obs in scenario.obstacles
+        if obs.obstacle_type in [ObstacleType.CAR, ObstacleType.BUS, ObstacleType.TRUCK]
+    ]
 
     monitor = crmonitor.Monitor()
     sim_param = crmonitor.MonitorSimulationParameters()
