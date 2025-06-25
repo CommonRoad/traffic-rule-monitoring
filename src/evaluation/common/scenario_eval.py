@@ -7,6 +7,7 @@ import crmonitor
 import numpy as np
 import yaml
 from commonroad.common.file_reader import CommonRoadFileReader
+from commonroad.scenario.obstacle import ObstacleType
 from commonroad.scenario.scenario import Scenario
 from commonroad.visualization.draw_params import MPDrawParams
 from commonroad.visualization.mp_renderer import MPRenderer
@@ -124,11 +125,12 @@ def vis_scenario(
     if rotation != 0.0:
         scenario.translate_rotate(np.array([np.array(0), np.array(0)]), rotation)
     world = crcpp.World(scenario)
-    obstacle_ids = [obs.obstacle_id for obs in scenario.obstacles]
+    obstacle_ids = [obs.obstacle_id for obs in scenario.obstacles if obs.obstacle_type in [ObstacleType.CAR, ObstacleType.BUS, ObstacleType.TRUCK]]
 
     monitor = crmonitor.Monitor()
     sim_param = crmonitor.MonitorSimulationParameters()
     sim_param.checkObstacleValid = False
+    sim_param.checkEgoValid = False
     sim_param.trace_reset_option = crmonitor.TraceResetOptions.always
     sim_param.storeEvalResults = False
     sim_param.world_parameters = crcpp.WorldParameters(

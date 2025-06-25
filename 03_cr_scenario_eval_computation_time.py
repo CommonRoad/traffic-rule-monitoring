@@ -254,7 +254,7 @@ scenario_configs = [
         activated_intersection_rule_set,
     ),
     (
-        Path(__file__).parent / "scenarios/planning/intersection/USA_Peach-4/" / "USA_Peach-4_2_T-1.pb",
+        Path(__file__).parent / "scenarios/planning/intersection/USA_Peach-4/" / "USA_Peach-4_9_T-1.pb",
         activated_intersection_rule_set,
     ),
 ]
