@@ -529,7 +529,7 @@ triangle = ">=20230923"
 type = "git"
 url = "ssh://git@gitlab.lrz.de/cps/reactive-planner.git"
 reference = "integration_crmonitor"
-resolved_reference = "6aba06d8f663b9489e9adb713a26372aa5ad2dba"
+resolved_reference = "138358d4b4ada7e27086f7edd47207b93b2e357c"
 
 [[package]]
 name = "commonroad-route-planner"

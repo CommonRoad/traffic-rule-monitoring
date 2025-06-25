@@ -1,6 +1,7 @@
 import statistics
 from copy import deepcopy
 
+from commonroad.visualization.mp_renderer import MPRenderer
 from commonroad_rp.reactive_planner import ReactivePlanner
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
 from commonroad_rp.utility.evaluation import run_evaluation
@@ -11,6 +12,8 @@ from commonroad_rp.utility.utils_coordinate_system import (
     create_initial_ref_path,
 )
 from commonroad_rp.utility.visualization import visualize_planner_at_timestep
+
+from src.evaluation.common.scenario_eval import create_ego_draw_params
 
 
 def run_planner_cr_scenario(config: ReactivePlannerConfiguration) -> float:
@@ -86,6 +89,9 @@ def run_planner_cr_scenario(config: ReactivePlannerConfiguration) -> float:
 
         # visualize the current time step of the simulation
         if config.debug.show_plots or config.debug.save_plots:
+            rnd = MPRenderer(figsize=(20, 10))
+            rnd.draw_params.axis_visible = False
+            rnd.draw_params.dynamic_obstacle.vehicle_shape.occupancy.shape.edgecolor = "black"
             visualize_planner_at_timestep(
                 scenario=config.scenario,
                 planning_problem=config.planning_problem,
@@ -94,6 +100,8 @@ def run_planner_cr_scenario(config: ReactivePlannerConfiguration) -> float:
                 ref_path=planner.reference_path,
                 timestep=current_count,
                 config=config,
+                rnd=rnd,
+                ego_params=create_ego_draw_params(current_count),
             )
         planner.prepare_monitor()
 

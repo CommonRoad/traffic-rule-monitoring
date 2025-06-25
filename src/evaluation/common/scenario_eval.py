@@ -9,9 +9,23 @@ import yaml
 from commonroad.common.file_reader import CommonRoadFileReader
 from commonroad.scenario.obstacle import ObstacleType
 from commonroad.scenario.scenario import Scenario
-from commonroad.visualization.draw_params import MPDrawParams
+from commonroad.visualization.draw_params import DynamicObstacleParams, MPDrawParams
 from commonroad.visualization.mp_renderer import MPRenderer
 from matplotlib import pyplot as plt
+
+
+def create_ego_draw_params(time_begin: int):
+    ego_params = DynamicObstacleParams()
+    ego_params.time_begin = time_begin
+    ego_params.time_end = 1000
+    ego_params.draw_icon = True
+    ego_params.vehicle_shape.occupancy.shape.facecolor = "#E37222"
+    ego_params.vehicle_shape.occupancy.shape.edgecolor = "black"
+    ego_params.vehicle_shape.occupancy.shape.zorder = 50
+    ego_params.vehicle_shape.occupancy.shape.opacity = 1
+    ego_params.trajectory.draw_trajectory = False
+
+    return ego_params
 
 
 def load_pred_costs(conf, rule_set: List[str], base_path: Path):
