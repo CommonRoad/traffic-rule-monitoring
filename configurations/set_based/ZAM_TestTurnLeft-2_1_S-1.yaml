@@ -10,7 +10,7 @@ vehicle:
 sampling:
   sampling_method: 1
   num_sampling_levels: 5
-  t_min: 0.4
+  t_min: 0.2
   d_min: -1.0
   d_max: 1.0
   max_deceleration_ratio: 0.125
