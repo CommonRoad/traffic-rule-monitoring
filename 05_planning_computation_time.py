@@ -52,12 +52,11 @@ def evaluate(
         rp_config.monitor.predicate_cost = {
             key: [value["cost"], value["probability"]] for key, value in data.get("predicateCost", {}).items()
         }
-        rp_config.update()
-
         try:
+            rp_config.update()
             computation_times.append(
                 func_timeout(
-                    900,
+                    60,
                     run_planner_cr_scenario,
                     args=(rp_config,),
                 )
@@ -68,9 +67,7 @@ def evaluate(
             )
             computation_times.append(0.0)
         except Exception:
-            logging.error(
-                f"Error evaluating predicate scenario {str(rp_config.scenario.scenario_id)} with config {str(conf)}."
-            )
+            logging.error(f"Error evaluating predicate scenario from path {str(sc_path)} with config {str(conf)}.")
             computation_times.append(0.0)
     average_time = sum(computation_times) / len(computation_times)
     return np.round(average_time, 4)
@@ -145,8 +142,6 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.nda
     return res
 
 
-# working: ZAM_Augmentation-1_1_T-1, USA_US101-22_5_T-1, USA_US101-14_7_T-1, DEU_Salzwedel-107_1_T-7
-# working with all except "R_G1", "R_G2", "R_G4": USA_Peach-4_2_T-1
 scenario_configs = [
     (
         Path(__file__).parent / "scenarios/motivating_examples" / "ZAM_Augmentation-1_1_T-1.xml",
@@ -165,7 +160,7 @@ scenario_configs = [
         activated_intersection_rule_set,
     ),
     (
-        Path(__file__).parent / "scenarios/planning/intersection/USA_Peach-4/" / "USA_Peach-4_2_T-1.pb",
+        Path(__file__).parent / "scenarios/planning/intersection/USA_Peach-4/" / "USA_Peach-4_9_T-1.pb",
         activated_intersection_rule_set,
     ),
 ]
