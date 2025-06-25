@@ -23,7 +23,6 @@ class EvalConfig:
     reordering: bool = False
     iterative_eval: bool = False
     early_termination: bool = False
-    visualization: bool = False
     check_results: bool = False
     with_monitor: bool = False
     complete_rule_eval: bool = True  # only planning
@@ -32,8 +31,8 @@ class EvalConfig:
 
 configs = [
     EvalConfig(name="C0"),
-    EvalConfig(name="C1", with_monitor=True, visualization=True, reordering=False),  # C1: Baseline
-    EvalConfig(name="C2", with_monitor=True, connected_eval=True, reordering=False),  # C2: connected evaluation
+    EvalConfig(name="C1", with_monitor=True),  # C1: Baseline
+    EvalConfig(name="C2", with_monitor=True, connected_eval=True),  # C2: connected evaluation
     EvalConfig(
         name="C3", with_monitor=True, short_circuiting=True, connected_eval=True
     ),  # C3: connected evaluation and short-circuiting
@@ -52,14 +51,4 @@ configs = [
         iterative_eval=True,
         reordering=True,
     ),  # C6: connected evaluation, short-circuiting, reordering, iterative evaluation, and early termination
-    EvalConfig(
-        name="C7",
-        with_monitor=True,
-        short_circuiting=True,
-        connected_eval=True,
-        early_termination=True,
-        iterative_eval=True,
-        visualization=True,
-        reordering=True,
-    ),
 ]

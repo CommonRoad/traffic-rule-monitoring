@@ -58,7 +58,7 @@ def evaluate(
 
 
 def eval_scenario(config_settings: List[Tuple]) -> np.ndarray:
-    for base_idx, setting in enumerate(config_settings):
+    for setting in config_settings:
         scenario_path, activated_traffic_rule_sets = setting
         evaluate(scenario_path, configs[-1], activated_traffic_rule_sets)
 
@@ -68,10 +68,10 @@ scenario_configs = [
         Path(__file__).parent / "scenarios/motivating_examples" / "ZAM_Augmentation-1_1_T-1.xml",
         activated_interstate_rule_set,
     ),
-    (
-        Path(__file__).parent / "scenarios/planning" / "USA_US101-14_7_T-1.xml",
-        activated_interstate_rule_set,
-    ),
+    # (
+    #     Path(__file__).parent / "scenarios/planning" / "USA_US101-14_7_T-1.xml",
+    #     activated_interstate_rule_set,
+    # ),
     (
         Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_5_T-1.xml",
         activated_interstate_rule_set,
