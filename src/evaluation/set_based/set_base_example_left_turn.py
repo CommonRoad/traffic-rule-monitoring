@@ -11,6 +11,7 @@ def set_based_left_turn(
 ) -> None:
     rp_config = ReactivePlannerConfiguration.load(conf_path, scenario_path)
     rp_config.debug.complete_rule_eval = True
+    rp_config.general.path_output = str(Path(__file__).parent.parent.parent.parent / "output/set_based")
     rp_config.update()
 
     if monitor:

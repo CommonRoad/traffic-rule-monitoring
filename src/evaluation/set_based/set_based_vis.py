@@ -53,6 +53,7 @@ def draw_figure(
     rnd.draw_params.dynamic_obstacle.trajectory.draw_trajectory = config.debug.draw_prediction_others
     rnd.draw_params.planning_problem.initial_state.state.draw_arrow = False
     rnd.draw_params.planning_problem.initial_state.state.radius = 0.5
+    rnd.draw_params.axis_visible = False
 
     ego_params = create_ego_draw_params(timestep)
 

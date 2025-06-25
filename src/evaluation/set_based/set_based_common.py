@@ -2,6 +2,7 @@ from copy import deepcopy
 from typing import List, Union
 
 from commonroad.common.common_scenario import ScenarioID
+from commonroad.visualization.mp_renderer import MPRenderer
 from commonroad_rp.reactive_planner import ReactivePlanner
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
 from commonroad_rp.utility.utils_coordinate_system import (
@@ -71,6 +72,8 @@ def execute_rp(rp_config: ReactivePlannerConfiguration, pl: List[Union[int, floa
             plot_limits=pl,
         )
     else:
+        rnd = MPRenderer(figsize=(20, 10), plot_limits=pl)
+        rnd.draw_params.axis_visible = False
         visualize_planner_at_timestep(
             scenario=rp_config.scenario,
             planning_problem=rp_config.planning_problem,
@@ -81,6 +84,7 @@ def execute_rp(rp_config: ReactivePlannerConfiguration, pl: List[Union[int, floa
             config=rp_config,
             plot_limits=pl,
             ego_params=create_ego_draw_params(current_count),
+            rnd=rnd,
         )
 
 
