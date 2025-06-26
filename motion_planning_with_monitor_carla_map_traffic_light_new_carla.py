@@ -9,10 +9,9 @@ from commonroad.planning.goal import GoalRegion
 from commonroad.planning.planning_problem import PlanningProblem
 from commonroad.scenario.state import InitialState, PMState
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
-
 from crcarla.carla_interface import CarlaInterface
 from crcarla.controller.reactive_planner import ReactivePlannerInterface
-from crcarla.helper.config import CarlaParams, CustomVis, TrajectoryVisualization, SupportedCARLAVersion
+from crcarla.helper.config import CarlaParams, CustomVis, SupportedCARLAVersion, TrajectoryVisualization
 
 # Carla params
 param = CarlaParams()

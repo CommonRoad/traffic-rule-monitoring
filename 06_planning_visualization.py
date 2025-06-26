@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import List, Tuple
 
 import crmonitor
-import numpy as np
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
 
 from src.evaluation.common.config import (
@@ -38,7 +37,9 @@ def evaluate(
     rp_config.debug.draw_traj_set = True
     rp_config.debug.draw_prediction_others = True
     rp_config.debug.save_plots = True
-    rp_config.general.path_output = str(Path(__file__).parent / f"output/planning/{'with_monitor' if conf.with_monitor else 'without_monitor'}")
+    rp_config.general.path_output = str(
+        Path(__file__).parent / f"output/planning/{'with_monitor' if conf.with_monitor else 'without_monitor'}"
+    )
     rp_config.monitor.hydra_reordering = (
         True  # we need to set this to True to also set a bad reordering for demonstration purposes
     )

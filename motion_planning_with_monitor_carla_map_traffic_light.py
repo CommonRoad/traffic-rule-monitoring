@@ -7,11 +7,10 @@ from commonroad.planning.goal import GoalRegion
 from commonroad.planning.planning_problem import PlanningProblem
 from commonroad.scenario.state import InitialState, PMState
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
-from crpred.basic_models.constant_velocity_predictor import ConstantVelocityCurvilinearPredictor
-
 from crcarla.carla_interface import CarlaInterface
 from crcarla.controller.reactive_planner import ReactivePlannerInterface
 from crcarla.helper.config import CarlaParams, CustomVis, TrajectoryVisualization
+from crpred.basic_models.constant_velocity_predictor import ConstantVelocityCurvilinearPredictor
 
 # Carla params
 param = CarlaParams()
