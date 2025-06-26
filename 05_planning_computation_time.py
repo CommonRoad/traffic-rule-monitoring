@@ -2,6 +2,7 @@ import argparse
 import copy
 import logging
 import multiprocessing
+import signal
 from pathlib import Path
 from typing import List, Tuple, Union
 
@@ -74,15 +75,25 @@ def _evaluate_wrapper(arguments: List[Union[Path, List[str], int, EvalConfig, in
         return res_idx, idx + 1, 0.0
 
 
-def _evaluate_worker(arguments, queue):
+def _timeout_handler(signum, frame):
+    raise TimeoutError("Evaluation timed out")
+
+
+def _evaluate_worker(arguments, queue, timeout=600):
+    signal.signal(signal.SIGALRM, _timeout_handler)
+    signal.alarm(timeout)
     try:
         res_idx, col_idx, value = _evaluate_wrapper(arguments)
         queue.put((res_idx, col_idx, value))
+    except TimeoutError:
+        queue.put((arguments[2], arguments[4] + 1, 0.0))
     except Exception:
         queue.put((arguments[2], arguments[4] + 1, 0.0))
+    finally:
+        signal.alarm(0)
 
 
-def eval_scenario(config_settings: List[Tuple], max_workers: int = 24, timeout: int = 600) -> np.ndarray:
+def eval_scenario(config_settings: List[Tuple], max_workers: int = 24, timeout: int = 1) -> np.ndarray:
     res = np.array(["Scenario Name", "C1", "C2", "C3", "C4", "C5", "C6"]).reshape(1, -1)
 
     evaluations = []
@@ -113,7 +124,7 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24, timeout: 
     while i < len(evaluations):
         # Start up to max_workers processes
         while len(running) < max_workers and i < len(evaluations):
-            p = multiprocessing.Process(target=_evaluate_worker, args=(evaluations[i], queue))
+            p = multiprocessing.Process(target=_evaluate_worker, args=(evaluations[i], queue, timeout))
             p.start()
             running.append((i, p))
             i += 1
