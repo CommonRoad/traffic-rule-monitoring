@@ -1,8 +1,6 @@
-import argparse
 import copy
 import logging
 import multiprocessing
-import signal
 from pathlib import Path
 from typing import List, Tuple, Union
 
@@ -75,25 +73,7 @@ def _evaluate_wrapper(arguments: List[Union[Path, List[str], int, EvalConfig, in
         return res_idx, idx + 1, 0.0
 
 
-def _timeout_handler(signum, frame):
-    raise TimeoutError("Evaluation timed out")
-
-
-def _evaluate_worker(arguments, queue, timeout=600):
-    signal.signal(signal.SIGALRM, _timeout_handler)
-    signal.alarm(timeout)
-    try:
-        res_idx, col_idx, value = _evaluate_wrapper(arguments)
-        queue.put((res_idx, col_idx, value))
-    except TimeoutError:
-        queue.put((arguments[2], arguments[4] + 1, 0.0))
-    except Exception:
-        queue.put((arguments[2], arguments[4] + 1, 0.0))
-    finally:
-        signal.alarm(0)
-
-
-def eval_scenario(config_settings: List[Tuple], max_workers: int = 24, timeout: int = 600) -> np.ndarray:
+def eval_scenario(config_settings: List[Tuple], timeout: int = 600) -> np.ndarray:
     res = np.array(["Scenario Name", "C1", "C2", "C3", "C4", "C5", "C6"]).reshape(1, -1)
 
     evaluations = []
@@ -118,40 +98,37 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24, timeout: 
                 conf_copy.complete_rule_eval = False
                 evaluations.append((scenario_path, activated_traffic_rule_sets, (base_idx + 1) * 2, conf_copy, idx))
 
-    running = []
-    queue = multiprocessing.Queue()
-    i = 0
-    while i < len(evaluations):
-        # Start up to max_workers processes
-        while len(running) < max_workers and i < len(evaluations):
-            p = multiprocessing.Process(target=_evaluate_worker, args=(evaluations[i], queue, timeout))
-            p.start()
-            running.append((i, p))
-            i += 1
-        # Check for finished or timed out processes
-        for idx, p in running:
-            p.join(timeout)
-            if p.is_alive():
-                logging.error(f"Timeout in evaluation {idx}, killing process.")
-                p.terminate()
-                p.join()
-                res_idx, col_idx = evaluations[idx][2], evaluations[idx][4] + 1
-                res[res_idx, col_idx] = 0.0
-            else:
-                try:
-                    res_idx, col_idx, value = queue.get_nowait()
-                    res[res_idx, col_idx] = value
-                except Exception:
-                    res_idx, col_idx = evaluations[idx][2], evaluations[idx][4] + 1
-                    res[res_idx, col_idx] = 0.0
-        running = []
-    # Drain any remaining results
-    while not queue.empty():
-        try:
-            res_idx, col_idx, value = queue.get_nowait()
-            res[res_idx, col_idx] = value
-        except Exception:
-            pass
+    def run_eval_in_subprocess(eval_args, timeout):
+        def target(queue, scenario_path, activated_traffic_rule_sets, conf, idx, res_idx):
+            try:
+                value = evaluate(scenario_path, conf, activated_traffic_rule_sets)
+                queue.put((res_idx, idx + 1, value))
+            except Exception:
+                queue.put((res_idx, idx + 1, 0.0))
+
+        scenario_path, activated_traffic_rule_sets, res_idx, conf, idx = eval_args
+        queue = multiprocessing.Queue()
+        p = multiprocessing.Process(
+            target=target, args=(queue, scenario_path, activated_traffic_rule_sets, conf, idx, res_idx)
+        )
+        p.start()
+        p.join(timeout)
+        if p.is_alive():
+            p.terminate()
+            p.join()
+            logging.error(f"Timeout in evaluation {scenario_path} with config {conf}, setting value to 0.0")
+            return res_idx, idx + 1, 0.0
+        else:
+            try:
+                return queue.get_nowait()
+            except Exception:
+                logging.error(f"Error in evaluation {scenario_path} with config {conf}, setting value to 0.0")
+                return res_idx, idx + 1, 0.0
+
+    for eval_args in evaluations:
+        res_idx, col_idx, value = run_eval_in_subprocess(eval_args, timeout)
+        res[res_idx, col_idx] = value
+
     return res
 
 
@@ -179,11 +156,7 @@ scenario_configs = [
 ]
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Evaluate predicates on scenarios.")
-    parser.add_argument("--threads", type=int, default=24, help="Number of threads to use.")
-    args = parser.parse_args()
-
-    comp_summary = eval_scenario(scenario_configs, max_workers=args.threads)
+    comp_summary = eval_scenario(scenario_configs)
 
     path = Path(__file__).parent / "output/planning"
     if not path.exists():
