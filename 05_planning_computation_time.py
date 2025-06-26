@@ -3,7 +3,7 @@ import copy
 import logging
 from multiprocessing import Pool
 from pathlib import Path
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 import crmonitor
 import numpy as np
@@ -66,7 +66,7 @@ def evaluate(
     return np.round(average_time, 4)
 
 
-def _evaluate_wrapper(arguments: List[Path, List[str], int, EvalConfig, int]) -> Tuple[int, int, float]:
+def _evaluate_wrapper(arguments: List[Union[Path, List[str], int, EvalConfig, int]]) -> Tuple[int, int, float]:
     scenario_path, activated_traffic_rule_sets, res_idx, conf, idx = arguments
     try:
         # 1 seconds timeout per evaluation (adjust as needed)
