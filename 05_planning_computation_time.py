@@ -1,7 +1,7 @@
 import argparse
-import concurrent.futures
 import copy
 import logging
+from multiprocessing import Pool
 from pathlib import Path
 from typing import List, Tuple
 
@@ -55,22 +55,28 @@ def evaluate(
         try:
             rp_config.update()
             computation_times.append(
-                func_timeout(
-                    60,
-                    run_planner_cr_scenario,
-                    args=(rp_config,),
+                run_planner_cr_scenario(
+                    rp_config,
                 )
             )
-        except FunctionTimedOut:
-            logging.error(
-                f"Timout during evaluating of scenario {str(rp_config.scenario.scenario_id)} with config {str(conf)}."
-            )
-            computation_times.append(0.0)
         except Exception:
             logging.error(f"Error evaluating predicate scenario from path {str(sc_path)} with config {str(conf)}.")
             computation_times.append(0.0)
     average_time = sum(computation_times) / len(computation_times)
     return np.round(average_time, 4)
+
+
+def _evaluate_wrapper(arguments: List[Path, List[str], int, EvalConfig, int]) -> Tuple[int, int, float]:
+    scenario_path, activated_traffic_rule_sets, res_idx, conf, idx = arguments
+    try:
+        # 1 seconds timeout per evaluation (adjust as needed)
+        return res_idx, idx + 1, func_timeout(60, evaluate, args=(scenario_path, conf, activated_traffic_rule_sets))
+    except FunctionTimedOut:
+        logging.error(f"Timeout in scenario {scenario_path} with config {conf}")
+        return res_idx, idx + 1, 0.0
+    except Exception:
+        logging.error(f"Error in scenario {scenario_path} with config {conf}")
+        return res_idx, idx + 1, 0.0
 
 
 def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.ndarray:
@@ -133,11 +139,10 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.nda
                     )
                 )
 
-    with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
-        future_to_conf = {executor.submit(evaluate, conf[0], conf[3], conf[1]): conf for conf in evaluations}
-        for future in concurrent.futures.as_completed(future_to_conf):
-            conf = future_to_conf[future]
-            res[conf[2], conf[4] + 1] = future.result()
+    with Pool(processes=max_workers) as pool:
+        results = pool.map(_evaluate_wrapper, evaluations)
+        for res_idx, col_idx, value in results:
+            res[res_idx, col_idx] = value
 
     return res
 
