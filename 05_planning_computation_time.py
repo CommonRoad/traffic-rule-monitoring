@@ -73,7 +73,7 @@ def _evaluate_wrapper(arguments: List[Union[Path, List[str], int, EvalConfig, in
         return res_idx, idx + 1, 0.0
 
 
-def eval_scenario(config_settings: List[Tuple], timeout: int = 600) -> np.ndarray:
+def eval_scenario(config_settings: List[Tuple], timeout: int = 150) -> np.ndarray:
     res = np.array(["Scenario Name", "C1", "C2", "C3", "C4", "C5", "C6"]).reshape(1, -1)
 
     evaluations = []
