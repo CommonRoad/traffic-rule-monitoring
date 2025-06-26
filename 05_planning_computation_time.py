@@ -8,7 +8,6 @@ from typing import List, Tuple, Union
 import crmonitor
 import numpy as np
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
-from func_timeout import FunctionTimedOut, func_timeout
 from tabulate import tabulate
 
 from src.evaluation.common.config import (
@@ -69,17 +68,13 @@ def evaluate(
 def _evaluate_wrapper(arguments: List[Union[Path, List[str], int, EvalConfig, int]]) -> Tuple[int, int, float]:
     scenario_path, activated_traffic_rule_sets, res_idx, conf, idx = arguments
     try:
-        # 1 seconds timeout per evaluation (adjust as needed)
-        return res_idx, idx + 1, func_timeout(60, evaluate, args=(scenario_path, conf, activated_traffic_rule_sets))
-    except FunctionTimedOut:
-        logging.error(f"Timeout in scenario {scenario_path} with config {conf}")
-        return res_idx, idx + 1, 0.0
+        return res_idx, idx + 1, evaluate(scenario_path, conf, activated_traffic_rule_sets)
     except Exception:
         logging.error(f"Error in scenario {scenario_path} with config {conf}")
         return res_idx, idx + 1, 0.0
 
 
-def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.ndarray:
+def eval_scenario(config_settings: List[Tuple], max_workers: int = 24, timeout: int = 600) -> np.ndarray:
     res = np.array(["Scenario Name", "C1", "C2", "C3", "C4", "C5", "C6"]).reshape(1, -1)
 
     evaluations = []
@@ -87,62 +82,33 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.nda
         scenario_path, activated_traffic_rule_sets = setting
         res = np.append(
             res,
-            np.array(
-                [
-                    str(scenario_path.stem),
-                    None,
-                    None,
-                    None,
-                    None,
-                    None,
-                    None,
-                ]
-            ).reshape(1, -1),
+            np.array([str(scenario_path.stem), None, None, None, None, None, None]).reshape(1, -1),
             axis=0,
         )
         res = np.append(
             res,
-            np.array(
-                [
-                    str(scenario_path.stem) + "*",
-                    None,
-                    None,
-                    None,
-                    None,
-                    None,
-                    None,
-                ]
-            ).reshape(1, -1),
+            np.array([str(scenario_path.stem) + "*", None, None, None, None, None, None]).reshape(1, -1),
             axis=0,
         )
         for idx, eval_config in enumerate(configs[1:7]):
             if not any("_U" in rname for rname in activated_traffic_rule_sets) or idx > 1:
                 evaluations.append(
-                    (
-                        scenario_path,
-                        activated_traffic_rule_sets,
-                        (base_idx + 1) * 2 - 1,
-                        eval_config,
-                        idx,
-                    )
+                    (scenario_path, activated_traffic_rule_sets, (base_idx + 1) * 2 - 1, eval_config, idx)
                 )
                 conf_copy = copy.deepcopy(eval_config)
                 conf_copy.complete_rule_eval = False
-                conf_copy.complete_rule_eval = False
-                evaluations.append(
-                    (
-                        scenario_path,
-                        activated_traffic_rule_sets,
-                        (base_idx + 1) * 2,
-                        conf_copy,
-                        idx,
-                    )
-                )
+                evaluations.append((scenario_path, activated_traffic_rule_sets, (base_idx + 1) * 2, conf_copy, idx))
 
     with Pool(processes=max_workers) as pool:
-        results = pool.map(_evaluate_wrapper, evaluations)
-        for res_idx, col_idx, value in results:
-            res[res_idx, col_idx] = value
+        async_results = [pool.apply_async(_evaluate_wrapper, (arguments,)) for arguments in evaluations]
+        for i, async_result in enumerate(async_results):
+            try:
+                res_idx, col_idx, value = async_result.get(timeout=600)
+                res[res_idx, col_idx] = value
+            except Exception:
+                logging.error(f"Timeout or error in evaluation {i}, setting value to 0.0")
+                res_idx, col_idx = evaluations[i][2], evaluations[i][4] + 1
+                res[res_idx, col_idx] = 0.0
 
     return res
 
