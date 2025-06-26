@@ -25,6 +25,7 @@ def evaluate(
     config_path = Path(__file__).parent / "configurations/planning/planning_base_comp_time.yaml"
 
     rp_config = ReactivePlannerConfiguration.load(config_path, str(sc_path))
+    rp_config.monitor.with_rule_monitoring = conf.with_monitor
     rp_config.monitor.activated_traffic_rules = rule_set
     rp_config.debug.complete_rule_eval = conf.complete_rule_eval
     rp_config.debug.complete_collision_eval = conf.complete_collision_eval
@@ -37,7 +38,7 @@ def evaluate(
     rp_config.debug.draw_traj_set = True
     rp_config.debug.draw_prediction_others = True
     rp_config.debug.save_plots = True
-    rp_config.general.path_output = str(Path(__file__).parent / "output/planning")
+    rp_config.general.path_output = str(Path(__file__).parent / f"output/planning/{'with_monitor' if conf.with_monitor else 'without_monitor'}")
     rp_config.monitor.hydra_reordering = (
         True  # we need to set this to True to also set a bad reordering for demonstration purposes
     )
@@ -57,9 +58,10 @@ def evaluate(
     run_planner_cr_scenario(rp_config)
 
 
-def eval_scenario(config_settings: List[Tuple]) -> np.ndarray:
+def eval_scenario(config_settings: List[Tuple]):
     for setting in config_settings:
         scenario_path, activated_traffic_rule_sets = setting
+        evaluate(scenario_path, configs[0], activated_traffic_rule_sets)
         evaluate(scenario_path, configs[-1], activated_traffic_rule_sets)
 
 

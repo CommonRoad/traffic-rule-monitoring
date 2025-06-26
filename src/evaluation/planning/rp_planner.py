@@ -103,7 +103,8 @@ def run_planner_cr_scenario(config: ReactivePlannerConfiguration) -> float:
                 rnd=rnd,
                 ego_params=create_ego_draw_params(current_count),
             )
-        planner.prepare_monitor()
+        if config.monitor.with_rule_monitoring:
+            planner.prepare_monitor()
 
     cleaned_times = [comp_times[0]]
     for idx in range(len(comp_times) - 1):
