@@ -1,12 +1,14 @@
+import argparse
+import concurrent.futures
 import copy
 import logging
-import multiprocessing
 from pathlib import Path
-from typing import List, Tuple, Union
+from typing import List, Tuple
 
 import crmonitor
 import numpy as np
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
+from func_timeout import FunctionTimedOut, func_timeout
 from tabulate import tabulate
 
 from src.evaluation.common.config import (
@@ -53,10 +55,17 @@ def evaluate(
         try:
             rp_config.update()
             computation_times.append(
-                run_planner_cr_scenario(
-                    rp_config,
+                func_timeout(
+                    60,
+                    run_planner_cr_scenario,
+                    args=(rp_config,),
                 )
             )
+        except FunctionTimedOut:
+            logging.error(
+                f"Timout during evaluating of scenario {str(rp_config.scenario.scenario_id)} with config {str(conf)}."
+            )
+            computation_times.append(0.0)
         except Exception:
             logging.error(f"Error evaluating predicate scenario from path {str(sc_path)} with config {str(conf)}.")
             computation_times.append(0.0)
@@ -64,16 +73,7 @@ def evaluate(
     return np.round(average_time, 4)
 
 
-def _evaluate_wrapper(arguments: List[Union[Path, List[str], int, EvalConfig, int]]) -> Tuple[int, int, float]:
-    scenario_path, activated_traffic_rule_sets, res_idx, conf, idx = arguments
-    try:
-        return res_idx, idx + 1, evaluate(scenario_path, conf, activated_traffic_rule_sets)
-    except Exception:
-        logging.error(f"Error in scenario {scenario_path} with config {conf}")
-        return res_idx, idx + 1, 0.0
-
-
-def eval_scenario(config_settings: List[Tuple], timeout: int = 150) -> np.ndarray:
+def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.ndarray:
     res = np.array(["Scenario Name", "C1", "C2", "C3", "C4", "C5", "C6"]).reshape(1, -1)
 
     evaluations = []
@@ -81,53 +81,65 @@ def eval_scenario(config_settings: List[Tuple], timeout: int = 150) -> np.ndarra
         scenario_path, activated_traffic_rule_sets = setting
         res = np.append(
             res,
-            np.array([str(scenario_path.stem), None, None, None, None, None, None]).reshape(1, -1),
+            np.array(
+                [
+                    str(scenario_path.stem),
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                ]
+            ).reshape(1, -1),
             axis=0,
         )
         res = np.append(
             res,
-            np.array([str(scenario_path.stem) + "*", None, None, None, None, None, None]).reshape(1, -1),
+            np.array(
+                [
+                    str(scenario_path.stem) + "*",
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                ]
+            ).reshape(1, -1),
             axis=0,
         )
         for idx, eval_config in enumerate(configs[1:7]):
             if not any("_U" in rname for rname in activated_traffic_rule_sets) or idx > 1:
-                evaluations.append(
-                    (scenario_path, activated_traffic_rule_sets, (base_idx + 1) * 2 - 1, eval_config, idx)
-                )
+                # only show first case for simple scenario due to compuation time
+                if "ZAM_Augmentation" in str(scenario_path):
+                    evaluations.append(
+                        (
+                            scenario_path,
+                            activated_traffic_rule_sets,
+                            (base_idx + 1) * 2 - 1,
+                            eval_config,
+                            idx,
+                        )
+                    )
                 conf_copy = copy.deepcopy(eval_config)
                 conf_copy.complete_rule_eval = False
-                evaluations.append((scenario_path, activated_traffic_rule_sets, (base_idx + 1) * 2, conf_copy, idx))
+                conf_copy.complete_rule_eval = False
+                evaluations.append(
+                    (
+                        scenario_path,
+                        activated_traffic_rule_sets,
+                        (base_idx + 1) * 2,
+                        conf_copy,
+                        idx,
+                    )
+                )
 
-    def run_eval_in_subprocess(eval_args, timeout):
-        def target(queue, scenario_path, activated_traffic_rule_sets, conf, idx, res_idx):
-            try:
-                value = evaluate(scenario_path, conf, activated_traffic_rule_sets)
-                queue.put((res_idx, idx + 1, value))
-            except Exception:
-                queue.put((res_idx, idx + 1, 0.0))
-
-        scenario_path, activated_traffic_rule_sets, res_idx, conf, idx = eval_args
-        queue = multiprocessing.Queue()
-        p = multiprocessing.Process(
-            target=target, args=(queue, scenario_path, activated_traffic_rule_sets, conf, idx, res_idx)
-        )
-        p.start()
-        p.join(timeout)
-        if p.is_alive():
-            p.terminate()
-            p.join()
-            logging.error(f"Timeout in evaluation {scenario_path} with config {conf}, setting value to 0.0")
-            return res_idx, idx + 1, 0.0
-        else:
-            try:
-                return queue.get_nowait()
-            except Exception:
-                logging.error(f"Error in evaluation {scenario_path} with config {conf}, setting value to 0.0")
-                return res_idx, idx + 1, 0.0
-
-    for eval_args in evaluations:
-        res_idx, col_idx, value = run_eval_in_subprocess(eval_args, timeout)
-        res[res_idx, col_idx] = value
+    with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
+        future_to_conf = {executor.submit(evaluate, conf[0], conf[3], conf[1]): conf for conf in evaluations}
+        for future in concurrent.futures.as_completed(future_to_conf):
+            conf = future_to_conf[future]
+            res[conf[2], conf[4] + 1] = future.result()
 
     return res
 
@@ -156,7 +168,11 @@ scenario_configs = [
 ]
 
 if __name__ == "__main__":
-    comp_summary = eval_scenario(scenario_configs)
+    parser = argparse.ArgumentParser(description="Evaluate predicates on scenarios.")
+    parser.add_argument("--threads", type=int, default=24, help="Number of threads to use.")
+    args = parser.parse_args()
+
+    comp_summary = eval_scenario(scenario_configs, max_workers=args.threads)
 
     path = Path(__file__).parent / "output/planning"
     if not path.exists():
