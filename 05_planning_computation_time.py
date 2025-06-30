@@ -25,6 +25,7 @@ def evaluate(
     sc_path: Path,
     conf: EvalConfig,
     rule_set: List[str],
+    timeout: int = 600,
 ):
     print(f"Evaluating scenario {sc_path} - {conf}")
 
@@ -41,7 +42,7 @@ def evaluate(
         rp_config.monitor.hydra_reordering = (
             True  # we need to set this to True to also set a bad reordering for demonstration purposes
         )
-        rp_config.monitor.formula_evaluation_mode = (
+        rp_config.monitor.formula_evaluation_mode = rp_config.monitor.formula_evaluation_mode_val = (
             crmonitor.FormulaEvaluationMode.globally_early_termination.value
             if conf.early_termination
             else crmonitor.FormulaEvaluationMode.globally.value
@@ -56,7 +57,7 @@ def evaluate(
             rp_config.update()
             computation_times.append(
                 func_timeout(
-                    60,
+                    timeout,
                     run_planner_cr_scenario,
                     args=(rp_config,),
                 )
@@ -73,7 +74,7 @@ def evaluate(
     return np.round(average_time, 4)
 
 
-def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.ndarray:
+def eval_scenario(config_settings: List[Tuple], max_workers: int = 24, timeout: int = 600) -> np.ndarray:
     res = np.array(["Scenario Name", "C1", "C2", "C3", "C4", "C5", "C6"]).reshape(1, -1)
 
     evaluations = []
@@ -111,7 +112,7 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.nda
         )
         for idx, eval_config in enumerate(configs[1:7]):
             if not any("_U" in rname for rname in activated_traffic_rule_sets) or idx > 1:
-                # only show first case for simple scenario due to compuation time
+                # only show first case for simple scenario due to computation time
                 if "ZAM_Augmentation" in str(scenario_path):
                     evaluations.append(
                         (
@@ -124,7 +125,7 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.nda
                     )
                 conf_copy = copy.deepcopy(eval_config)
                 conf_copy.complete_rule_eval = False
-                conf_copy.complete_rule_eval = False
+                conf_copy.complete_collision_eval = False
                 evaluations.append(
                     (
                         scenario_path,
@@ -136,7 +137,7 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.nda
                 )
 
     with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
-        future_to_conf = {executor.submit(evaluate, conf[0], conf[3], conf[1]): conf for conf in evaluations}
+        future_to_conf = {executor.submit(evaluate, conf[0], conf[3], conf[1], timeout): conf for conf in evaluations}
         for future in concurrent.futures.as_completed(future_to_conf):
             conf = future_to_conf[future]
             res[conf[2], conf[4] + 1] = future.result()
@@ -147,10 +148,6 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.nda
 scenario_configs = [
     (
         Path(__file__).parent / "scenarios/motivating_examples" / "ZAM_Augmentation-1_1_T-1.xml",
-        activated_interstate_rule_set,
-    ),
-    (
-        Path(__file__).parent / "scenarios/planning" / "USA_US101-14_7_T-1.xml",
         activated_interstate_rule_set,
     ),
     (
@@ -170,9 +167,10 @@ scenario_configs = [
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate predicates on scenarios.")
     parser.add_argument("--threads", type=int, default=24, help="Number of threads to use.")
+    parser.add_argument("--timeout", type=int, default=600, help="Timeout in seconds.")
     args = parser.parse_args()
 
-    comp_summary = eval_scenario(scenario_configs, max_workers=args.threads)
+    comp_summary = eval_scenario(scenario_configs, max_workers=args.threads, timeout=args.timeout)
 
     path = Path(__file__).parent / "output/planning"
     if not path.exists():
