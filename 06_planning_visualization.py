@@ -43,7 +43,7 @@ def evaluate(
     rp_config.monitor.hydra_reordering = (
         True  # we need to set this to True to also set a bad reordering for demonstration purposes
     )
-    rp_config.monitor.formula_evaluation_mode = (
+    rp_config.monitor.formula_evaluation_mode = rp_config.monitor.formula_evaluation_mode_val = (
         crmonitor.FormulaEvaluationMode.globally_early_termination.value
         if conf.early_termination
         else crmonitor.FormulaEvaluationMode.globally.value
