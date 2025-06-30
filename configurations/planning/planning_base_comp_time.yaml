@@ -10,7 +10,7 @@ vehicle:
 sampling:
   d_min: -4
   d_max: 4
-  max_deceleration_ratio: 0.2
+  max_deceleration_ratio: 0.425
 
 debug:
   show_plots: False
