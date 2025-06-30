@@ -55,13 +55,12 @@ def evaluate(
         }
         try:
             rp_config.update()
-            computation_times.append(
-                func_timeout(
-                    timeout,
-                    run_planner_cr_scenario,
-                    args=(rp_config,),
-                )
+            res = func_timeout(
+                timeout,
+                run_planner_cr_scenario,
+                args=(rp_config,),
             )
+            computation_times.append(res if res is not None else 0.0)
         except FunctionTimedOut:
             logging.error(
                 f"Timout during evaluating of scenario {str(rp_config.scenario.scenario_id)} with config {str(conf)}."
