@@ -16,20 +16,20 @@ from src.evaluation.planning.rp_planner import run_planner_cr_scenario
 
 def evaluate(
     sc_path: Path,
-    conf: EvalConfig,
     rule_set: List[str],
+    with_monitor: bool,
 ):
-    print(f"Evaluating scenario {sc_path} - {conf}")
+    print(f"Evaluating scenario {sc_path}")
 
     config_path = Path(__file__).parent / "configurations/planning/planning_base_comp_time.yaml"
 
     rp_config = ReactivePlannerConfiguration.load(config_path, str(sc_path))
-    rp_config.monitor.with_rule_monitoring = conf.with_monitor
+    rp_config.monitor.with_rule_monitoring = with_monitor
     rp_config.monitor.activated_traffic_rules = rule_set
-    rp_config.debug.complete_rule_eval = conf.complete_rule_eval
-    rp_config.debug.complete_collision_eval = conf.complete_collision_eval
-    rp_config.monitor.trace_step = [10, 1] if conf.iterative_eval else [1]
-    rp_config.monitor.short_circuiting = conf.short_circuiting
+    rp_config.debug.complete_rule_eval = True
+    rp_config.debug.complete_collision_eval = True
+    rp_config.monitor.trace_step = [10, 1]
+    rp_config.monitor.short_circuiting = True
     rp_config.debug.draw_icons = True
     rp_config.debug.draw_planning_problem = True
     rp_config.debug.plots_file_format = "svg"
@@ -38,23 +38,18 @@ def evaluate(
     rp_config.debug.draw_prediction_others = True
     rp_config.debug.save_plots = True
     rp_config.general.path_output = str(
-        Path(__file__).parent / f"output/planning/{'with_monitor' if conf.with_monitor else 'without_monitor'}"
+        Path(__file__).parent / f"output/planning/{'with_monitor' if with_monitor else 'without_monitor'}"
     )
     rp_config.monitor.hydra_reordering = (
         True  # we need to set this to True to also set a bad reordering for demonstration purposes
     )
-    rp_config.monitor.formula_evaluation_mode = rp_config.monitor.formula_evaluation_mode_val = (
-        crmonitor.FormulaEvaluationMode.globally_early_termination.value
-        if conf.early_termination
-        else crmonitor.FormulaEvaluationMode.globally.value
-    )
-    rp_config.monitor.hydra_connected_evaluation = conf.connected_eval
+    rp_config.monitor.formula_evaluation_mode = rp_config.monitor.formula_evaluation_mode_val = crmonitor.FormulaEvaluationMode.globally_early_termination.value
+    rp_config.monitor.hydra_connected_evaluation = True
     rp_config.monitor.performance_measurement = False
-    data = load_pred_costs(conf, rule_set, Path(__file__).parent)
+    data = load_pred_costs(True, rule_set, Path(__file__).parent)
     rp_config.monitor.predicate_cost = {
         key: [value["cost"], value["probability"]] for key, value in data.get("predicateCost", {}).items()
     }
-
     rp_config.update()
     run_planner_cr_scenario(rp_config)
 
@@ -62,8 +57,8 @@ def evaluate(
 def eval_scenario(config_settings: List[Tuple]):
     for setting in config_settings:
         scenario_path, activated_traffic_rule_sets = setting
-        evaluate(scenario_path, configs[0], activated_traffic_rule_sets)
-        evaluate(scenario_path, configs[-1], activated_traffic_rule_sets)
+        evaluate(scenario_path, activated_traffic_rule_sets, True)
+        evaluate(scenario_path,  activated_traffic_rule_sets, False)
 
 
 scenario_configs = [
