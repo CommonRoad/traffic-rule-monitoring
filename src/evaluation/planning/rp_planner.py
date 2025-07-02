@@ -4,14 +4,14 @@ from copy import deepcopy
 from commonroad.visualization.mp_renderer import MPRenderer
 from commonroad_rp.reactive_planner import ReactivePlanner
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
-from commonroad_rp.utility.evaluation import run_evaluation
+from commonroad_rp.utility.evaluation import create_full_solution_ego_vehicle
 from commonroad_rp.utility.logger import initialize_logger
 from commonroad_rp.utility.utils_coordinate_system import (
     CoordinateSystem,
     create_coordinate_system,
     create_initial_ref_path,
 )
-from commonroad_rp.utility.visualization import visualize_planner_at_timestep
+from commonroad_rp.utility.visualization import plot_final_trajectory, visualize_planner_at_timestep
 
 from src.evaluation.common.scenario_eval import create_ego_draw_params
 
@@ -110,9 +110,19 @@ def run_planner_cr_scenario(config: ReactivePlannerConfiguration) -> float:
     for idx in range(len(comp_times) - 1):
         cleaned_times.append(comp_times[idx + 1] - comp_times[idx])
 
-    # Evaluate results
-    evaluate = False
-    if evaluate:
-        run_evaluation(planner.config, planner.record_state_list, planner.record_input_list)
+    if config.debug.save_plots or config.debug.show_plots:
+        ego_vehicle_solution = create_full_solution_ego_vehicle(config, planner.record_state_list)
+        rnd = MPRenderer(figsize=(20, 10))
+        rnd.draw_params.axis_visible = False
+        rnd.draw_params.dynamic_obstacle.vehicle_shape.occupancy.shape.edgecolor = "black"
+        plot_final_trajectory(
+            config.scenario,
+            config.planning_problem,
+            ego_vehicle_solution.prediction.trajectory.state_list,
+            config,
+            ego_vehicle=ego_vehicle_solution,
+            rnd=rnd,
+            ego_params=create_ego_draw_params(0),
+        )
 
     return statistics.median(cleaned_times)
