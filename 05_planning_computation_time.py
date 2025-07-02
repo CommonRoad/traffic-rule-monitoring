@@ -109,7 +109,7 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24, timeout: 
             ).reshape(1, -1),
             axis=0,
         )
-        for idx, eval_config in enumerate(configs[6:7], start=5):
+        for idx, eval_config in enumerate(configs[1:7]):
             if not any("_U" in rname for rname in activated_traffic_rule_sets) or idx > 1:
                 # only show first case for simple scenario due to computation time
                 if "ZAM_Augmentation" in str(scenario_path):
