@@ -31,7 +31,7 @@ def evaluate(
 
     computation_times = []
     for _ in range(1):
-        config_path = Path(__file__).parent / "configurations/planning/planning_base_comp_time.yaml"
+        config_path = Path(__file__).parent / f"configurations/planning/{sc_path.stem}.yaml"
 
         rp_config = ReactivePlannerConfiguration.load(config_path, str(sc_path))
         rp_config.monitor.activated_traffic_rules = rule_set
@@ -109,28 +109,28 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24, timeout: 
             ).reshape(1, -1),
             axis=0,
         )
-        for idx, eval_config in enumerate(configs[1:7]):
+        for idx, eval_config in enumerate(configs[6:7], start=5):
             if not any("_U" in rname for rname in activated_traffic_rule_sets) or idx > 1:
                 # only show first case for simple scenario due to computation time
                 if "ZAM_Augmentation" in str(scenario_path):
+                    conf_copy = copy.deepcopy(eval_config)
+                    conf_copy.complete_rule_eval = True
+                    conf_copy.complete_collision_eval = True
                     evaluations.append(
                         (
                             scenario_path,
                             activated_traffic_rule_sets,
                             (base_idx + 1) * 2 - 1,
-                            eval_config,
+                            conf_copy,
                             idx,
                         )
                     )
-                conf_copy = copy.deepcopy(eval_config)
-                conf_copy.complete_rule_eval = False
-                conf_copy.complete_collision_eval = False
                 evaluations.append(
                     (
                         scenario_path,
                         activated_traffic_rule_sets,
                         (base_idx + 1) * 2,
-                        conf_copy,
+                        eval_config,
                         idx,
                     )
                 )

@@ -25,8 +25,8 @@ class EvalConfig:
     early_termination: bool = False
     check_results: bool = False
     with_monitor: bool = False
-    complete_rule_eval: bool = True  # only planning
-    complete_collision_eval: bool = True  # only planning
+    complete_rule_eval: bool = False
+    complete_collision_eval: bool = False
 
 
 configs = [

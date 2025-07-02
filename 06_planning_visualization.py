@@ -5,10 +5,8 @@ import crmonitor
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
 
 from src.evaluation.common.config import (
-    EvalConfig,
     activated_intersection_rule_set,
     activated_interstate_rule_set,
-    configs,
 )
 from src.evaluation.common.scenario_eval import load_pred_costs
 from src.evaluation.planning.rp_planner import run_planner_cr_scenario
@@ -21,7 +19,7 @@ def evaluate(
 ):
     print(f"Evaluating scenario {sc_path}")
 
-    config_path = Path(__file__).parent / "configurations/planning/planning_base_comp_time.yaml"
+    config_path = Path(__file__).parent / f"configurations/planning/{sc_path.stem}.yaml"
 
     rp_config = ReactivePlannerConfiguration.load(config_path, str(sc_path))
     rp_config.monitor.with_rule_monitoring = with_monitor
@@ -43,7 +41,9 @@ def evaluate(
     rp_config.monitor.hydra_reordering = (
         True  # we need to set this to True to also set a bad reordering for demonstration purposes
     )
-    rp_config.monitor.formula_evaluation_mode = rp_config.monitor.formula_evaluation_mode_val = crmonitor.FormulaEvaluationMode.globally_early_termination.value
+    rp_config.monitor.formula_evaluation_mode = rp_config.monitor.formula_evaluation_mode_val = (
+        crmonitor.FormulaEvaluationMode.globally_early_termination.value
+    )
     rp_config.monitor.hydra_connected_evaluation = True
     rp_config.monitor.performance_measurement = False
     data = load_pred_costs(True, rule_set, Path(__file__).parent)
@@ -58,7 +58,7 @@ def eval_scenario(config_settings: List[Tuple]):
     for setting in config_settings:
         scenario_path, activated_traffic_rule_sets = setting
         evaluate(scenario_path, activated_traffic_rule_sets, True)
-        evaluate(scenario_path,  activated_traffic_rule_sets, False)
+        evaluate(scenario_path, activated_traffic_rule_sets, False)
 
 
 scenario_configs = [

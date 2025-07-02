@@ -1,0 +1,14 @@
+planning:
+  replanning_frequency: 1
+
+vehicle:
+  # CR vehicle type (see commonroad-vehicle-models): #1: Ford Escort, #2: BMW 320i, 3 = VW Vanagon
+  id_type_vehicle: 2
+
+sampling:
+  d_min: -2
+  d_max: 2
+  max_deceleration_ratio: 0.00
+
+monitor:
+  with_rule_monitoring: True

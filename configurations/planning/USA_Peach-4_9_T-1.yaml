@@ -1,0 +1,12 @@
+planning:
+  replanning_frequency: 1
+
+vehicle:
+  id_type_vehicle: 2
+
+sampling:
+  d_min: -5
+  d_max: 5
+
+monitor:
+  with_rule_monitoring: True
