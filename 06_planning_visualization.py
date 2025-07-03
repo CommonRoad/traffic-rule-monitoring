@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import List, Tuple
 
@@ -55,10 +56,17 @@ def evaluate(
 
 
 def eval_scenario(config_settings: List[Tuple]):
-    for setting in config_settings:
-        scenario_path, activated_traffic_rule_sets = setting
-        evaluate(scenario_path, activated_traffic_rule_sets, True)
-        evaluate(scenario_path, activated_traffic_rule_sets, False)
+    tasks = []
+    with ThreadPoolExecutor() as executor:
+        for setting in config_settings:
+            scenario_path, activated_traffic_rule_sets = setting
+            tasks.append(executor.submit(evaluate, scenario_path, activated_traffic_rule_sets, True))
+            tasks.append(executor.submit(evaluate, scenario_path, activated_traffic_rule_sets, False))
+        for future in as_completed(tasks):
+            try:
+                future.result()
+            except Exception as exc:
+                print(f"A scenario evaluation generated an exception: {exc}")
 
 
 scenario_configs = [
