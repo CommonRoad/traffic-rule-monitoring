@@ -44,6 +44,7 @@ def run_planner_cr_scenario(config: ReactivePlannerConfiguration) -> float:
                 i = 1
                 while optimal is None and i <= planner.sampling_level:
                     optimal = planner.plan(i)
+                    i += 1
 
             if not optimal:
                 print("No optimal trajectory found, stopping planning.")

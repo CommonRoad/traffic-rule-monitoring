@@ -2,7 +2,6 @@ planning:
   replanning_frequency: 1
 
 vehicle:
-  # CR vehicle type (see commonroad-vehicle-models): #1: Ford Escort, #2: BMW 320i, 3 = VW Vanagon
   id_type_vehicle: 2
 
 sampling:
