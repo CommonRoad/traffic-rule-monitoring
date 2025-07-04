@@ -42,11 +42,14 @@ def evaluate(
         rp_config.monitor.hydra_reordering = (
             True  # we need to set this to True to also set a bad reordering for demonstration purposes
         )
-        rp_config.monitor.formula_evaluation_mode = rp_config.monitor.formula_evaluation_mode_val = (
-            crmonitor.FormulaEvaluationMode.globally_early_termination.value
+        rp_config.monitor.formula_evaluation_mode = (
+            crmonitor.FormulaEvaluationMode.globally_early_termination.name
             if conf.early_termination
-            else crmonitor.FormulaEvaluationMode.globally.value
+            else crmonitor.FormulaEvaluationMode.globally.name
         )
+        rp_config.monitor.formula_evaluation_mode_val = crmonitor.FormulaEvaluationMode[
+            rp_config.monitor.formula_evaluation_mode
+        ]
         rp_config.monitor.hydra_connected_evaluation = conf.connected_eval
         rp_config.monitor.performance_measurement = False
         data = load_pred_costs(conf.reordering, rule_set, Path(__file__).parent)

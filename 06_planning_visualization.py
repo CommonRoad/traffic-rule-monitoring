@@ -31,6 +31,7 @@ def evaluate(
     rp_config.debug.draw_icons = True
     rp_config.debug.draw_planning_problem = True
     rp_config.debug.plots_file_format = "svg"
+    rp_config.debug.traj_vis_filter = ["INFEASIBLE_KINEMATIC"]
     rp_config.debug.draw_ref_path = True
     rp_config.debug.draw_traj_set = True
     rp_config.debug.draw_prediction_others = True
@@ -42,8 +43,12 @@ def evaluate(
         True  # we need to set this to True to also set a bad reordering for demonstration purposes
     )
     rp_config.monitor.formula_evaluation_mode = rp_config.monitor.formula_evaluation_mode_val = (
-        crmonitor.FormulaEvaluationMode.globally_early_termination.value
+        crmonitor.FormulaEvaluationMode.globally_early_termination.name
     )
+    rp_config.monitor.formula_evaluation_mode = crmonitor.FormulaEvaluationMode.globally_early_termination.name
+    rp_config.monitor.formula_evaluation_mode_val = crmonitor.FormulaEvaluationMode[
+        rp_config.monitor.formula_evaluation_mode
+    ]
     rp_config.monitor.hydra_connected_evaluation = True
     rp_config.monitor.performance_measurement = False
     data = load_pred_costs(True, rule_set, Path(__file__).parent)
