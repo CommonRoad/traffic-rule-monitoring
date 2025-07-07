@@ -27,4 +27,5 @@ lazy_eval(rvm.Hydra2(formulas, predicateCosts=predicate_cost_1), 50)
 lazy_eval(rvm.Hydra2(formulas, predicateCosts=predicate_cost_2), 50)
 
 
-formula_size_eval("formula_size_atomic", 4, 1000, 50, 0.3)
+formula_size_eval("formula_size_atomic", 4, 1000, 50, 0.3, True)
+formula_size_eval("formula_size_atomic", 4, 1000, 50, 0.3, False)
