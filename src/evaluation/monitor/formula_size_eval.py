@@ -47,6 +47,7 @@ def formula_size_eval(
     pred: bool,
     seed: int,
     num_iters: int,
+    with_tex: bool,
 ):
     if not path.exists():
         path.mkdir(parents=True, exist_ok=True)
@@ -91,10 +92,12 @@ def formula_size_eval(
     plt.tick_params(axis="y", labelcolor="black", top=max_y)
     plt.legend(fontsize=30)
     plt.savefig(f"{path}/{name}.svg")
-    if tikzplotlib is not None:
+    if with_tex and tikzplotlib:
         tikzplotlib.save(f"{path}/{name}.tex")
+    elif with_tex and not tikzplotlib:
+        raise RuntimeError("tikzplotlib not available")
 
 
 if __name__ == "__main__":
-    formula_size_eval("formula_size_atomic", 4, 1000, 50, 0.3, False, 10, 5)
-    formula_size_eval("formula_size_predicate", 4, 1000, 50, 0.3, True, 10, 5)
+    formula_size_eval("formula_size_atomic", 4, 1000, 50, 0.3, False, 10, 5, False)
+    formula_size_eval("formula_size_predicate", 4, 1000, 50, 0.3, True, 10, 5, False)

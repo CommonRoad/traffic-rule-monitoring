@@ -1,6 +1,7 @@
 general:
   seed: 10
   num_iters: 5
+  with_tex: true
 
 eval_trace_length:
   - name: running_example_predicate
@@ -21,7 +22,7 @@ eval_trace_length:
     ["S3", "G((c('rand')) U[0, 4] (d('rand')) & (e('rand')) S[0, 4] (f('rand')))"
     ]]
     num_atomics: 6
-    max_y: 0.6
+    max_y: 1.8
     pred: true
     trace_lengths: [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
     xlabel: Trace Length [x100]
@@ -77,5 +78,5 @@ formula_size_eval:
     num_atomics: 4
     trace_length: 1000
     max_formula_size: 50
-    max_y: 0.3
+    max_y: 0.015
     pred: false

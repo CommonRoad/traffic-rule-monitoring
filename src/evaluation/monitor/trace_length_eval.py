@@ -28,6 +28,7 @@ def eval_trace_length(
     xlabel: str,
     num_iters: int,
     seed: int,
+    with_tex: bool,
 ):
     if not path.exists():
         path.mkdir(parents=True, exist_ok=True)
@@ -74,8 +75,10 @@ def eval_trace_length(
     plt.tick_params(axis="y", labelcolor="black", top=max_y)
     plt.legend(fontsize=30)
     plt.savefig(f"{path}/{name}.svg")
-    if tikzplotlib:
+    if with_tex and tikzplotlib:
         tikzplotlib.save(f"{path}/{name}.tex")
+    elif with_tex and not tikzplotlib:
+        raise RuntimeError("tikzplotlib not available")
 
 
 if __name__ == "__main__":
@@ -83,7 +86,7 @@ if __name__ == "__main__":
         Path(__file__).parent.parent.parent.parent / "configurations/rv_monitor/evaluation_parameters.yaml", "r"
     ) as f:
         params = yaml.safe_load(f)
-    seed = params["general"]["seed"]
-    num_iters = params["general"]["num_iters"]
+    seed_var = params["general"]["seed"]
+    iters = params["general"]["num_iters"]
     for eval_params in params["eval_trace_length"]:
-        eval_trace_length(**eval_params, num_iters=num_iters, seed=seed)
+        eval_trace_length(**eval_params, num_iters=iters, seed=seed_var, with_tex=False)
