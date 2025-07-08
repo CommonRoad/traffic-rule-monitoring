@@ -1,0 +1,81 @@
+general:
+  seed: 10
+  num_iters: 5
+
+eval_trace_length:
+  - name: running_example_predicate
+    spec: [
+    ["S1", "G((a('rand')) S[0, 4] (b('rand')))"],
+    ["S2", "G((a('rand')) U[0, 4] (b('rand')))"],
+    ["S3", "G((a('rand')) U[0, 4] (b('rand')) & (a('rand')) S[0, 4] (b('rand')))"
+    ]]
+    num_atomics: 2
+    max_y: 0.6
+    pred: true
+    trace_lengths: [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
+    xlabel: Trace Length [x100]
+  - name: dissimilar_predicate
+    spec: [
+    ["S1", "G(P[0, 4] (a('rand')))"],
+    ["S2", "G(X[0, 4] (b('rand')))"],
+    ["S3", "G((c('rand')) U[0, 4] (d('rand')) & (e('rand')) S[0, 4] (f('rand')))"
+    ]]
+    num_atomics: 6
+    max_y: 0.6
+    pred: true
+    trace_lengths: [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
+    xlabel: Trace Length [x100]
+  - name: running_example_atomic
+    spec: [
+    ["S1", "G((a) S[0, 4] (b))"],
+    [
+        "S2",
+        "G((a) U[0, 4] (b))",
+    ],
+    ["S3", "G((a) U[0, 4] (b) & (a) S[0, 4] (b))"]
+]
+    num_atomics: 2
+    max_y: 1.1
+    pred: false
+    trace_lengths: [20000, 40000, 60000, 80000, 100000, 120000, 140000, 160000, 180000, 200000]
+    xlabel: Trace Length [x10000]
+  - name: dissimilar_atomic
+    spec: [
+    ["S1", "G(P[0, 4] a)"],
+    [
+        "S2",
+        "G(X[0, 4] b)",
+    ],
+    ["S3", "G((c) U[0, 4] (d) & (e) S[0, 4] (f))"],
+]
+    num_atomics: 6
+    max_y: 1.1
+    pred: false
+    trace_lengths: [20000, 40000, 60000, 80000, 100000, 120000, 140000, 160000, 180000, 200000]
+    xlabel: Trace Length [x10000]
+
+lazy_eval:
+  trace_length: 50
+  specs: [["S1", "G(low_comp_time('rand') | high_comp_time('rand'))"]]
+  pred_cost:
+    PredCost1:
+      "low_comp_time": [ 1.0, 1.0, 0.0 ]
+      "high_comp_time": [ 100.0, 0.0, 0.0 ]
+    PredCost2:
+      "low_comp_time": [ 100.0, 0.0, 0.0 ]
+      "high_comp_time": [ 1.0, 1.0, 0.0 ]
+
+
+formula_size_eval:
+  - name: formula_size_atomic
+    num_atomics: 4
+    trace_length: 1000
+    max_formula_size: 50
+    max_y: 0.3
+    pred: true
+  - name: formula_size_predicate
+    num_atomics: 4
+    trace_length: 1000
+    max_formula_size: 50
+    max_y: 0.3
+    pred: false

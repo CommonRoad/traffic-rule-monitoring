@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import rvm
 from evaluation.monitor.common_monitor import create_trace, evaluate, update_trace
-from evaluation.monitor.specifications import specs1_atomic, specs1_pred, specs2_atomic, specs2_pred
 
 from src.evaluation.monitor import path
 
@@ -23,15 +22,15 @@ def eval_trace_length(
     num_atomics: int,
     max_y: float,
     pred: bool,
-    seed: int,
     trace_lengths: range,
-    x_axis_text: str,
-    num_inters: int,
+    xlabel: str,
+    num_iters: int,
+    seed: int,
 ):
     if not path.exists():
         path.mkdir(parents=True, exist_ok=True)
 
-    df = pd.DataFrame(columns=["Approach", x_axis_text, "Comp. Time [s]"])
+    df = pd.DataFrame(columns=["Approach", xlabel, "Comp. Time [s]"])
     formulas = [rvm.Parser.parse(form[1], form[0]) for form in spec]
 
     for trace_length in trace_lengths:
@@ -45,9 +44,9 @@ def eval_trace_length(
             None,
             trace_length,
             pred,
-            num_inters,
+            num_iters,
         )
-        evaluate("Ours", rvm.Hydra2(formulas), trace, df, None, trace_length, pred, num_inters)
+        evaluate("Ours", rvm.Hydra2(formulas), trace, df, None, trace_length, pred, num_iters)
 
     # Plotting
     plt.figure(figsize=(10, 8))
@@ -56,7 +55,7 @@ def eval_trace_length(
         subset = df[df["Approach"] == approach]
         max_y = max(max_y, max(subset["Comp. Time [s]"]))
         plt.plot(
-            subset[x_axis_text],
+            subset[xlabel],
             subset["Comp. Time [s]"],
             marker="o",
             markersize=5,
@@ -64,7 +63,7 @@ def eval_trace_length(
             label=approach,
         )
 
-    plt.xlabel(x_axis_text, labelpad=40, color="black")
+    plt.xlabel(xlabel, labelpad=40, color="black")
     plt.ylabel("Computation Time [s]", labelpad=45, color="black")
     plt.ylim(bottom=0, top=max_y)
     plt.yticks(color="black")
