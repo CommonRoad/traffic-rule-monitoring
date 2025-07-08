@@ -1,10 +1,9 @@
-import time
 from typing import List, Tuple
 
 import matplotlib.pyplot as plt
 import pandas as pd
 import rvm
-from evaluation.monitor.common_monitor import a, b, c, create_trace, d, e, f, make_event_list, update_trace
+from evaluation.monitor.common_monitor import create_trace, evaluate, update_trace
 from evaluation.monitor.specifications import specs1_atomic, specs1_pred, specs2_atomic, specs2_pred
 
 from src.evaluation.monitor import path
@@ -16,32 +15,6 @@ except ImportError:
 
 
 plt.style.use("ggplot")
-
-
-def evaluate(
-    approach: str, mon: rvm.Hydra2, tr: rvm.Trace, df: pd.DataFrame, trace_length: int, pred: bool, num_iters: int
-):
-    event_list = make_event_list(trace_length)
-
-    elapsed_time = 0
-    for ite in range(num_iters):
-        if pred:
-            tr = rvm.Trace(
-                event_list,
-                [
-                    rvm.Function(a),
-                    rvm.Function(b),
-                    rvm.Function(c),
-                    rvm.Function(d),
-                    rvm.Function(e),
-                    rvm.Function(f),
-                ],
-                rvm.ConstantCollection([rvm.ConstantValue("rand", 0)]),
-            )
-        start = time.time()
-        mon.evaluate(tr)
-        elapsed_time += time.time() - start
-    df.loc[len(df)] = [approach, trace_length, elapsed_time / num_iters]
 
 
 def eval_trace_length(
@@ -69,11 +42,12 @@ def eval_trace_length(
             rvm.Hydra2(formulas, connectedEval=False, shortCircuiting=False),
             trace,
             df,
+            None,
             trace_length,
             pred,
             num_inters,
         )
-        evaluate("Ours", rvm.Hydra2(formulas), trace, df, trace_length, pred, num_inters)
+        evaluate("Ours", rvm.Hydra2(formulas), trace, df, None, trace_length, pred, num_inters)
 
     # Plotting
     plt.figure(figsize=(10, 8))

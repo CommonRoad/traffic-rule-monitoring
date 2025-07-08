@@ -1,17 +1,12 @@
-import rvm
-from evaluation.monitor import path
 from evaluation.monitor.trace_length_eval import eval_trace_length
 
 from src.evaluation.monitor.formula_size_eval import formula_size_eval
 from src.evaluation.monitor.lazy_eval import lazy_eval
 from src.evaluation.monitor.specifications import (
-    predicate_cost_1,
-    predicate_cost_2,
     specs1_atomic,
     specs1_pred,
     specs2_atomic,
     specs2_pred,
-    specs_lazy,
 )
 
 eval_trace_length(
@@ -29,13 +24,7 @@ eval_trace_length(
 )
 
 
-formulas = [rvm.Parser.parse(form[1], form[0]) for form in specs_lazy]
-res_pred1 = lazy_eval(rvm.Hydra2(formulas, predicateCosts=predicate_cost_1), 50, 5)
-res_pred2 = lazy_eval(rvm.Hydra2(formulas, predicateCosts=predicate_cost_2), 50, 5)
-
-with open(f"{path}/lazy_eval_results.txt", "w") as f:
-    f.write(f"Result with predicate_cost_1: {res_pred1}\n")
-    f.write(f"Result with predicate_cost_2: {res_pred2}\n")
+lazy_eval(50, 5, 10)
 
 
 formula_size_eval("formula_size_atomic", 4, 1000, 50, 0.3, True, 10, 5)

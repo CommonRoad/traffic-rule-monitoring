@@ -1,4 +1,3 @@
-import time
 from pathlib import Path
 from typing import List, Tuple
 
@@ -13,7 +12,7 @@ except ImportError:
 from matplotlib import pyplot as plt
 
 from src.evaluation.monitor import path
-from src.evaluation.monitor.common_monitor import a, b, c, create_trace, d, make_event_list, update_trace
+from src.evaluation.monitor.common_monitor import create_trace, evaluate, update_trace
 
 plt.style.use("ggplot")
 
@@ -37,31 +36,6 @@ def create_specs(size: int, num_atomics: int, seed: int, pred: bool) -> List[Tup
         formulas.append((f"S{idx}", f"G({line})"))
 
     return formulas
-
-
-def evaluate(
-    approach: str,
-    mon: rvm.Hydra2,
-    tr: rvm.Trace,
-    df: pd.DataFrame,
-    spec_size: int,
-    trace_length: int,
-    pred: bool,
-    num_iters: int,
-):
-    event_list = make_event_list(trace_length)
-    elapsed_time = 0
-    for ite in range(num_iters):
-        if pred:
-            tr = rvm.Trace(
-                event_list,
-                [rvm.Function(a), rvm.Function(b), rvm.Function(c), rvm.Function(d)],
-                rvm.ConstantCollection([rvm.ConstantValue("rand", 0)]),
-            )
-        start = time.time()
-        mon.evaluate(tr)
-        elapsed_time += time.time() - start
-    df.loc[len(df)] = [approach, spec_size, elapsed_time / num_iters]
 
 
 def formula_size_eval(

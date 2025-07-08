@@ -5,6 +5,7 @@ from typing import List
 
 import matplotlib
 import matplotlib.pyplot as plt
+import pandas as pd
 import rvm
 
 matplotlib.use("agg")
@@ -185,3 +186,37 @@ def gen_figs():
     plt.ylabel("Memory Usage [Bytes]")
     plt.grid()
     plt.savefig(figs_path / "space_complexity.png")
+
+
+def evaluate(
+    approach: str,
+    mon: rvm.Hydra2,
+    tr: rvm.Trace,
+    df: pd.DataFrame,
+    spec_size: int | None,
+    trace_length: int,
+    pred: bool,
+    num_iters: int,
+):
+    event_list = make_event_list(trace_length)
+    elapsed_time = 0
+    for ite in range(num_iters):
+        if pred:
+            tr = rvm.Trace(
+                event_list,
+                [
+                    rvm.Function(a),
+                    rvm.Function(b),
+                    rvm.Function(c),
+                    rvm.Function(d),
+                    rvm.Function(e),
+                    rvm.Function(f),
+                    rvm.Function(low_comp_time),
+                    rvm.Function(high_comp_time),
+                ],
+                rvm.ConstantCollection([rvm.ConstantValue("rand", 0)]),
+            )
+        start = time.time()
+        mon.evaluate(tr)
+        elapsed_time += time.time() - start
+    df.loc[len(df)] = [approach, trace_length if spec_size is None else spec_size, elapsed_time / num_iters]
