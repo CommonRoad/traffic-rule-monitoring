@@ -40,11 +40,17 @@ def create_specs(size: int, num_atomics: int, seed: int, pred: bool) -> List[Tup
 
 
 def evaluate(
-    approach: str, mon: rvm.Hydra2, tr: rvm.Trace, df: pd.DataFrame, spec_size: int, trace_length: int, pred: bool
+    approach: str,
+    mon: rvm.Hydra2,
+    tr: rvm.Trace,
+    df: pd.DataFrame,
+    spec_size: int,
+    trace_length: int,
+    pred: bool,
+    num_iters: int,
 ):
     event_list = make_event_list(trace_length)
     elapsed_time = 0
-    num_iters = 5
     for ite in range(num_iters):
         if pred:
             tr = rvm.Trace(
@@ -59,7 +65,14 @@ def evaluate(
 
 
 def formula_size_eval(
-    name: str, num_atomics: int, trace_length: int, max_formula_size: int, max_y: float, pred: bool, seed: int
+    name: str,
+    num_atomics: int,
+    trace_length: int,
+    max_formula_size: int,
+    max_y: float,
+    pred: bool,
+    seed: int,
+    num_iters: int,
 ):
     if not path.exists():
         path.mkdir(parents=True, exist_ok=True)
@@ -78,8 +91,9 @@ def formula_size_eval(
             spec_size,
             trace_length,
             pred,
+            num_iters,
         )
-        evaluate("Ours", rvm.Hydra2(formulas), trace, df, spec_size, trace_length, pred)
+        evaluate("Ours", rvm.Hydra2(formulas), trace, df, spec_size, trace_length, pred, num_iters)
 
     plt.figure(figsize=(10, 8))
     plt.rcParams["svg.fonttype"] = "none"
@@ -108,5 +122,5 @@ def formula_size_eval(
 
 
 if __name__ == "__main__":
-    formula_size_eval("formula_size_atomic", 4, 1000, 50, 0.3, False, 10)
-    formula_size_eval("formula_size_predicate", 4, 1000, 50, 0.3, True, 10)
+    formula_size_eval("formula_size_atomic", 4, 1000, 50, 0.3, False, 10, 5)
+    formula_size_eval("formula_size_predicate", 4, 1000, 50, 0.3, True, 10, 5)

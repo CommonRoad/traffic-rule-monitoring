@@ -18,11 +18,12 @@ except ImportError:
 plt.style.use("ggplot")
 
 
-def evaluate(approach: str, mon: rvm.Hydra2, tr: rvm.Trace, df: pd.DataFrame, trace_length: int, pred: bool):
+def evaluate(
+    approach: str, mon: rvm.Hydra2, tr: rvm.Trace, df: pd.DataFrame, trace_length: int, pred: bool, num_iters: int
+):
     event_list = make_event_list(trace_length)
 
     elapsed_time = 0
-    num_iters = 5
     for ite in range(num_iters):
         if pred:
             tr = rvm.Trace(
@@ -52,6 +53,7 @@ def eval_trace_length(
     seed: int,
     trace_lengths: range,
     x_axis_text: str,
+    num_inters: int,
 ):
     if not path.exists():
         path.mkdir(parents=True, exist_ok=True)
@@ -63,9 +65,15 @@ def eval_trace_length(
         print(trace_length)
         update_trace(trace := create_trace(trace_length, num_atomics, seed, pred))
         evaluate(
-            "Baseline", rvm.Hydra2(formulas, connectedEval=False, shortCircuiting=False), trace, df, trace_length, pred
+            "Baseline",
+            rvm.Hydra2(formulas, connectedEval=False, shortCircuiting=False),
+            trace,
+            df,
+            trace_length,
+            pred,
+            num_inters,
         )
-        evaluate("Ours", rvm.Hydra2(formulas), trace, df, trace_length, pred)
+        evaluate("Ours", rvm.Hydra2(formulas), trace, df, trace_length, pred, num_inters)
 
     # Plotting
     plt.figure(figsize=(10, 8))
@@ -97,15 +105,23 @@ def eval_trace_length(
 
 if __name__ == "__main__":
     eval_trace_length(
-        specs1_pred, "running_example_predicate", 2, 0.6, True, 10, range(500, 5500, 500), "Trace Length [x100]"
+        specs1_pred, "running_example_predicate", 2, 0.6, True, 10, range(500, 5500, 500), "Trace Length [x100]", 5
     )
     eval_trace_length(
-        specs2_pred, "dissimilar_predicate", 6, 0.6, True, 10, range(500, 5500, 500), "Trace Length [x100]"
+        specs2_pred, "dissimilar_predicate", 6, 0.6, True, 10, range(500, 5500, 500), "Trace Length [x100]", 5
     )
 
     eval_trace_length(
-        specs1_atomic, "running_example_atomic", 2, 1.1, False, 10, range(20000, 220000, 20000), "Trace Length [x10000]"
+        specs1_atomic,
+        "running_example_atomic",
+        2,
+        1.1,
+        False,
+        10,
+        range(20000, 220000, 20000),
+        "Trace Length [x10000]",
+        5,
     )
     eval_trace_length(
-        specs2_atomic, "dissimilar_atomic", 6, 1.1, False, 10, range(20000, 220000, 20000), "Trace Length [x10000]"
+        specs2_atomic, "dissimilar_atomic", 6, 1.1, False, 10, range(20000, 220000, 20000), "Trace Length [x10000]", 5
     )

@@ -79,6 +79,18 @@ def create_trace(length: int, num_atomics: int, seed: int, predicate: bool) -> r
         return actions
 
 
+# 2ms
+def low_comp_time(time_step: int, rand: int) -> bool:
+    time.sleep(0.002)
+    return True
+
+
+# 100ms
+def high_comp_time(time_step: int, rand: int) -> bool:
+    time.sleep(0.1)
+    return True
+
+
 # 0.00001ms
 def a(time_step: int, rand: int) -> bool:
     time.sleep(float(0.00001 / 1000))
