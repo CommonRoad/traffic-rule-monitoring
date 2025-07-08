@@ -1,51 +1,118 @@
-"""
-Script for Hydra2 experiments.
-"""
-
 import subprocess
+import time
 from pathlib import Path
+from typing import List
 
 import matplotlib
 import matplotlib.pyplot as plt
+import rvm
 
 matplotlib.use("agg")
 
 exec_path = Path(__file__).parent / "exec"
-fmlas_path = Path(__file__).parent / Path("fmlas")
 logs_path = Path(__file__).parent / Path("logs")
 output_path = Path(__file__).parent / Path("output")
 stats_path = Path(__file__).parent / Path("stats")
 figs_path = Path(__file__).parent / Path("figs")
 config_path = Path(__file__).parent / Path("../../../configurations/rv_monitor/rv_monitor.yaml")
 
+trace = []
 
-def gen_fmla(file_name: str, seed: int, size: int, max_int: int, typ: int, scale: int, aps: int):
+
+def update_trace(new_trace: List[List[str]]):
     """
-    Generates formula. The generated formula is stored in the fmlas directory.
-
-    :param file_name: Name of evaluation.
-    :param seed: Seed for generator.
-    :param size: Number of operators and atomic proposition in formula.
-    :param max_int: Maximal lower and upper bound for time interval.
-    :param typ: Type of temporal logic (MTL: 0, MDL: 1, MFOTL: 2).
-    :param scale: Scale factor.
-    :param aps: Maximal number of atomic propositions.
+    Updates the global trace variable with a new trace.
     """
-    if not fmlas_path.exists():
-        fmlas_path.mkdir(parents=True, exist_ok=True)
+    global trace
+    trace = new_trace
 
-    args = (
-        str(exec_path / "gen_fmla"),
-        str(fmlas_path / file_name),
-        str(size),
-        str(max_int),
-        str(typ),
-        str(scale),
-        str(seed),
-        str(aps),
-    )
-    popen = subprocess.Popen(args)
-    popen.wait()
+
+def make_event_list(size):
+    return [rvm.Event(i, i == size - 1) for i in range(size)]
+
+
+def create_trace(length: int, num_atomics: int, seed: int, predicate: bool) -> rvm.Trace | List[List[str]]:
+    gen_log("./eval", length, 1, 10, seed, num_atomics)
+
+    # Initialize the lists
+    actions = []
+    time_steps = []
+
+    # Open the file and read the lines
+    with open(Path(__file__).parent / "logs/eval.log", "r") as file:
+        lines = file.readlines()
+
+    # Process each line
+    for line in lines:
+        # Split the line into parts
+        parts = line.strip().split()
+
+        # The first part is the time step
+        time_step = int(parts[0][1:])
+
+        # The remaining parts are the actions
+        action = []
+        for part in parts[1:]:
+            if part == "a0":
+                action.append("a")
+            elif part == "a1":
+                action.append("b")
+            elif part == "a2":
+                action.append("c")
+            elif part == "a3":
+                action.append("d")
+            elif part == "a4":
+                action.append("e")
+            elif part == "a5":
+                action.append("f")
+            else:
+                raise RuntimeError("unknown atomic")
+
+        # Add to the lists
+        actions.append(action)
+        time_steps.append(time_step)
+
+    if not predicate:
+        atomic_names = {"a", "b"} if num_atomics == 2 else {"a", "b", "c", "d", "e", "f"}
+        return rvm.create_trace(atomic_names, actions, time_steps)
+    else:
+        return actions
+
+
+# 0.00001ms
+def a(time_step: int, rand: int) -> bool:
+    time.sleep(float(0.00001 / 1000))
+    return "a" in trace[time_step]
+
+
+# 0.00005ms
+def b(time_step: int, rand: int) -> bool:
+    time.sleep(0.00005 / 1000)
+    return "b" in trace[time_step]
+
+
+# 0.00002ms
+def c(time_step: int, rand: int) -> bool:
+    time.sleep(0.00002 / 1000)
+    return "c" in trace[time_step]
+
+
+# 0.000001ms
+def d(time_step: int, rand: int) -> bool:
+    time.sleep(0.000001 / 1000)
+    return "d" in trace[time_step]
+
+
+# 0.0002ms
+def e(time_step: int, rand: int) -> bool:
+    time.sleep(0.0002 / 1000)
+    return "e" in trace[time_step]
+
+
+# 0.00001ms
+def f(time_step: int, rand: int) -> bool:
+    time.sleep(0.00001 / 1000)
+    return "f" in trace[time_step]
 
 
 def gen_log(file_name: str, ts_cnt: int, er: int, delta: int, seed: int, aps: int):

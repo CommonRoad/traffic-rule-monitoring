@@ -4,6 +4,7 @@ from typing import List, Tuple
 
 import pandas as pd
 import rvm
+from evaluation.monitor.specifications import gen_fmla
 from evaluation.monitor.trace_length_eval_predicate import make_event_list
 
 try:
@@ -13,79 +14,9 @@ except ImportError:
 from matplotlib import pyplot as plt
 
 from src.evaluation.monitor import path
-from src.evaluation.monitor.common_monitor import gen_fmla, gen_log
+from src.evaluation.monitor.common_monitor import a, b, c, create_trace, d, update_trace
 
 plt.style.use("ggplot")
-
-trace = []
-
-
-# 0.00001ms
-def a(time_step: int, rand: int) -> bool:
-    time.sleep(float(0.00001 / 1000))
-    return "a" in trace[time_step]
-
-
-# 0.00005ms
-def b(time_step: int, rand: int) -> bool:
-    time.sleep(0.00005 / 1000)
-    return "b" in trace[time_step]
-
-
-# 0.00002ms
-def c(time_step: int, rand: int) -> bool:
-    time.sleep(0.00002 / 1000)
-    return "c" in trace[time_step]
-
-
-# 0.000001ms
-def d(time_step: int, rand: int) -> bool:
-    time.sleep(0.000001 / 1000)
-    return "d" in trace[time_step]
-
-
-def create_trace(length: int, num_atomics: int, seed: int, predicate: bool) -> rvm.Trace | List[List[str]]:
-    gen_log("./eval", length, 1, 10, seed, num_atomics)
-
-    # Initialize the lists
-    actions = []
-    time_steps = []
-
-    # Open the file and read the lines
-    with open(f"{Path(__file__).parent / 'logs/eval.log'}", "r") as file:
-        lines = file.readlines()
-
-    # Process each line
-    for line in lines:
-        # Split the line into parts
-        parts = line.strip().split()
-
-        # The first part is the time step
-        time_step = int(parts[0][1:])
-
-        # The remaining parts are the actions
-        action = []
-        for part in parts[1:]:
-            if part == "a0":
-                action.append("a")
-            elif part == "a1":
-                action.append("b")
-            elif part == "a2":
-                action.append("c")
-            elif part == "a3":
-                action.append("d")
-            else:
-                raise RuntimeError("unknown atomic")
-
-        # Add to the lists
-        actions.append(action)
-        time_steps.append(time_step)
-
-    if not predicate:
-        atomic_names = {"a", "b"} if num_atomics == 2 else {"a", "b", "c", "d"}
-        return rvm.create_trace(atomic_names, actions, time_steps)
-    else:
-        return actions
 
 
 def create_specs(size: int, num_atomics: int, seed: int, pred: bool) -> List[Tuple[str, str]]:
@@ -96,7 +27,7 @@ def create_specs(size: int, num_atomics: int, seed: int, pred: bool) -> List[Tup
     idx = 1
 
     # Open the file and read the lines
-    with open("./fmlas/eval.mdl", "r") as file:
+    with open(Path(__file__).parent / "fmlas/eval.mdl", "r") as file:
         lines = file.readlines()
 
     for line in lines:
@@ -128,14 +59,14 @@ def evaluate(
     df.loc[len(df)] = [approach, spec_size, elapsed_time / num_iters]
 
 
-def formula_size_eval(name: str, num_atomics: int, trace_length: int, max_formula_size: int, max_y: float, pred: bool):
+def formula_size_eval(
+    name: str, num_atomics: int, trace_length: int, max_formula_size: int, max_y: float, pred: bool, seed: int
+):
     if not path.exists():
         path.mkdir(parents=True, exist_ok=True)
 
-    seed = 10
     df = pd.DataFrame(columns=["Approach", "Formula Size", "Computation Time [s]"])
-    global trace
-    trace = create_trace(trace_length, num_atomics, seed, pred)
+    update_trace(trace := create_trace(trace_length, num_atomics, seed, pred))
     for spec_size in range(2, max_formula_size + 1, 2):
         print(spec_size)
         specs = create_specs(spec_size, num_atomics, seed, pred)
@@ -178,5 +109,5 @@ def formula_size_eval(name: str, num_atomics: int, trace_length: int, max_formul
 
 
 if __name__ == "__main__":
-    formula_size_eval("formula_size_atomic", 4, 1000, 50, 0.3, False)
-    formula_size_eval("formula_size_predicate", 4, 1000, 50, 0.3, True)
+    formula_size_eval("formula_size_atomic", 4, 1000, 50, 0.3, False, 10)
+    formula_size_eval("formula_size_predicate", 4, 1000, 50, 0.3, True, 10)
