@@ -1,13 +1,13 @@
 import time
-from pathlib import Path
 from typing import List, Tuple
 
 import matplotlib.pyplot as plt
 import pandas as pd
 import rvm
+from evaluation.monitor.common_monitor import a, b, c, create_trace, d, e, f, make_event_list, update_trace
+from evaluation.monitor.specifications import specs1_atomic, specs1_pred, specs2_atomic, specs2_pred
 
 from src.evaluation.monitor import path
-from src.evaluation.monitor.common_monitor import gen_log
 
 try:
     import tikzplotlib
@@ -18,81 +18,55 @@ except ImportError:
 plt.style.use("ggplot")
 
 
-def create_trace(length: int, num_atomics: int, seed: int) -> rvm.Trace:
-    if not path.exists():
-        path.mkdir(parents=True, exist_ok=True)
-    gen_log("./eval", length, 1, 10, seed, num_atomics)
+def evaluate(approach: str, mon: rvm.Hydra2, tr: rvm.Trace, df: pd.DataFrame, trace_length: int, pred: bool):
+    event_list = make_event_list(trace_length)
 
-    # Initialize the lists
-    actions = []
-    time_steps = []
-
-    # Open the file and read the lines
-    with open(Path(__file__).parent / "logs/eval.log", "r") as file:
-        lines = file.readlines()
-
-    # Process each line
-    for line in lines:
-        # Split the line into parts
-        parts = line.strip().split()
-
-        # The first part is the time step
-        time_step = int(parts[0][1:])
-
-        # The remaining parts are the actions
-        action = []
-        for part in parts[1:]:
-            if part == "a0":
-                action.append("a")
-            elif part == "a1":
-                action.append("b")
-            elif part == "a2":
-                action.append("c")
-            elif part == "a3":
-                action.append("d")
-            elif part == "a4":
-                action.append("e")
-            elif part == "a5":
-                action.append("f")
-            else:
-                raise RuntimeError("unknown atomic")
-
-        # Add to the lists
-        actions.append(action)
-        time_steps.append(time_step)
-
-    atomic_names = {"a", "b"} if num_atomics == 2 else {"a", "b", "c", "d", "e", "f"}
-
-    return rvm.create_trace(atomic_names, actions, time_steps)
-
-
-def evaluate(approach: str, mon: rvm.Hydra2, tr: rvm.Trace, df: pd.DataFrame, trace_length: int):
     elapsed_time = 0
     num_iters = 5
     for ite in range(num_iters):
+        if pred:
+            tr = rvm.Trace(
+                event_list,
+                [
+                    rvm.Function(a),
+                    rvm.Function(b),
+                    rvm.Function(c),
+                    rvm.Function(d),
+                    rvm.Function(e),
+                    rvm.Function(f),
+                ],
+                rvm.ConstantCollection([rvm.ConstantValue("rand", 0)]),
+            )
         start = time.time()
         mon.evaluate(tr)
         elapsed_time += time.time() - start
     df.loc[len(df)] = [approach, trace_length, elapsed_time / num_iters]
 
 
-def eval_trace_length_atomic(spec: List[Tuple[str, str]], name: str, num_atomics: int, max_y: float):
-    trace_lengths = range(20000, 220000, 20000)
-    x_axis_text = "Trace Length [x10000]"
+def eval_trace_length(
+    spec: List[Tuple[str, str]],
+    name: str,
+    num_atomics: int,
+    max_y: float,
+    pred: bool,
+    seed: int,
+    trace_lengths: range,
+    x_axis_text: str,
+):
+    if not path.exists():
+        path.mkdir(parents=True, exist_ok=True)
 
     df = pd.DataFrame(columns=["Approach", x_axis_text, "Comp. Time [s]"])
     formulas = [rvm.Parser.parse(form[1], form[0]) for form in spec]
+
     for trace_length in trace_lengths:
         print(trace_length)
-        trace = create_trace(trace_length, num_atomics, 2)
+        update_trace(trace := create_trace(trace_length, num_atomics, seed, pred))
         evaluate(
-            "Baseline",
-            rvm.Hydra2(formulas, connectedEval=False, shortCircuiting=False),
-            trace,
-            df,
-            trace_length,
+            "Baseline", rvm.Hydra2(formulas, connectedEval=False, shortCircuiting=False), trace, df, trace_length, pred
         )
-        evaluate("Ours", rvm.Hydra2(formulas), trace, df, trace_length)
+        evaluate("Ours", rvm.Hydra2(formulas), trace, df, trace_length, pred)
+
     # Plotting
     plt.figure(figsize=(10, 8))
     plt.rcParams["svg.fonttype"] = "none"
@@ -119,3 +93,19 @@ def eval_trace_length_atomic(spec: List[Tuple[str, str]], name: str, num_atomics
     plt.savefig(f"{path}/{name}.svg")
     if tikzplotlib:
         tikzplotlib.save(f"{path}/{name}.tex")
+
+
+if __name__ == "__main__":
+    eval_trace_length(
+        specs1_pred, "running_example_predicate", 2, 0.6, True, 10, range(500, 5500, 500), "Trace Length [x100]"
+    )
+    eval_trace_length(
+        specs2_pred, "dissimilar_predicate", 6, 0.6, True, 10, range(500, 5500, 500), "Trace Length [x100]"
+    )
+
+    eval_trace_length(
+        specs1_atomic, "running_example_atomic", 2, 1.1, False, 10, range(20000, 220000, 20000), "Trace Length [x10000]"
+    )
+    eval_trace_length(
+        specs2_atomic, "dissimilar_atomic", 6, 1.1, False, 10, range(20000, 220000, 20000), "Trace Length [x10000]"
+    )

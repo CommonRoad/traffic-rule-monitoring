@@ -5,7 +5,6 @@ from typing import List, Tuple
 import pandas as pd
 import rvm
 from evaluation.monitor.specifications import gen_fmla
-from evaluation.monitor.trace_length_eval_predicate import make_event_list
 
 try:
     import tikzplotlib
@@ -14,7 +13,7 @@ except ImportError:
 from matplotlib import pyplot as plt
 
 from src.evaluation.monitor import path
-from src.evaluation.monitor.common_monitor import a, b, c, create_trace, d, update_trace
+from src.evaluation.monitor.common_monitor import a, b, c, create_trace, d, make_event_list, update_trace
 
 plt.style.use("ggplot")
 
