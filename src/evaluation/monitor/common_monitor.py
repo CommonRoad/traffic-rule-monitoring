@@ -15,7 +15,6 @@ logs_path = Path(__file__).parent / Path("logs")
 output_path = Path(__file__).parent / Path("output")
 stats_path = Path(__file__).parent / Path("stats")
 figs_path = Path(__file__).parent / Path("figs")
-config_path = Path(__file__).parent / Path("../../../configurations/rv_monitor/rv_monitor.yaml")
 
 trace = []
 
@@ -92,39 +91,39 @@ def high_comp_time(time_step: int, rand: int) -> bool:
     return True
 
 
-# 0.00001ms
+# 0.001ms
 def a(time_step: int, rand: int) -> bool:
-    time.sleep(float(0.00001 / 1000))
+    time.sleep(float(0.001 / 1000))
     return "a" in trace[time_step]
 
 
-# 0.00005ms
+# 0.005ms
 def b(time_step: int, rand: int) -> bool:
-    time.sleep(0.00005 / 1000)
+    time.sleep(0.005 / 1000)
     return "b" in trace[time_step]
 
 
-# 0.00002ms
+# 0.002ms
 def c(time_step: int, rand: int) -> bool:
-    time.sleep(0.00002 / 1000)
+    time.sleep(0.002 / 1000)
     return "c" in trace[time_step]
 
 
-# 0.000001ms
+# 0.0001ms
 def d(time_step: int, rand: int) -> bool:
-    time.sleep(0.000001 / 1000)
+    time.sleep(0.0001 / 1000)
     return "d" in trace[time_step]
 
 
-# 0.0002ms
+# 0.02ms
 def e(time_step: int, rand: int) -> bool:
-    time.sleep(0.0002 / 1000)
+    time.sleep(0.02 / 1000)
     return "e" in trace[time_step]
 
 
-# 0.00001ms
+# 0.001ms
 def f(time_step: int, rand: int) -> bool:
-    time.sleep(0.00001 / 1000)
+    time.sleep(0.001 / 1000)
     return "f" in trace[time_step]
 
 

@@ -58,8 +58,8 @@ def eval_trace_length(
         subset = df[df["Approach"] == approach]
         max_y = max(max_y, max(subset["Comp. Time [s]"]))
         plt.plot(
-            subset[xlabel],
-            subset["Comp. Time [s]"],
+            subset[xlabel].to_numpy(),
+            subset["Comp. Time [s]"].to_numpy(),
             marker="o",
             markersize=5,
             linewidth=4,
@@ -70,7 +70,9 @@ def eval_trace_length(
     plt.ylabel("Computation Time [s]", labelpad=45, color="black")
     plt.ylim(bottom=0, top=max_y)
     plt.yticks(color="black")
-    plt.xticks(trace_lengths, [str(int(i / 10000)) for i in trace_lengths], color="black")
+    plt.xticks(
+        trace_lengths, [str(int(i / int(xlabel[xlabel.find("[x") + 2 : -1]))) for i in trace_lengths], color="black"
+    )
     plt.tick_params(axis="x", which="major", pad=30, color="black")
     plt.tick_params(axis="y", labelcolor="black", top=max_y)
     plt.legend(fontsize=30)
@@ -88,5 +90,6 @@ if __name__ == "__main__":
         params = yaml.safe_load(f)
     seed_var = params["general"]["seed"]
     iters = params["general"]["num_iters"]
+    tex = params["general"]["with_tex"]
     for eval_params in params["eval_trace_length"]:
-        eval_trace_length(**eval_params, num_iters=iters, seed=seed_var, with_tex=False)
+        eval_trace_length(**eval_params, num_iters=iters, seed=seed_var, with_tex=tex)

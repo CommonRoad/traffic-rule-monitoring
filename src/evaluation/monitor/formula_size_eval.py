@@ -75,8 +75,8 @@ def formula_size_eval(
     for approach in df["Approach"].unique():
         subset = df[df["Approach"] == approach]
         plt.plot(
-            subset["Formula Size"],
-            subset["Computation Time [s]"],
+            subset["Formula Size"].to_numpy(),
+            subset["Computation Time [s]"].to_numpy(),
             marker="o",
             markersize=5,
             linewidth=4,
