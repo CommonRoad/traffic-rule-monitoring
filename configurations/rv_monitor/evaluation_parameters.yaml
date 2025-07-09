@@ -4,28 +4,29 @@ general:
   with_tex: true
 
 eval_trace_length:
-  - name: running_example_predicate
-    spec: [
-    ["S1", "G((a('rand')) S[0, 4] (b('rand')))"],
-    ["S2", "G((a('rand')) U[0, 4] (b('rand')))"],
-    ["S3", "G((a('rand')) U[0, 4] (b('rand')) & (a('rand')) S[0, 4] (b('rand')))"
-    ]]
-    num_atomics: 2
-    max_y: 0.6
-    pred: true
-    trace_lengths: [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
-    xlabel: Trace Length [x100]
-  - name: dissimilar_predicate
-    spec: [
-    ["S1", "G(P[0, 4] (a('rand')))"],
-    ["S2", "G(X[0, 4] (b('rand')))"],
-    ["S3", "G((c('rand')) U[0, 4] (d('rand')) & (e('rand')) S[0, 4] (f('rand')))"
-    ]]
-    num_atomics: 6
-    max_y: 1.8
-    pred: true
-    trace_lengths: [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
-    xlabel: Trace Length [x100]
+# benefit of our approach with very simple formulas and predicates almost not visible -> commented out
+#  - name: running_example_predicate
+#    spec: [
+#    ["S1", "G((a('rand')) S[0, 4] (b('rand')))"],
+#    ["S2", "G((a('rand')) U[0, 4] (b('rand')))"],
+#    ["S3", "G((a('rand')) U[0, 4] (b('rand')) & (a('rand')) S[0, 4] (b('rand')))"
+#    ]]
+#    num_atomics: 2
+#    max_y: 0.6
+#    pred: true
+#    trace_lengths: [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
+#    xlabel: Trace Length [x100]
+#  - name: dissimilar_predicate
+#    spec: [
+#    ["S1", "G(P[0, 4] (a('rand')))"],
+#    ["S2", "G(X[0, 4] (b('rand')))"],
+#    ["S3", "G((c('rand')) U[0, 4] (d('rand')) & (e('rand')) S[0, 4] (f('rand')))"
+#    ]]
+#    num_atomics: 6
+#    max_y: 1.8
+#    pred: true
+#    trace_lengths: [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
+#    xlabel: Trace Length [x100]
   - name: running_example_atomic
     spec: [
     ["S1", "G((a) S[0, 4] (b))"],
