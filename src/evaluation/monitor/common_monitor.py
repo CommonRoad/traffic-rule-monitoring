@@ -79,19 +79,7 @@ def create_trace(length: int, num_atomics: int, seed: int, predicate: bool) -> r
         return actions
 
 
-# 2ms
-def low_comp_time(time_step: int, rand: int) -> bool:
-    time.sleep(0.002)
-    return True
-
-
-# 100ms
-def high_comp_time(time_step: int, rand: int) -> bool:
-    time.sleep(0.1)
-    return True
-
-
-# 0.001ms
+# 0.0001ms
 def a(time_step: int, rand: int) -> bool:
     time.sleep(float(0.001 / 1000))
     return "a" in trace[time_step]
@@ -109,21 +97,21 @@ def c(time_step: int, rand: int) -> bool:
     return "c" in trace[time_step]
 
 
-# 0.0001ms
+# 0.001ms
 def d(time_step: int, rand: int) -> bool:
-    time.sleep(0.0001 / 1000)
+    time.sleep(0.001 / 1000)
     return "d" in trace[time_step]
 
 
-# 0.02ms
+# 0.005ms
 def e(time_step: int, rand: int) -> bool:
-    time.sleep(0.02 / 1000)
+    time.sleep(0.005 / 1000)
     return "e" in trace[time_step]
 
 
-# 0.001ms
+# 2ms
 def f(time_step: int, rand: int) -> bool:
-    time.sleep(0.001 / 1000)
+    time.sleep(2 / 1000)
     return "f" in trace[time_step]
 
 
@@ -210,8 +198,6 @@ def evaluate(
                     rvm.Function(d),
                     rvm.Function(e),
                     rvm.Function(f),
-                    rvm.Function(low_comp_time),
-                    rvm.Function(high_comp_time),
                 ],
                 rvm.ConstantCollection([rvm.ConstantValue("rand", 0)]),
             )

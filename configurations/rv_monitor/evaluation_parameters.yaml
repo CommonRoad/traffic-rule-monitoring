@@ -57,15 +57,34 @@ eval_trace_length:
     xlabel: Trace Length [x10000]
 
 lazy_eval:
-  trace_length: 50
-  specs: [["S1", "G(low_comp_time('rand') | high_comp_time('rand'))"]]
-  pred_cost:
-    PredCost1:
-      "low_comp_time": [ 1.0, 1.0, 0.0 ]
-      "high_comp_time": [ 100.0, 0.0, 0.0 ]
-    PredCost2:
-      "low_comp_time": [ 100.0, 0.0, 0.0 ]
-      "high_comp_time": [ 1.0, 1.0, 0.0 ]
+  - name: or
+    spec: [["S1", "G(f('rand') | e('rand'))"]]
+    num_atomics: 6
+    max_y: 2.3
+    pred: true
+    trace_lengths: [200, 400, 600, 800, 1000]
+    pred_cost:
+      PredCost1:
+        "e": [ 1.0, 1.0, 0.0 ]
+        "f": [ 100.0, 0.0, 0.0 ]
+      PredCost2:
+        "e": [ 100.0, 0.0, 0.0 ]
+        "f": [ 1.0, 1.0, 0.0 ]
+    xlabel: Trace Length
+  - name: and
+    spec: [["S1", "G(f('rand') & e('rand'))"]]
+    num_atomics: 6
+    max_y: 2.3
+    pred: true
+    trace_lengths: [200, 400, 600, 800, 1000]
+    pred_cost:
+      PredCost1:
+        "e": [ 1.0, 0.0, 0.0 ]
+        "f": [ 100.0, 1.0, 0.0 ]
+      PredCost2:
+        "e": [ 100.0, 1.0, 0.0 ]
+        "f": [ 1.0, 0.0, 0.0 ]
+    xlabel: Trace Length
 
 
 formula_size_eval:
@@ -73,11 +92,11 @@ formula_size_eval:
     num_atomics: 4
     trace_length: 1000
     max_formula_size: 50
-    max_y: 0.3
-    pred: true
+    max_y: 0.0125
+    pred: false
   - name: formula_size_predicate
     num_atomics: 4
     trace_length: 1000
     max_formula_size: 50
-    max_y: 0.015
-    pred: false
+    max_y: 0.25
+    pred: true
