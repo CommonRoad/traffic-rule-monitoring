@@ -29,6 +29,7 @@ def eval_lazy(
     seed: int,
     with_tex: bool,
     pred_cost: Dict[str, Dict[str, Dict[str, List[float]]]],
+    idx: int,
 ):
     if not path.exists():
         path.mkdir(parents=True, exist_ok=True)
@@ -40,8 +41,8 @@ def eval_lazy(
         print(trace_length)
         update_trace(trace := create_trace(trace_length, num_atomics, seed, pred))
         evaluate(
-            "PredCost1",
-            rvm.Hydra2(formulas, predicateCosts=pred_cost["PredCost1"]),
+            f"PredCost{idx * 2 + 1}",
+            rvm.Hydra2(formulas, predicateCosts=pred_cost[f"PredCost{idx * 2 + 1}"]),
             trace,
             df,
             None,
@@ -50,8 +51,8 @@ def eval_lazy(
             num_iters,
         )
         evaluate(
-            "PredCost2",
-            rvm.Hydra2(formulas, predicateCosts=pred_cost["PredCost2"]),
+            f"PredCost{idx * 2 + 2}",
+            rvm.Hydra2(formulas, predicateCosts=pred_cost[f"PredCost{idx * 2 + 2}"]),
             trace,
             df,
             None,
@@ -102,5 +103,5 @@ if __name__ == "__main__":
     seed_var = params["general"]["seed"]
     iters = params["general"]["num_iters"]
     tex = params["general"]["with_tex"]
-    for eval_params in params["lazy_eval"]:
-        eval_lazy(**eval_params, num_iters=iters, seed=seed_var, with_tex=tex)
+    for idx_eval, eval_params in enumerate(params["lazy_eval"]):
+        eval_lazy(**eval_params, num_iters=iters, seed=seed_var, with_tex=tex, idx=idx_eval)

@@ -78,10 +78,10 @@ lazy_eval:
     pred: true
     trace_lengths: [200, 400, 600, 800, 1000]
     pred_cost:
-      PredCost1:
+      PredCost3:
         "e": [ 1.0, 0.0, 0.0 ]
         "f": [ 100.0, 1.0, 0.0 ]
-      PredCost2:
+      PredCost4:
         "e": [ 100.0, 1.0, 0.0 ]
         "f": [ 1.0, 0.0, 0.0 ]
     xlabel: Trace Length

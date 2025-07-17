@@ -16,8 +16,8 @@ with_tex = params["general"]["with_tex"]
 for eval_params in params["eval_trace_length"]:
     eval_trace_length(**eval_params, num_iters=num_iters, seed=seed, with_tex=with_tex)
 
-for eval_params in params["lazy_eval"]:
-    eval_lazy(**eval_params, num_iters=num_iters, seed=seed, with_tex=with_tex)
+for idx, eval_params in enumerate(params["lazy_eval"]):
+    eval_lazy(**eval_params, num_iters=num_iters, seed=seed, with_tex=with_tex, idx=idx)
 
 for fs_params in params["formula_size_eval"]:
     formula_size_eval(**fs_params, seed=seed, num_iters=num_iters, with_tex=with_tex)
