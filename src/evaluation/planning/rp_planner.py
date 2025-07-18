@@ -4,7 +4,10 @@ from copy import deepcopy
 from commonroad.visualization.mp_renderer import MPRenderer
 from commonroad_rp.reactive_planner import ReactivePlanner
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
-from commonroad_rp.utility.evaluation import create_full_solution_ego_vehicle
+from commonroad_rp.utility.evaluation import (
+    create_full_solution_ego_vehicle,
+    evaluate_results,
+)
 from commonroad_rp.utility.logger import initialize_logger
 from commonroad_rp.utility.utils_coordinate_system import (
     CoordinateSystem,
@@ -125,5 +128,6 @@ def run_planner_cr_scenario(config: ReactivePlannerConfiguration) -> float:
             rnd=rnd,
             ego_params=create_ego_draw_params(0),
         )
+        evaluate_results(config, ego_vehicle_solution.prediction.trajectory, planner.record_input_list)
 
     return statistics.median(cleaned_times)
