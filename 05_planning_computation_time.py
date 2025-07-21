@@ -157,6 +157,10 @@ scenario_configs = [
         activated_interstate_rule_set,
     ),
     (
+        Path(__file__).parent / "scenarios/planning" / "USA_US101-14_7_T-1.xml",
+        activated_interstate_rule_set,
+    ),
+    (
         Path(__file__).parent / "scenarios/planning/intersection/DEU_Salzwedel-107/" / "DEU_Salzwedel-107_1_T-7.pb",
         activated_intersection_rule_set,
     ),
