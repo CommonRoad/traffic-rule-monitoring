@@ -29,7 +29,7 @@ def evaluate(
     rp_config.monitor.trace_step = [10, 1]
     rp_config.monitor.short_circuiting = True
     rp_config.debug.draw_icons = True
-    rp_config.debug.show_evaluation_plots = True
+    rp_config.debug.show_evaluation_plots = False
     rp_config.debug.draw_planning_problem = True
     rp_config.debug.plots_file_format = "svg"
     rp_config.debug.traj_vis_filter = ["INFEASIBLE_KINEMATIC"]

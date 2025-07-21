@@ -1,0 +1,13 @@
+planning:
+  replanning_frequency: 1
+
+vehicle:
+  id_type_vehicle: 2
+
+sampling:
+  d_min: -3.5
+  d_max: 3.5
+  max_deceleration_ratio: 0.125
+
+monitor:
+  with_rule_monitoring: True
