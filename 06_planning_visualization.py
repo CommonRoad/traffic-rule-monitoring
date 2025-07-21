@@ -1,3 +1,4 @@
+import concurrent.futures
 from pathlib import Path
 from typing import List, Tuple
 
@@ -61,10 +62,13 @@ def evaluate(
 
 
 def eval_scenario(config_settings: List[Tuple]):
-    for setting in config_settings:
-        scenario_path, activated_traffic_rule_sets = setting
-        evaluate(scenario_path, activated_traffic_rule_sets, True)
-        evaluate(scenario_path, activated_traffic_rule_sets, False)
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        futures = []
+        for setting in config_settings:
+            scenario_path, activated_traffic_rule_sets = setting
+            futures.append(executor.submit(evaluate, scenario_path, activated_traffic_rule_sets, True))
+            futures.append(executor.submit(evaluate, scenario_path, activated_traffic_rule_sets, False))
+        concurrent.futures.wait(futures)
 
 
 scenario_configs = [
