@@ -17,6 +17,7 @@ def evaluate(
     sc_path: Path,
     rule_set: List[str],
     with_monitor: bool,
+    plot_limits: Tuple[float, float, float, float],
 ):
     print(f"Evaluating scenario {sc_path}")
 
@@ -58,31 +59,35 @@ def evaluate(
         key: [value["cost"], value["probability"]] for key, value in data.get("predicateCost", {}).items()
     }
     rp_config.update()
-    run_planner_cr_scenario(rp_config)
+    run_planner_cr_scenario(rp_config, plot_limits)
 
 
 def eval_scenario(config_settings: List[Tuple]):
-    with concurrent.futures.ProcessPoolExecutor(max_workers=12) as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=1) as executor:
         futures = []
         for setting in config_settings:
-            scenario_path, activated_traffic_rule_sets = setting
+            scenario_path, activated_traffic_rule_sets, plot_limits = setting
             futures.append(executor.submit(evaluate, scenario_path, activated_traffic_rule_sets, True))
             futures.append(executor.submit(evaluate, scenario_path, activated_traffic_rule_sets, False))
-        concurrent.futures.wait(futures)
+            evaluate(scenario_path, activated_traffic_rule_sets, True, plot_limits)
+            concurrent.futures.wait(futures)
 
 
 scenario_configs = [
     (
         Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_5_T-1.xml",
         activated_interstate_rule_set,
+        [-20, 58.22154813195135, -52.18761429753197, 20],
     ),
     (
         Path(__file__).parent / "scenarios/planning/intersection/DEU_Salzwedel-107/" / "DEU_Salzwedel-107_1_T-7.pb",
         activated_intersection_rule_set,
+        [-26.31180869192808, 27.792619041001938, -31.0, 20.061873788838348],
     ),
     (
         Path(__file__).parent / "scenarios/planning/intersection/USA_Peach-4/" / "USA_Peach-4_9_T-1.pb",
         activated_intersection_rule_set,
+        [-34.82384098144091, 20.0, -69.2432711302175, 20],
     ),
 ]
 

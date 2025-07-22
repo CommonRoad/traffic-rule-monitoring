@@ -1,5 +1,6 @@
 import statistics
 from copy import deepcopy
+from typing import Tuple
 
 from commonroad.visualization.mp_renderer import MPRenderer
 from commonroad_rp.reactive_planner import ReactivePlanner
@@ -19,7 +20,9 @@ from commonroad_rp.utility.visualization import plot_final_trajectory, visualize
 from src.evaluation.common.scenario_eval import create_ego_draw_params
 
 
-def run_planner_cr_scenario(config: ReactivePlannerConfiguration) -> float:
+def run_planner_cr_scenario(
+    config: ReactivePlannerConfiguration, plot_limits: Tuple[float, float, float, float] | None = None
+) -> float:
     # Initialization
     initialize_logger(config)
     ref_path_orig = create_initial_ref_path(config.scenario.lanelet_network, config.planning_problem)
@@ -106,6 +109,7 @@ def run_planner_cr_scenario(config: ReactivePlannerConfiguration) -> float:
                 config=config,
                 rnd=rnd,
                 ego_params=create_ego_draw_params(current_count),
+                plot_limits=plot_limits,
             )
         if config.monitor.with_rule_monitoring:
             planner.prepare_monitor()
