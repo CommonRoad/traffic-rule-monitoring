@@ -63,7 +63,7 @@ def evaluate(
 
 
 def eval_scenario(config_settings: List[Tuple]):
-    with concurrent.futures.ProcessPoolExecutor(max_workers=1) as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=10) as executor:
         futures = []
         for setting in config_settings:
             scenario_path, activated_traffic_rule_sets, plot_limits = setting
