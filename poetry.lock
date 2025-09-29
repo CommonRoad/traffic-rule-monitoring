@@ -415,7 +415,7 @@ scipy = "^1.11.3"
 type = "git"
 url = "ssh://git@gitlab.lrz.de/cps/commonroad/commonroad-carla-interface.git"
 reference = "monitor-integration"
-resolved_reference = "c65b6bd64c116623de582352da1e29d4e0318053"
+resolved_reference = "5155806263719f39734acb6464200210afd362e5"
 
 [[package]]
 name = "commonroad-clcs"
@@ -456,7 +456,7 @@ test = ["parameterized (>=0.9.0,<0.10.0)", "pytest (>=3.8.0)"]
 
 [[package]]
 name = "commonroad_cpp"
-version = "2023.0rc6.dev388+g56df2a67"
+version = "2023.0rc6.dev389+g1d4d43a0"
 description = "CommonRoad C++ Environment Model"
 optional = false
 python-versions = "<3.14,>=3.9"
@@ -475,7 +475,7 @@ test = ["numpy (>=1.20.0)", "pytest (>=5.3.2)"]
 type = "git"
 url = "ssh://git@gitlab.lrz.de/cps/commonroad/environment-model"
 reference = "fix/extract-lanelet-prio"
-resolved_reference = "56df2a67142346224b4679bd119b28625ae15b67"
+resolved_reference = "1d4d43a0ec8259dbf6bebac5fe33b2abd4a6c73c"
 
 [[package]]
 name = "commonroad-drivability-checker"
@@ -557,7 +557,7 @@ resolved_reference = "f5f83646d1d82265c44bf2193fc67460d58a98cd"
 
 [[package]]
 name = "commonroad_monitor"
-version = "2023.0rc2.dev430+g822cbc36"
+version = "2023.0rc2.dev432+ga2ad8d7a"
 description = "Traffic Rule Monitor for CommonRoad Scenarios"
 optional = false
 python-versions = "<3.12,>=3.9"
@@ -590,7 +590,7 @@ test = ["pytest (>=5.3.2)"]
 type = "git"
 url = "ssh://git@gitlab.lrz.de/cps/commonroad/commonroad-monitor.git"
 reference = "feature/monitor-node-profile-vis"
-resolved_reference = "822cbc3669b04791d18276080701e7b778cba760"
+resolved_reference = "a2ad8d7ac8b2bc79f3469ba9e51cb8dbd7f190d5"
 
 [[package]]
 name = "commonroad-prediction"
@@ -646,7 +646,7 @@ triangle = ">=20230923"
 type = "git"
 url = "ssh://git@gitlab.lrz.de/cps/reactive-planner.git"
 reference = "integration_crmonitor"
-resolved_reference = "39cdc966c9e315f9dfb0b9141bb88706e60518cc"
+resolved_reference = "9cf05c3a80e5ade10450df1bc7cefa31695762cc"
 
 [[package]]
 name = "commonroad-route-planner"
@@ -2024,14 +2024,14 @@ files = [
 
 [[package]]
 name = "narwhals"
-version = "2.5.0"
+version = "2.6.0"
 description = "Extremely lightweight compatibility layer between dataframe libraries"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "narwhals-2.5.0-py3-none-any.whl", hash = "sha256:7e213f9ca7db3f8bf6f7eff35eaee6a1cf80902997e1b78d49b7755775d8f423"},
-    {file = "narwhals-2.5.0.tar.gz", hash = "sha256:8ae0b6f39597f14c0dc52afc98949d6f8be89b5af402d2d98101d2f7d3561418"},
+    {file = "narwhals-2.6.0-py3-none-any.whl", hash = "sha256:3215ea42afb452c6c8527e79cefbe542b674aa08d7e2e99d46b2c9708870e0d4"},
+    {file = "narwhals-2.6.0.tar.gz", hash = "sha256:5c9e2ba923e6a0051017e146184e49fb793548936f978ce130c9f55a9a81240e"},
 ]
 
 [package.extras]

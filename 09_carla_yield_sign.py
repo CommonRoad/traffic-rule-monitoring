@@ -15,8 +15,8 @@ rp_config = init_rp_config_carla(["R_U2", "R_U4", "R_U12", "R_G1"])
 carla_interface = CarlaInterface(param)
 # get scenario from specified map
 scenario = CommonRoadFileReader(
-    filename_map="scenarios/ZAM_CARLAReactivePlannerError-10/ZAM_CARLAReactivePlannerError-10.pb",
-    filename_dynamic="scenarios/ZAM_CARLAReactivePlannerError-10/ZAM_CARLAReactivePlannerError-10_1_T-1.pb",
+    filename_map="scenarios/planning/ZAM_CARLAReactivePlannerError-10/ZAM_CARLAReactivePlannerError-10.pb",
+    filename_dynamic="scenarios/planning/ZAM_CARLAReactivePlannerError-10/ZAM_CARLAReactivePlannerError-10_1_T-1.pb",
 ).open_map_dynamic()
 scenario.remove_obstacle(scenario.obstacle_by_id(596))
 scenario.remove_obstacle(scenario.obstacle_by_id(595))

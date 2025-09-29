@@ -31,8 +31,14 @@ def init_carla_params():
     param.simulation.max_time_step = 450
     param.simulation.number_walkers = 0
     param.simulation.number_vehicles = 0
-    param.start_carla_server = False
-    param.visualization.vis_activation.trajectory = TrajectoryVisualization.ONLY_COLLISION_FREE
+    param.visualization.vis_activation.trajectory = TrajectoryVisualization.ONLY_FEASIBLE
+    param.visualization.vis_activation.traj_color_mapping = {
+        "optimal": "black",
+        "feasible": "green",
+        "infeasible": "purple",
+        "collision": "red",
+        "rule_violating": "red",
+    }
 
     return param
 
@@ -41,8 +47,8 @@ def init_rp_config_carla(rules: List[str]):
     rp_config = ReactivePlannerConfiguration()
     rp_config.debug.multiproc = False
     rp_config.planning.replanning_frequency = 1
-    rp_config.sampling.d_min = -1
-    rp_config.sampling.d_max = 1
+    rp_config.sampling.d_min = -1.5
+    rp_config.sampling.d_max = 1.5
     rp_config.debug.complete_collision_eval = True
     rp_config.debug.complete_rule_eval = True
     rp_config.monitor.with_rule_monitoring = True
