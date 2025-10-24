@@ -92,7 +92,7 @@ def visualize_time_step(
     draw_params.time_begin = time_step
     draw_params.time_end = max_time_step
     draw_params.dynamic_obstacle.draw_icon = True
-    draw_params.dynamic_obstacle.trajectory.draw_trajectory = False
+    draw_params.dynamic_obstacle.trajectory.draw_trajectory = True
     rnd.ax.spines["top"].set_visible(False)
     rnd.ax.spines["right"].set_visible(False)
     rnd.ax.spines["bottom"].set_visible(False)

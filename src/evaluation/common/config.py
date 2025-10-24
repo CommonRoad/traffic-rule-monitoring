@@ -11,6 +11,7 @@ activated_intersection_rule_set = [
     "R_U3",
     "R_U4",
     "R_U5",
+    "R_U12",
 ]
 activated_interstate_rule_set = ["R_G1", "R_G2", "R_G3", "R_G4", "R_G5", "R_I1", "R_I2", "R_I3", "R_I4", "R_I5"]
 

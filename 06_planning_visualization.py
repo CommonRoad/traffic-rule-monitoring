@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import List, Tuple
 
 import crmonitor
+from commonroad_rp.trajectories import FeasibilityStatus
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
 
 from src.evaluation.common.config import (
@@ -35,6 +36,12 @@ def evaluate(
     rp_config.debug.draw_planning_problem = True
     rp_config.debug.plots_file_format = "svg"
     rp_config.debug.traj_vis_filter = ["INFEASIBLE_KINEMATIC"]
+    rp_config.debug.traj_color = {
+        FeasibilityStatus.FEASIBLE.name: "green",
+        FeasibilityStatus.INFEASIBLE_KINEMATIC.name: "red",
+        FeasibilityStatus.INFEASIBLE_COLLISION.name: "red",
+        FeasibilityStatus.INFEASIBLE_RULE.name: "red",
+    }
     rp_config.debug.draw_ref_path = True
     rp_config.debug.draw_traj_set = True
     rp_config.debug.draw_prediction_others = True
@@ -62,13 +69,16 @@ def evaluate(
     run_planner_cr_scenario(rp_config, plot_limits)
 
 
-def eval_scenario(config_settings: List[Tuple]):
+def eval_scenario(config_settings: List[Tuple], with_monitor: bool):
     with concurrent.futures.ProcessPoolExecutor(max_workers=12) as executor:
         futures = []
         for setting in config_settings:
             scenario_path, activated_traffic_rule_sets, plot_limits = setting
             futures.append(executor.submit(evaluate, scenario_path, activated_traffic_rule_sets, True, plot_limits))
-            futures.append(executor.submit(evaluate, scenario_path, activated_traffic_rule_sets, False, plot_limits))
+            if with_monitor:
+                futures.append(
+                    executor.submit(evaluate, scenario_path, activated_traffic_rule_sets, False, plot_limits)
+                )
         concurrent.futures.wait(futures)
 
 
@@ -91,7 +101,7 @@ scenario_configs = [
 ]
 
 if __name__ == "__main__":
-    eval_scenario(scenario_configs)
+    eval_scenario(scenario_configs, False)
 
     path = Path(__file__).parent / "output/planning"
     if not path.exists():

@@ -6,8 +6,8 @@ from commonroad.common.file_writer import CommonRoadFileWriter
 from commonroad.common.solution import VehicleType
 from commonroad.common.util import FileFormat
 from commonroad.common.writer.file_writer_interface import OverwriteExistingFile
-from commonroad.planning.planning_problem import PlanningProblemSet, PlanningProblem
-from commonroad.scenario.scenario import Tag, Scenario
+from commonroad.planning.planning_problem import PlanningProblem, PlanningProblemSet
+from commonroad.scenario.scenario import Scenario, Tag
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
 from crcarla.carla_interface import CarlaInterface
 from crcarla.controller.reactive_planner import ReactivePlannerInterface
@@ -61,7 +61,13 @@ def init_rp_config_carla(rules: List[str]):
     return rp_config
 
 
-def execute_simulation(rp_config: ReactivePlannerConfiguration, planning_problem: PlanningProblem, scenario: Scenario, carla_interface: CarlaInterface, use_scenario: bool):
+def execute_simulation(
+    rp_config: ReactivePlannerConfiguration,
+    planning_problem: PlanningProblem,
+    scenario: Scenario,
+    carla_interface: CarlaInterface,
+    use_scenario: bool,
+):
     # execute simulation and planning
     rp_config.update(scenario, planning_problem)
     predictor = ConstantVelocityCurvilinearPredictor()
