@@ -52,9 +52,7 @@ def evaluate(
     rp_config.monitor.hydra_reordering = (
         True  # we need to set this to True to also set a bad reordering for demonstration purposes
     )
-    rp_config.monitor.formula_evaluation_mode = rp_config.monitor.formula_evaluation_mode_val = (
-        crmonitor.FormulaEvaluationMode.globally_early_termination.name
-    )
+
     rp_config.monitor.formula_evaluation_mode = crmonitor.FormulaEvaluationMode.globally_early_termination.name
     rp_config.monitor.formula_evaluation_mode_val = crmonitor.FormulaEvaluationMode[
         rp_config.monitor.formula_evaluation_mode
@@ -69,13 +67,13 @@ def evaluate(
     run_planner_cr_scenario(rp_config, plot_limits)
 
 
-def eval_scenario(config_settings: List[Tuple], with_monitor: bool):
+def eval_scenario(config_settings: List[Tuple], without_monitor: bool):
     with concurrent.futures.ProcessPoolExecutor(max_workers=12) as executor:
         futures = []
         for setting in config_settings:
             scenario_path, activated_traffic_rule_sets, plot_limits = setting
             futures.append(executor.submit(evaluate, scenario_path, activated_traffic_rule_sets, True, plot_limits))
-            if with_monitor:
+            if not without_monitor:
                 futures.append(
                     executor.submit(evaluate, scenario_path, activated_traffic_rule_sets, False, plot_limits)
                 )
