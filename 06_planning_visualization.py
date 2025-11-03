@@ -35,6 +35,7 @@ def evaluate(
     rp_config.debug.show_evaluation_plots = False
     rp_config.debug.draw_planning_problem = True
     rp_config.debug.plots_file_format = "svg"
+    rp_config.monitor.history_size = 1  # todo remove
     rp_config.debug.traj_vis_filter = ["INFEASIBLE_KINEMATIC"]
     rp_config.debug.traj_color = {
         FeasibilityStatus.FEASIBLE.name: "green",
@@ -73,7 +74,7 @@ def eval_scenario(config_settings: List[Tuple], without_monitor: bool):
         for setting in config_settings:
             scenario_path, activated_traffic_rule_sets, plot_limits = setting
             futures.append(executor.submit(evaluate, scenario_path, activated_traffic_rule_sets, True, plot_limits))
-            if not without_monitor:
+            if without_monitor:
                 futures.append(
                     executor.submit(evaluate, scenario_path, activated_traffic_rule_sets, False, plot_limits)
                 )
