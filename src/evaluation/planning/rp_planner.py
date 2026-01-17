@@ -131,6 +131,7 @@ def run_planner_cr_scenario(
             ego_vehicle=ego_vehicle_solution,
             rnd=rnd,
             ego_params=create_ego_draw_params(0),
+            plot_limits=plot_limits
         )
         evaluate_results(config, ego_vehicle_solution.prediction.trajectory, planner.record_input_list)
 
