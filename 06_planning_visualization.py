@@ -36,7 +36,7 @@ def evaluate(
     rp_config.debug.draw_planning_problem = True
     rp_config.debug.plots_file_format = "svg"
     rp_config.debug.ref_path_color = "orange"
-    rp_config.monitor.history_size = 1  # todo remove
+    rp_config.monitor.history_size = 30
     rp_config.debug.traj_vis_filter = ["INFEASIBLE_KINEMATIC"]
     rp_config.debug.traj_color = {
         FeasibilityStatus.FEASIBLE.name: "green",

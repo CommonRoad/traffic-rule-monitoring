@@ -85,23 +85,6 @@ files = [
 ]
 
 [[package]]
-name = "carla"
-version = "0.9.16"
-description = "Python API for communicating with the CARLA server."
-optional = false
-python-versions = "*"
-groups = ["main"]
-markers = "python_version == \"3.10\""
-files = [
-    {file = "carla-0.9.16-cp310-cp310-manylinux_2_31_x86_64.whl", hash = "sha256:52b1f2fafb0655e25954f9f6d1e97c211a4da404217fd1d0094b4b7350737c95"},
-    {file = "carla-0.9.16-cp310-cp310-win_amd64.whl", hash = "sha256:5e7d46f13216f0c65ec5ccc6a4b922d0d939be4ef97e07167a4b5f4595865ca6"},
-    {file = "carla-0.9.16-cp311-cp311-manylinux_2_31_x86_64.whl", hash = "sha256:9ca1e0793a5f453375a8bc93d85d43cc5629b3342bafe10ab8ebb1ef4fb111dc"},
-    {file = "carla-0.9.16-cp311-cp311-win_amd64.whl", hash = "sha256:9d8bca9ea3a3bccd691536b17f6f278335ce9b6af7883612aa0800929b388ed1"},
-    {file = "carla-0.9.16-cp312-cp312-manylinux_2_31_x86_64.whl", hash = "sha256:c323a7b1f8ad3ac81cfac79f5d96c9cac8afa6d0a768fa2fffa46bb336945c4f"},
-    {file = "carla-0.9.16-cp312-cp312-win_amd64.whl", hash = "sha256:f1f22d153b1a43b579d90e816b7016ca19f1483ca64cbc5ebbcd4dbf325e3356"},
-]
-
-[[package]]
 name = "certifi"
 version = "2025.10.5"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -395,38 +378,6 @@ files = [
 ]
 
 [[package]]
-name = "commonroad-carla-interface"
-version = "1.0.0"
-description = "Interface between CommonRoad and the traffic simulator CARLA."
-optional = false
-python-versions = ">=3.10,<3.12"
-groups = ["main"]
-files = []
-develop = false
-
-[package.dependencies]
-carla = {version = ">=0.9.15,<0.10.0", markers = "python_version >= \"3.9\" and python_version < \"3.11\""}
-commonroad-clcs = ">=2025.1"
-commonroad-drivability-checker = ">=2025.1"
-commonroad-prediction = {git = "ssh://git@gitlab.lrz.de/cps/commonroad/commonroad-prediction.git", branch = "develop"}
-commonroad-reactive-planner = {git = "ssh://git@gitlab.lrz.de/cps/reactive-planner.git", branch = "integration_crmonitor"}
-commonroad-route-planner = ">=2025.1.0"
-commonroad-scenario-designer = {git = "ssh://git@gitlab.lrz.de/cps/commonroad/commonroad-scenario-designer.git", branch = "release-0-9-0"}
-commonroad_vehicle_models = ">=3.0.2"
-matplotlib = ">=3.1.1"
-numpy = {version = ">=1.26.1", markers = "python_version < \"3.13\""}
-omegaconf = ">=2.1.2"
-psutil = "^5.9.4"
-pygame = ">=2.1.2"
-scipy = {version = ">=1.11.3", markers = "python_version < \"3.13\""}
-
-[package.source]
-type = "git"
-url = "ssh://git@gitlab.lrz.de/cps/commonroad/commonroad-carla-interface.git"
-reference = "monitor-integration"
-resolved_reference = "0bc8b89985e88dd2c9718ed5807d989fbfdb0926"
-
-[[package]]
 name = "commonroad-clcs"
 version = "2025.1.1"
 description = "Curvilinear (Frenet) Coordinate System for motion planning."
@@ -579,29 +530,6 @@ reference = "develop"
 resolved_reference = "67852d83acb7b2280fb195bc47cf1f3a93f0cc2f"
 
 [[package]]
-name = "commonroad-prediction"
-version = "0.1.1"
-description = "A collection and interface for CommonRoad prediction algorithms."
-optional = false
-python-versions = ">=3.10,<3.14"
-groups = ["main"]
-files = []
-develop = false
-
-[package.dependencies]
-commonroad-clcs = ">=2025.1"
-commonroad-drivability-checker = ">=2025.1"
-commonroad-io = ">=2024.1"
-imageio = "^2.31.1"
-numpy = ">=1.26.1"
-
-[package.source]
-type = "git"
-url = "ssh://git@gitlab.lrz.de/cps/commonroad/commonroad-prediction.git"
-reference = "develop"
-resolved_reference = "1b17642111f73e7fdca43016603dcaf84633553c"
-
-[[package]]
 name = "commonroad-reactive-planner"
 version = "2025.1"
 description = "CommonRoad Reactive Planner: Sampling-based Frenet Planner"
@@ -632,7 +560,7 @@ triangle = ">=20230923"
 type = "git"
 url = "ssh://git@gitlab.lrz.de/cps/reactive-planner.git"
 reference = "integration_crmonitor"
-resolved_reference = "8f904fe6833437818f8c78a6284f97d1c61d39ce"
+resolved_reference = "162f31637e9e71858b3ed5f9cc98fc3ee686c33b"
 
 [[package]]
 name = "commonroad-route-planner"
@@ -653,81 +581,6 @@ matplotlib = ">=3.1.2"
 networkx = ">=2.4"
 numpy = ">=1.17.4"
 shapely = ">=1.6.4.post2"
-
-[[package]]
-name = "commonroad-scenario-designer"
-version = "0.9.0"
-description = "Toolbox for Map Conversion and Scenario Creation for Autonomous Vehicles"
-optional = false
-python-versions = "^3.10,<3.14"
-groups = ["main"]
-files = []
-develop = false
-
-[package.dependencies]
-antlr4-python3-runtime = "4.9.3"
-commonroad-clcs = ">=2025.1"
-commonroad-drivability-checker = "^2025.1"
-commonroad-io = {git = "https://github.com/commonroad/commonroad-io", rev = "feature/new-format"}
-commonroad-sumo = ">=2025.1.3"
-iso3166 = "^2.1.1"
-kdtree = "^0.16"
-lxml = "^6.0.2"
-matplotlib = ">=3.6.0"
-mercantile = "^1.2.1"
-mgrs = ">=1.4.5"
-networkx = "^3.0"
-numpy = {version = ">=1.26.1", markers = "python_version < \"3.13\""}
-omegaconf = "^2.3.0"
-ordered-set = "^4.1.0"
-pandas = "^2.0.2"
-pyclothoids = "^0.1.5"
-pygeodesy = "^23.3.23"
-pymetis = ">=2020.1"
-pyproj = "^3.4.1"
-pyqt6 = ">=6.6.0"
-pyyaml = "^6.0"
-requests = "^2.31.0 "
-scipy = {version = ">=1.11.3", markers = "python_version < \"3.13\""}
-shapely = ">=2.0.1"
-similaritymeasures = ">=0.4.4"
-typer = "^0.9.0"
-typing-extensions = "^4.8.0"
-urllib3 = "^2.0.3"
-utm = "^0.7.0"
-
-[package.source]
-type = "git"
-url = "ssh://git@gitlab.lrz.de/cps/commonroad/commonroad-scenario-designer.git"
-reference = "release-0-9-0"
-resolved_reference = "404b4480f2d9271259c05265efbd6db8bc904a84"
-
-[[package]]
-name = "commonroad-sumo"
-version = "2025.1.4"
-description = "Interface between CommonRoad and the SUMO traffic simulator"
-optional = false
-python-versions = "<4.0,>=3.10"
-groups = ["main"]
-files = [
-    {file = "commonroad_sumo-2025.1.4-py3-none-any.whl", hash = "sha256:0f749209677cdbbf0167bf89562c1c506af8b861956d3a6daab9b7615c43f871"},
-    {file = "commonroad_sumo-2025.1.4.tar.gz", hash = "sha256:4887fb89999e6815b3985b35734a8289165df812dbf52076c9d6548fc4fd4626"},
-]
-
-[package.dependencies]
-commonroad-io = ">=2024.3,<2025.0"
-ffmpeg = ">=1.4,<2.0.0"
-libsumo = ">=1.24.0,<2.0.0"
-matplotlib = ">=3.0.0,<4.0.0"
-numpy = {version = ">=1.26.1", markers = "python_version < \"3.13\""}
-shapely = ">=2.0.0,<3.0.0"
-traci = ">=1.24.0,<2.0.0"
-typing-extensions = ">=4.12.2,<5.0.0"
-
-[package.extras]
-dev = ["pre-commit (>=3.5.0,<4.0.0)"]
-docs = ["mkdocs (>=1.6.0,<2.0.0)", "mkdocs-autorefs (>=1.0.1,<2.0.0)", "mkdocs-material (>=9.6.14,<10.0.0)", "mkdocstrings-python (>=1.10.3,<2.0.0)"]
-test = ["coverage[toml] (>=7.5,<8.0.0)", "parameterized (>=0.8.1,<1.0.0)", "pytest (>=7.4,<8.0.0)", "pytest-mock (>=3.12.0,<4.0.0)"]
 
 [[package]]
 name = "commonroad-vehicle-models"
@@ -1034,31 +887,6 @@ files = [
 ]
 
 [[package]]
-name = "eclipse-sumo"
-version = "1.24.0"
-description = "A microscopic, multi-modal traffic simulation package"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "eclipse_sumo-1.24.0-py2.py3-none-macosx_15_0_arm64.whl", hash = "sha256:52bda84d18a430ff1d3765cb8161036ec2240bc8077eb2669b18d3d90d1a29e7"},
-    {file = "eclipse_sumo-1.24.0-py2.py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:3169b0fe93b0ccf694cf11a6a0b91916449cf1544c12e04882835390c0d4d417"},
-    {file = "eclipse_sumo-1.24.0-py2.py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:bcf9fffb52e50661b0ecdce8bcbc9db25baaaf2d3935160be33c41f75abbfb6c"},
-    {file = "eclipse_sumo-1.24.0-py2.py3-none-win_amd64.whl", hash = "sha256:8c0e7faf478ae8ccf1a0a1df486de8ceec8d7d5c6b4fbe58ecbd4515b159bd8b"},
-]
-
-[[package]]
-name = "ffmpeg"
-version = "1.4"
-description = "ffmpeg python package url [https://github.com/jiashaokun/ffmpeg]"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "ffmpeg-1.4.tar.gz", hash = "sha256:6931692c890ff21d39938433c2189747815dca0c60ddc7f9bb97f199dba0b5b9"},
-]
-
-[[package]]
 name = "filelock"
 version = "3.20.0"
 description = "A platform independent file lock."
@@ -1317,18 +1145,6 @@ files = [
 referencing = ">=0.31.0"
 
 [[package]]
-name = "kdtree"
-version = "0.16"
-description = "A Python implemntation of a kd-tree"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "kdtree-0.16-py2.py3-none-any.whl", hash = "sha256:083945db69bc3cf0d349d8d0efe66c056de28d1c2f1e81f762dc5ce46f0dcf0a"},
-    {file = "kdtree-0.16.tar.gz", hash = "sha256:386df6c7816a05e0fab974e3035df944f99ef68b5615f4a416771391e33d7534"},
-]
-
-[[package]]
 name = "kiwisolver"
 version = "1.4.9"
 description = "A fast implementation of the Cassowary constraint solver"
@@ -1438,40 +1254,6 @@ files = [
     {file = "kiwisolver-1.4.9-pp311-pypy311_pp73-win_amd64.whl", hash = "sha256:fb940820c63a9590d31d88b815e7a3aa5915cad3ce735ab45f0c730b39547de1"},
     {file = "kiwisolver-1.4.9.tar.gz", hash = "sha256:c3b22c26c6fd6811b0ae8363b95ca8ce4ea3c202d3d0975b2914310ceb1bcc4d"},
 ]
-
-[[package]]
-name = "libsumo"
-version = "1.24.0"
-description = "The python version of the libsumo API to communicate with the traffic simulation Eclipse SUMO"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "libsumo-1.24.0-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b31515fc1000fa6d1f1dd54697ff71503dd2687dc6aad592e2604e8ee7c4c997"},
-    {file = "libsumo-1.24.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:36b079bd6400dec761b7e251da2a3616c23ec4d76bca7c1d038a1aee63b979af"},
-    {file = "libsumo-1.24.0-cp310-cp310-win_amd64.whl", hash = "sha256:a02cc654383a5496ea00d8b034474aa44da886af90be2cfe086bbced012b2eb0"},
-    {file = "libsumo-1.24.0-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:a969ce5efe81a0e20d69630240858d3b5aee9c7462b4ff06cd8ad73b22d82394"},
-    {file = "libsumo-1.24.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:bb825000cd6312d06cb89c3a883f3bc62b4f220ac3a44fe2404bf672381aae45"},
-    {file = "libsumo-1.24.0-cp311-cp311-win_amd64.whl", hash = "sha256:f3a167894e79a39757a7124265bd86660c4208dae1687d166bd9a00d1d334d2b"},
-    {file = "libsumo-1.24.0-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:1860eb6437f2c5e132678de7228a62d90e65f8ad8069e3e7d892640b4d1b1170"},
-    {file = "libsumo-1.24.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4c260e3cb32a7c0cc621ea004eaefb2658624de8b47ef61c2ba70f7e5e1c54cf"},
-    {file = "libsumo-1.24.0-cp312-cp312-win_amd64.whl", hash = "sha256:a1852415fbd518b75dad2eb321e6e7758528bedf403698748857223fde9250c0"},
-    {file = "libsumo-1.24.0-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:19b47d499346fdd1999eb59903fcbb574728a08007268496bd077ba9671b55e2"},
-    {file = "libsumo-1.24.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b33c49ef10748eebecff62cf5f4890a655c4e59c0ead13a067ee19978712f5c5"},
-    {file = "libsumo-1.24.0-cp313-cp313-win_amd64.whl", hash = "sha256:c5c80f03aa3f5ed10e853c70d1b0253880c747442a5d892a3f93bda73ba57d20"},
-    {file = "libsumo-1.24.0-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:605f5cd3fb9ed2052b46d2fa1633da040d6d5c14e25c1de44dcbd5bc7719c0b7"},
-    {file = "libsumo-1.24.0-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:03ae5c4c1b9301758333666e7a198ce84c8196460023995f6c4e7ba1c59a0517"},
-    {file = "libsumo-1.24.0-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:dc2567f1e43846172df588814626127109298b61b906186d598b339be927ab98"},
-    {file = "libsumo-1.24.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4bd79cb37262e854b84237538f77f96b3ca5f51807c73dadb5907376cb9af53c"},
-    {file = "libsumo-1.24.0-cp39-cp39-macosx_15_0_universal2.whl", hash = "sha256:d390fabcf1ce6378a8433c06bd57a0c1822b227ed3d97aaf8f8b19f4d31eefc5"},
-    {file = "libsumo-1.24.0-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:04f950708cf82f3298b1befebf1139eff07632b44c3fc1061911ab9dac72ec08"},
-    {file = "libsumo-1.24.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:0e3d08bd31521cc57765515186edf12419c645fb6384aea5b7fe1ab2f8c5c289"},
-    {file = "libsumo-1.24.0-cp39-cp39-win_amd64.whl", hash = "sha256:f4c6cf02934aede255953103374be78bedf747436bb788f7fc03de1214ad8a50"},
-]
-
-[package.dependencies]
-eclipse-sumo = "*"
-traci = ">=1.24.0"
 
 [[package]]
 name = "lxml"
@@ -1778,25 +1560,6 @@ pyparsing = ">=2.3.1"
 python-dateutil = ">=2.7"
 
 [[package]]
-name = "mercantile"
-version = "1.2.1"
-description = "Web mercator XYZ tile utilities"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "mercantile-1.2.1-py3-none-any.whl", hash = "sha256:30f457a73ee88261aab787b7069d85961a5703bb09dc57a170190bc042cd023f"},
-    {file = "mercantile-1.2.1.tar.gz", hash = "sha256:fa3c6db15daffd58454ac198b31887519a19caccee3f9d63d17ae7ff61b3b56b"},
-]
-
-[package.dependencies]
-click = ">=3.0"
-
-[package.extras]
-dev = ["check-manifest"]
-test = ["hypothesis", "pytest"]
-
-[[package]]
 name = "methodtools"
 version = "0.4.7"
 description = "Expand standard functools to methods"
@@ -1816,62 +1579,15 @@ doc = ["sphinx"]
 test = ["functools32 (>=3.2.3-2) ; python_version < \"3\"", "pytest (>=4.6.7)", "pytest-cov (>=2.6.1)"]
 
 [[package]]
-name = "mgrs"
-version = "1.5.0"
-description = "MGRS coordinate conversion for Python"
-optional = false
-python-versions = ">=3.9"
-groups = ["main"]
-files = [
-    {file = "mgrs-1.5.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:785e50655360fc14de732591d53479144c2b980bb1f1d8e3130969e7bda28ff2"},
-    {file = "mgrs-1.5.0-cp310-cp310-manylinux_2_12_i686.manylinux2010_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:bfa656b865224552c738486629a117f76e20ab0e309d87fa8c94a4f96b8bf555"},
-    {file = "mgrs-1.5.0-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:06c02a5d5bf8b0e58bedd9f216bc3cc63b49db5b302f3982a5f8f80d2d4c60de"},
-    {file = "mgrs-1.5.0-cp310-cp310-musllinux_1_2_i686.whl", hash = "sha256:137296c2df8fdfdfcaa6e21d81a27da5451846bca7460862072908f804639431"},
-    {file = "mgrs-1.5.0-cp310-cp310-musllinux_1_2_x86_64.whl", hash = "sha256:42a47c3feed7cac9dcdf5fcc6066a77a878c30083e75acbfb5566cf446441d99"},
-    {file = "mgrs-1.5.0-cp310-cp310-win32.whl", hash = "sha256:4f60fb1bad0923215a3156d9b833dcd5eeeb64e3309513159f0ab2d7829c1068"},
-    {file = "mgrs-1.5.0-cp310-cp310-win_amd64.whl", hash = "sha256:f78c7e5014e5cae6c5513221a299379306561de432ff7373c0aee2a4ed90b560"},
-    {file = "mgrs-1.5.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:8f29e88b7fb458c2d574dd1f771347e6ec5bd548ca8a5aeab1b1a39cb93b25f6"},
-    {file = "mgrs-1.5.0-cp311-cp311-manylinux_2_12_i686.manylinux2010_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:73e175cd4795bc08309a33499294c85cdae2f2e86e7fbe2b79ea5fc7e6663e87"},
-    {file = "mgrs-1.5.0-cp311-cp311-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:805455e5475681074125381381035434929fec27abdeeb2ff633e5feb41ce1f1"},
-    {file = "mgrs-1.5.0-cp311-cp311-musllinux_1_2_i686.whl", hash = "sha256:9364a70e067ad1c346fe02094007ba9077d2b53672922251de243268e6cc54a4"},
-    {file = "mgrs-1.5.0-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:9416e237680877fa79e71fa7ed98e3de412320dcc17590d241bfff21d4db952f"},
-    {file = "mgrs-1.5.0-cp311-cp311-win32.whl", hash = "sha256:b0a9a2ef778e9477647f154d40b5c2a0f723061a12a349ddb30cb9c20f153108"},
-    {file = "mgrs-1.5.0-cp311-cp311-win_amd64.whl", hash = "sha256:7904c2c454cf5afbe2fa11e898d3881625e817c66fe24dfdf098a9153cda4023"},
-    {file = "mgrs-1.5.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:3171ae9581238bbb5467e4dc85dfb0299ae17085e3a196640615e20ddb6a24c8"},
-    {file = "mgrs-1.5.0-cp312-cp312-manylinux_2_12_i686.manylinux2010_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:89d67dbdc337bc4ca5f212bc5cdf3be754862a2310c552fc13cc4cce264bfbff"},
-    {file = "mgrs-1.5.0-cp312-cp312-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:40c0193c57fccdc4031f69fe65803767e3d25e99e28199fdd893ea939e301be6"},
-    {file = "mgrs-1.5.0-cp312-cp312-musllinux_1_2_i686.whl", hash = "sha256:b6fea82cc17069ab866e93abbf37913a0044a66e0d21255f06862b2feaa248fd"},
-    {file = "mgrs-1.5.0-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:36021894edff1c53f8775b299b4b29e20fe79365a2ace8d42f90c49f5c2c9e81"},
-    {file = "mgrs-1.5.0-cp312-cp312-win32.whl", hash = "sha256:749b019e5f3cc40a4a642e8937bdb0c85c30ceb9c5ca11dc98e40b6854c780f1"},
-    {file = "mgrs-1.5.0-cp312-cp312-win_amd64.whl", hash = "sha256:134343e425204c3503f7d71a79ade41ef09baa9537a5eac54ed9124df0b567f1"},
-    {file = "mgrs-1.5.0-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:fd9d00933464ab69316df4266c19564e95f9681334ebcd71d45ad915c6bd70de"},
-    {file = "mgrs-1.5.0-cp39-cp39-manylinux_2_12_i686.manylinux2010_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:c923d4efc6e8003338727b4f35956879e7511fdb481634bd5a311dc5b4bc31c4"},
-    {file = "mgrs-1.5.0-cp39-cp39-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a4664a4e14f2edc7273108e547aa74048adde6f3264b350be503b7936d35e9f2"},
-    {file = "mgrs-1.5.0-cp39-cp39-musllinux_1_2_i686.whl", hash = "sha256:bf7c82229b95a9be034bf21a946db51c1764354763a308fdd425c5d57f9a2c8a"},
-    {file = "mgrs-1.5.0-cp39-cp39-musllinux_1_2_x86_64.whl", hash = "sha256:dea082e783b2c3dfbf933b44f15ac9d6937343c83345ef57bd83bd3d28a3093b"},
-    {file = "mgrs-1.5.0-cp39-cp39-win32.whl", hash = "sha256:375946a1c233ef63a2a35caeed3128c37c3820f803341063931193f2bf77d40a"},
-    {file = "mgrs-1.5.0-cp39-cp39-win_amd64.whl", hash = "sha256:22d075cf819e56add1be240774399da29ab51d1b2a636290b0e980890ae3922e"},
-    {file = "mgrs-1.5.0-pp310-pypy310_pp73-macosx_11_0_arm64.whl", hash = "sha256:d40c9f5d95fc14796444dba16a6dbb74ec61d22d9689d2cdc003b33a589bd355"},
-    {file = "mgrs-1.5.0-pp310-pypy310_pp73-manylinux_2_12_i686.manylinux2010_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:3be147a68dd0b45f0afb8b8425515028e8576a3c9089ba38f2f3f669f7e10a0d"},
-    {file = "mgrs-1.5.0-pp310-pypy310_pp73-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ed6a47f008ddbc24743de3cd507a7cd6a31c582552c89c807854e6c2fa55e0a8"},
-    {file = "mgrs-1.5.0-pp310-pypy310_pp73-win_amd64.whl", hash = "sha256:0aceeed9b1f321e081c790c3263b383688bd0a7ad4e2e79312d3438af1209bbd"},
-    {file = "mgrs-1.5.0-pp39-pypy39_pp73-macosx_11_0_arm64.whl", hash = "sha256:d71fe869340f5aafabbdff525683794658017f664c6edd1677920ca44f58583b"},
-    {file = "mgrs-1.5.0-pp39-pypy39_pp73-manylinux_2_12_i686.manylinux2010_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:1f969797a86c3bbd9348305611ec2c6c30ea98af5fdcab0d39a1989cd595f6ab"},
-    {file = "mgrs-1.5.0-pp39-pypy39_pp73-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4026069d39ffc6953cc970b4992c25e18983e1a24db512a644518a757c5a87b4"},
-    {file = "mgrs-1.5.0-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:ca1f34f5f40e94bea8d30fb0f97d50ecc02fa86761f07e2402d257f71e9e65cc"},
-    {file = "mgrs-1.5.0.tar.gz", hash = "sha256:bff4f7e806ed29d46f8a31a01e6e0e6629e1eca425f745d39af639260bbc89c6"},
-]
-
-[[package]]
 name = "narwhals"
-version = "2.10.2"
+version = "2.11.0"
 description = "Extremely lightweight compatibility layer between dataframe libraries"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "narwhals-2.10.2-py3-none-any.whl", hash = "sha256:059cd5c6751161b97baedcaf17a514c972af6a70f36a89af17de1a0caf519c43"},
-    {file = "narwhals-2.10.2.tar.gz", hash = "sha256:ff738a08bc993cbb792266bec15346c1d85cc68fdfe82a23283c3713f78bd354"},
+    {file = "narwhals-2.11.0-py3-none-any.whl", hash = "sha256:a9795e1e44aa94e5ba6406ef1c5ee4c172414ced4f1aea4a79e5894f0c7378d4"},
+    {file = "narwhals-2.11.0.tar.gz", hash = "sha256:d23f3ea7efc6b4d0355444a72de6b8fa3011175585246c3400c894a7583964af"},
 ]
 
 [package.extras]
@@ -2003,21 +1719,6 @@ files = [
 [package.dependencies]
 antlr4-python3-runtime = "==4.9.*"
 PyYAML = ">=5.1.0"
-
-[[package]]
-name = "ordered-set"
-version = "4.1.0"
-description = "An OrderedSet is a custom MutableSet that remembers its order, so that every"
-optional = false
-python-versions = ">=3.7"
-groups = ["main"]
-files = [
-    {file = "ordered-set-4.1.0.tar.gz", hash = "sha256:694a8e44c87657c59292ede72891eb91d34131f6531463aab3009191c77364a8"},
-    {file = "ordered_set-4.1.0-py3-none-any.whl", hash = "sha256:046e1132c71fcf3330438a539928932caf51ddbc582496833e23de611de14562"},
-]
-
-[package.extras]
-dev = ["black", "mypy", "pytest"]
 
 [[package]]
 name = "osqp"
@@ -2400,35 +2101,6 @@ files = [
 ]
 
 [[package]]
-name = "psutil"
-version = "5.9.8"
-description = "Cross-platform lib for process and system monitoring in Python."
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
-groups = ["main"]
-files = [
-    {file = "psutil-5.9.8-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:26bd09967ae00920df88e0352a91cff1a78f8d69b3ecabbfe733610c0af486c8"},
-    {file = "psutil-5.9.8-cp27-cp27m-manylinux2010_i686.whl", hash = "sha256:05806de88103b25903dff19bb6692bd2e714ccf9e668d050d144012055cbca73"},
-    {file = "psutil-5.9.8-cp27-cp27m-manylinux2010_x86_64.whl", hash = "sha256:611052c4bc70432ec770d5d54f64206aa7203a101ec273a0cd82418c86503bb7"},
-    {file = "psutil-5.9.8-cp27-cp27mu-manylinux2010_i686.whl", hash = "sha256:50187900d73c1381ba1454cf40308c2bf6f34268518b3f36a9b663ca87e65e36"},
-    {file = "psutil-5.9.8-cp27-cp27mu-manylinux2010_x86_64.whl", hash = "sha256:02615ed8c5ea222323408ceba16c60e99c3f91639b07da6373fb7e6539abc56d"},
-    {file = "psutil-5.9.8-cp27-none-win32.whl", hash = "sha256:36f435891adb138ed3c9e58c6af3e2e6ca9ac2f365efe1f9cfef2794e6c93b4e"},
-    {file = "psutil-5.9.8-cp27-none-win_amd64.whl", hash = "sha256:bd1184ceb3f87651a67b2708d4c3338e9b10c5df903f2e3776b62303b26cb631"},
-    {file = "psutil-5.9.8-cp36-abi3-macosx_10_9_x86_64.whl", hash = "sha256:aee678c8720623dc456fa20659af736241f575d79429a0e5e9cf88ae0605cc81"},
-    {file = "psutil-5.9.8-cp36-abi3-manylinux_2_12_i686.manylinux2010_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:8cb6403ce6d8e047495a701dc7c5bd788add903f8986d523e3e20b98b733e421"},
-    {file = "psutil-5.9.8-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d06016f7f8625a1825ba3732081d77c94589dca78b7a3fc072194851e88461a4"},
-    {file = "psutil-5.9.8-cp36-cp36m-win32.whl", hash = "sha256:7d79560ad97af658a0f6adfef8b834b53f64746d45b403f225b85c5c2c140eee"},
-    {file = "psutil-5.9.8-cp36-cp36m-win_amd64.whl", hash = "sha256:27cc40c3493bb10de1be4b3f07cae4c010ce715290a5be22b98493509c6299e2"},
-    {file = "psutil-5.9.8-cp37-abi3-win32.whl", hash = "sha256:bc56c2a1b0d15aa3eaa5a60c9f3f8e3e565303b465dbf57a1b730e7a2b9844e0"},
-    {file = "psutil-5.9.8-cp37-abi3-win_amd64.whl", hash = "sha256:8db4c1b57507eef143a15a6884ca10f7c73876cdf5d51e713151c1236a0e68cf"},
-    {file = "psutil-5.9.8-cp38-abi3-macosx_11_0_arm64.whl", hash = "sha256:d16bbddf0693323b8c6123dd804100241da461e41d6e332fb0ba6058f630f8c8"},
-    {file = "psutil-5.9.8.tar.gz", hash = "sha256:6be126e3225486dff286a8fb9a06246a5253f4c7c53b475ea5f5ac934e64194c"},
-]
-
-[package.extras]
-test = ["enum34 ; python_version <= \"3.4\"", "ipaddress ; python_version < \"3.0\"", "mock ; python_version < \"3.0\"", "pywin32 ; sys_platform == \"win32\"", "wmi ; sys_platform == \"win32\""]
-
-[[package]]
 name = "pyarrow"
 version = "20.0.0"
 description = "Python library for Apache Arrow"
@@ -2497,89 +2169,6 @@ files = [
 test = ["cffi", "hypothesis", "pandas", "pytest", "pytz"]
 
 [[package]]
-name = "pybind11"
-version = "3.0.1"
-description = "Seamless operability between C++11 and Python"
-optional = false
-python-versions = ">=3.8"
-groups = ["main"]
-files = [
-    {file = "pybind11-3.0.1-py3-none-any.whl", hash = "sha256:aa8f0aa6e0a94d3b64adfc38f560f33f15e589be2175e103c0a33c6bce55ee89"},
-    {file = "pybind11-3.0.1.tar.gz", hash = "sha256:9c0f40056a016da59bab516efb523089139fcc6f2ba7e4930854c61efb932051"},
-]
-
-[package.extras]
-global = ["pybind11-global (==3.0.1)"]
-
-[[package]]
-name = "pyclothoids"
-version = "0.1.5"
-description = "A library for clothoid curves in Python"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "pyclothoids-0.1.5-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:b00b55be0b1ff63ec5ac3b6875c0891a7c117163fed2b830e1d679a6eb810a0a"},
-    {file = "pyclothoids-0.1.5-cp310-cp310-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:e9cc6c08ebcefd6c0950c43ff6698eccf9fd21eb208ce9f5ff5adc336710f439"},
-    {file = "pyclothoids-0.1.5-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:574074835bd4a369cdea6bde5b07e90f94e3a960cd25300593aec1f77cb696bd"},
-    {file = "pyclothoids-0.1.5-cp310-cp310-musllinux_1_1_i686.whl", hash = "sha256:ed55f098a0bedbf9b2358ce768a60b3b6a107376538bb8655395d3ed5332bc3c"},
-    {file = "pyclothoids-0.1.5-cp310-cp310-musllinux_1_1_x86_64.whl", hash = "sha256:a29002085b964483a3a90891ce1d9b3dbe2320794e35f1db591bf366877f0522"},
-    {file = "pyclothoids-0.1.5-cp310-cp310-win32.whl", hash = "sha256:bbe76f00150f8742472753f31a4df16c8963a36a7bb9dffa9156a1ca9e1a1fd3"},
-    {file = "pyclothoids-0.1.5-cp310-cp310-win_amd64.whl", hash = "sha256:d4690dabbebe32f450820783e9ae71e316cdc5dc7e03c99b97c4fdb402c7561a"},
-    {file = "pyclothoids-0.1.5-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:e413cd16d1ec35ee9b399f4efcf79fcc07d5550a533cacea079fa8b32d5d9d65"},
-    {file = "pyclothoids-0.1.5-cp311-cp311-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:36595dc4667a209cda781c40d1468515eb9fb78d5e4a22c39fb4fc9538c9d7c4"},
-    {file = "pyclothoids-0.1.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4bd1bdbd127054fd5948a15b5dd2560460942b0579a5548d2f6f7cf1ea0bb5b7"},
-    {file = "pyclothoids-0.1.5-cp311-cp311-musllinux_1_1_i686.whl", hash = "sha256:c093e9b9af00f115197833b93a2611f9d308e50addc1be46581dd093dc1449f0"},
-    {file = "pyclothoids-0.1.5-cp311-cp311-musllinux_1_1_x86_64.whl", hash = "sha256:162eb604973c41d54ef65bc5b85f9518d0a98698716ec17a3000ff3f04be828d"},
-    {file = "pyclothoids-0.1.5-cp311-cp311-win32.whl", hash = "sha256:3f98fcd01920b5d56dbd695df8cba87097b835c1f80e0354ee455cdc52a930b8"},
-    {file = "pyclothoids-0.1.5-cp311-cp311-win_amd64.whl", hash = "sha256:69a9fc8a27c06b0584422c8c0eafc76d4a9128bb665c8a82c9605fe45fbe1f69"},
-    {file = "pyclothoids-0.1.5-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:f540654d0cda48bdb87c37771473292a3bf3f6936a552779b3567d1e2ff54fb6"},
-    {file = "pyclothoids-0.1.5-cp36-cp36m-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:3126bf77a9c127a5680810d832f3791f02265a97fb9f32c4dfc806731eb019c5"},
-    {file = "pyclothoids-0.1.5-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:2a6baa55d6b125f63227f7de777264e941d6051bb861b5a5cb6dd1de86bafe75"},
-    {file = "pyclothoids-0.1.5-cp36-cp36m-musllinux_1_1_i686.whl", hash = "sha256:9deca2d1ba08f20ebdd734205b02bfd821213719a842821197fa59ddcfd26344"},
-    {file = "pyclothoids-0.1.5-cp36-cp36m-musllinux_1_1_x86_64.whl", hash = "sha256:eb72126a9bdf21a08adc5023597ae365d45d88bab92e303fb45e864349aabb01"},
-    {file = "pyclothoids-0.1.5-cp36-cp36m-win32.whl", hash = "sha256:c1d9cfce5aa760b4673672c47f7bc7e7cfc7baab2bbe6715a9546058522f969f"},
-    {file = "pyclothoids-0.1.5-cp36-cp36m-win_amd64.whl", hash = "sha256:ea0840557ffb53ba7810230f4721ffa82946d372201bcf28674555ea4e18abbe"},
-    {file = "pyclothoids-0.1.5-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:8659fab8e0d472db21ab3737348a8b604fdd624fc6b17d5ed4313a04d9a1c311"},
-    {file = "pyclothoids-0.1.5-cp37-cp37m-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:af7c57fd1bd7a30aa847161df5598180003d590a5772d05e31e6933d7a48b282"},
-    {file = "pyclothoids-0.1.5-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e2d8a3c6b6f201d57610c899dc9734767c9de50582f6cf04129679a5608c515e"},
-    {file = "pyclothoids-0.1.5-cp37-cp37m-musllinux_1_1_i686.whl", hash = "sha256:dc80097d31f31304746df0eb5476ca58dfc8f3a1d25c74ccce564f8af2f181a2"},
-    {file = "pyclothoids-0.1.5-cp37-cp37m-musllinux_1_1_x86_64.whl", hash = "sha256:b7da119656b6e851da08fce57831a4e78d1e9cb77a59ec5543629d732205c1fb"},
-    {file = "pyclothoids-0.1.5-cp37-cp37m-win32.whl", hash = "sha256:02d5d3dfa81bd71e7e41cdbe1577533055fa459a15b812969aa0eca535ddab80"},
-    {file = "pyclothoids-0.1.5-cp37-cp37m-win_amd64.whl", hash = "sha256:a77082faedca597988bed1687580e7a0b7c998ffb38a4bff6242985b8eecfdb7"},
-    {file = "pyclothoids-0.1.5-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:2cd49b54cc47b51168c101013c6849cf5d4e1418c584f6743d603d6782ac80ca"},
-    {file = "pyclothoids-0.1.5-cp38-cp38-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:0621a4de12aab7392654f94622d2f50666fb5ef5ced24cd1a568c35d606a8fcf"},
-    {file = "pyclothoids-0.1.5-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1fc8d776bd1940fbf1387b66f955c06edddfa6930d13ff5071f6ff97bf3f2a4b"},
-    {file = "pyclothoids-0.1.5-cp38-cp38-musllinux_1_1_i686.whl", hash = "sha256:315d6227e42ebe7d9afd5c5ec9a889036cb4558def730c65bc7f3fc139b79103"},
-    {file = "pyclothoids-0.1.5-cp38-cp38-musllinux_1_1_x86_64.whl", hash = "sha256:d4ad3794061ed7948cf50c887ed8ed5cef4b754d4ecf7038c12ef14805e8de2c"},
-    {file = "pyclothoids-0.1.5-cp38-cp38-win32.whl", hash = "sha256:edde2e79cbd3f9e7d8ee32b2b87c1bbdb1d5b364c478fe5f07dfeed6d3a53370"},
-    {file = "pyclothoids-0.1.5-cp38-cp38-win_amd64.whl", hash = "sha256:70adc69425cb36a3d0d029d34de6b67a46e28e2026440091a536c0127f60dfd0"},
-    {file = "pyclothoids-0.1.5-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:3dce9ce2cea6d340214c44423fd7d29c0b0b0248bfd24143d2d36ed90987d86d"},
-    {file = "pyclothoids-0.1.5-cp39-cp39-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:ff1fb127eb78dac6564a8d15641ac6bcbe6b058bb4afd93cdf71f35b6a6d79b4"},
-    {file = "pyclothoids-0.1.5-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:dc2ec8a493a54ea8adf9f5481c16553aeca7d35d0903fe9b37f406c4c2888a0f"},
-    {file = "pyclothoids-0.1.5-cp39-cp39-musllinux_1_1_i686.whl", hash = "sha256:2a8dd945d848b2ec0f869a35e48d8af07a164c44d774be5efec7cc1fc02846e6"},
-    {file = "pyclothoids-0.1.5-cp39-cp39-musllinux_1_1_x86_64.whl", hash = "sha256:e9db4441fb579e17496cfe04e4be576aef42a923a7187d5ddc6d10346cce4674"},
-    {file = "pyclothoids-0.1.5-cp39-cp39-win32.whl", hash = "sha256:24d2430e735a72e1fc0128f27c9584e8d7df828066a07c9efdcd7b2e1966b2ed"},
-    {file = "pyclothoids-0.1.5-cp39-cp39-win_amd64.whl", hash = "sha256:a1575d8111fab09c03ab9bd3aa524d04d0b9940028888d10e63d0869a40c0c87"},
-    {file = "pyclothoids-0.1.5-pp37-pypy37_pp73-macosx_10_9_x86_64.whl", hash = "sha256:56ee1513b30b8e716645dd50eabcdc861b15c0f1664ca6ff2a5d21bccd0e6f20"},
-    {file = "pyclothoids-0.1.5-pp37-pypy37_pp73-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:b784dc5571d69df17e5b210341134c9a322113e2185d3faa7a154ba79e330ea0"},
-    {file = "pyclothoids-0.1.5-pp37-pypy37_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:6d983376ad922973b07492a1bc636f426c965e2fcd0f625bd2baf3d3935cb15a"},
-    {file = "pyclothoids-0.1.5-pp37-pypy37_pp73-win_amd64.whl", hash = "sha256:d1b9708e3a558bd49f8709a6c7d020cbb0c8019c304934d011fdb148f88ea4be"},
-    {file = "pyclothoids-0.1.5-pp38-pypy38_pp73-macosx_10_9_x86_64.whl", hash = "sha256:302467febde8023e2830a5faa88dfb236decec9699dae75c1f9b98be102c0c27"},
-    {file = "pyclothoids-0.1.5-pp38-pypy38_pp73-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:88f5bc7b06a981d1e1b18988fa032271951250c6b9b10dfb32defa5da2131234"},
-    {file = "pyclothoids-0.1.5-pp38-pypy38_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:46eb06f0304a9239fe17eb07405d27b5eefa54467371afb182394259387983b6"},
-    {file = "pyclothoids-0.1.5-pp38-pypy38_pp73-win_amd64.whl", hash = "sha256:6c0e659ec32808816e6e53f947e9074664036612ceff20b104ab8d261e7df5ac"},
-    {file = "pyclothoids-0.1.5-pp39-pypy39_pp73-macosx_10_9_x86_64.whl", hash = "sha256:43cd62e1bc1b35bbb4e1137fff65b167839b395ce04420f382c08ed3f3200861"},
-    {file = "pyclothoids-0.1.5-pp39-pypy39_pp73-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:7637a9ad58445e2f74223108b16d34f30636cb138b3b156421d9e08a039ae8c2"},
-    {file = "pyclothoids-0.1.5-pp39-pypy39_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ad9562ab68bf323a1faa1638f30a23ff4991558617698e7ab7b785f975513a8d"},
-    {file = "pyclothoids-0.1.5-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:a3450065c5c5285a62e5c13205647cbffe828eff3826658fc9a2ba59821cc5a9"},
-    {file = "pyclothoids-0.1.5.tar.gz", hash = "sha256:ebd0ecb04221499461b7665420f0ee86d61e5dcab650c143667e83070cd2a601"},
-]
-
-[package.dependencies]
-pybind11 = ">=2.4"
-
-[[package]]
 name = "pycparser"
 version = "2.23"
 description = "C parser in Python"
@@ -2613,130 +2202,6 @@ carto = ["pydeck-carto"]
 jupyter = ["ipykernel (>=5.1.2) ; python_version >= \"3.4\"", "ipython (>=5.8.0) ; python_version < \"3.4\"", "ipywidgets (>=7,<8)", "traitlets (>=4.3.2)"]
 
 [[package]]
-name = "pygame"
-version = "2.6.1"
-description = "Python Game Development"
-optional = false
-python-versions = ">=3.6"
-groups = ["main"]
-files = [
-    {file = "pygame-2.6.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:9beeb647e555afb5657111fa83acb74b99ad88761108eaea66472e8b8547b55b"},
-    {file = "pygame-2.6.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:10e3d2a55f001f6c0a6eb44aa79ea7607091c9352b946692acedb2ac1482f1c9"},
-    {file = "pygame-2.6.1-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:816e85000c5d8b02a42b9834f761a5925ef3377d2924e3a7c4c143d2990ce5b8"},
-    {file = "pygame-2.6.1-cp310-cp310-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:8a78fd030d98faab4a8e27878536fdff7518d3e062a72761c552f624ebba5a5f"},
-    {file = "pygame-2.6.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:da3ad64d685f84a34ebe5daacb39fff14f1251acb34c098d760d63fee768f50c"},
-    {file = "pygame-2.6.1-cp310-cp310-win32.whl", hash = "sha256:9dd5c054d4bd875a8caf978b82672f02bec332f52a833a76899220c460bb4b58"},
-    {file = "pygame-2.6.1-cp310-cp310-win_amd64.whl", hash = "sha256:00827aba089355925902d533f9c41e79a799641f03746c50a374dc5c3362e43d"},
-    {file = "pygame-2.6.1-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:20349195326a5e82a16e351ed93465a7845a7e2a9af55b7bc1b2110ea3e344e1"},
-    {file = "pygame-2.6.1-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:f3935459109da4bb0b3901da9904f0a3e52028a3332a355d298b1673a334cf21"},
-    {file = "pygame-2.6.1-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:c31dbdb5d0217f32764797d21c2752e258e5fb7e895326538d82b5f75a0cd856"},
-    {file = "pygame-2.6.1-cp311-cp311-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:173badf82fa198e6888017bea40f511cb28e69ecdd5a72b214e81e4dcd66c3b1"},
-    {file = "pygame-2.6.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ce8cc108b92de9b149b344ad2e25eedbe773af0dc41dfb24d1f07f679b558c60"},
-    {file = "pygame-2.6.1-cp311-cp311-win32.whl", hash = "sha256:811e7b925146d8149d79193652cbb83e0eca0aae66476b1cb310f0f4226b8b5c"},
-    {file = "pygame-2.6.1-cp311-cp311-win_amd64.whl", hash = "sha256:91476902426facd4bb0dad4dc3b2573bc82c95c71b135e0daaea072ed528d299"},
-    {file = "pygame-2.6.1-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:4ee7f2771f588c966fa2fa8b829be26698c9b4836f82ede5e4edc1a68594942e"},
-    {file = "pygame-2.6.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:c8040ea2ab18c6b255af706ec01355c8a6b08dc48d77fd4ee783f8fc46a843bf"},
-    {file = "pygame-2.6.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:c47a6938de93fa610accd4969e638c2aebcb29b2fca518a84c3a39d91ab47116"},
-    {file = "pygame-2.6.1-cp312-cp312-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:33006f784e1c7d7e466fcb61d5489da59cc5f7eb098712f792a225df1d4e229d"},
-    {file = "pygame-2.6.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1206125f14cae22c44565c9d333607f1d9f59487b1f1432945dfc809aeaa3e88"},
-    {file = "pygame-2.6.1-cp312-cp312-win32.whl", hash = "sha256:84fc4054e25262140d09d39e094f6880d730199710829902f0d8ceae0213379e"},
-    {file = "pygame-2.6.1-cp312-cp312-win_amd64.whl", hash = "sha256:3a9e7396be0d9633831c3f8d5d82dd63ba373ad65599628294b7a4f8a5a01a65"},
-    {file = "pygame-2.6.1-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:ae6039f3a55d800db80e8010f387557b528d34d534435e0871326804df2a62f2"},
-    {file = "pygame-2.6.1-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:2a3a1288e2e9b1e5834e425bedd5ba01a3cd4902b5c2bff8ed4a740ccfe98171"},
-    {file = "pygame-2.6.1-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:27eb17e3dc9640e4b4683074f1890e2e879827447770470c2aba9f125f74510b"},
-    {file = "pygame-2.6.1-cp313-cp313-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:4c1623180e70a03c4a734deb9bac50fc9c82942ae84a3a220779062128e75f3b"},
-    {file = "pygame-2.6.1-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ef07c0103d79492c21fced9ad68c11c32efa6801ca1920ebfd0f15fb46c78b1c"},
-    {file = "pygame-2.6.1-cp313-cp313-win32.whl", hash = "sha256:3acd8c009317190c2bfd81db681ecef47d5eb108c2151d09596d9c7ea9df5c0e"},
-    {file = "pygame-2.6.1-cp313-cp313-win_amd64.whl", hash = "sha256:813af4fba5d0b2cb8e58f5d95f7910295c34067dcc290d34f1be59c48bd1ea6a"},
-    {file = "pygame-2.6.1-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:56ffca6059b165bbf64f4b4be23b8068f6a0e220780e4f96ec0bb5ac3c63ec39"},
-    {file = "pygame-2.6.1-cp36-cp36m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:3bede70ec708057e305815d6546012669226d1d80566785feca9b044216062e7"},
-    {file = "pygame-2.6.1-cp36-cp36m-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:f84f15d146d6aa93254008a626c56ef96fed276006202881a47b29757f0cd65a"},
-    {file = "pygame-2.6.1-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:14f9dda45469b254c0f15edaaeaa85d2cc072ff6a83584a265f5d684c7f7efd8"},
-    {file = "pygame-2.6.1-cp36-cp36m-win32.whl", hash = "sha256:28b43190436037e428a5be28fc80cf6615304fd528009f2c688cc828f4ff104b"},
-    {file = "pygame-2.6.1-cp36-cp36m-win_amd64.whl", hash = "sha256:a4b8f04fceddd9a3ac30778d11f0254f59efcd1c382d5801271113cea8b4f2f3"},
-    {file = "pygame-2.6.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:a620883d589926f157b8f1d1f543183ac52e5c30507dea445e3927ae0bee1c54"},
-    {file = "pygame-2.6.1-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b46e68cd168f44d0224c670bb72186688fc692d7079715f79d04096757d703d0"},
-    {file = "pygame-2.6.1-cp37-cp37m-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:c0b11356ac96261162d54a2c2b41a41978f00525631b01ec9c4fe26b01c66595"},
-    {file = "pygame-2.6.1-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:325a84d072d52e3c2921eff02f87c6a74b7e77d71db3bdf53801c6c975f1b6c4"},
-    {file = "pygame-2.6.1-cp37-cp37m-win32.whl", hash = "sha256:2a615d78b2364e86f541458ff41c2a46181b9a1e9eabd97b389282fdf04efbb3"},
-    {file = "pygame-2.6.1-cp37-cp37m-win_amd64.whl", hash = "sha256:94afd1177680d92f9214c54966ad3517d18210c4fbc5d84a0192d218e93647e0"},
-    {file = "pygame-2.6.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:97ac4e13847b6b293ecaffa5ffce9886c98d09c03309406931cc592f0cea6366"},
-    {file = "pygame-2.6.1-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:d1a7f2b66ac2e4c9583b6d4c6d6f346fb10a3392c04163f537061f86a448ed5c"},
-    {file = "pygame-2.6.1-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:ac3f033d2be4a9e23660a96afe2986df3a6916227538a6a0061bc218c5088507"},
-    {file = "pygame-2.6.1-cp38-cp38-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:a1bf7ab5311bbced70320f1a56701650b4c18231343ae5af42111eea91e0949a"},
-    {file = "pygame-2.6.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:21160d9093533eb831f1b708e630706e5ac16b30750571ec27bc3b8364814f38"},
-    {file = "pygame-2.6.1-cp38-cp38-win32.whl", hash = "sha256:7bffdd3eaf394d9645331d1c3a5df9d782ebcc3c5a78f3b657c7879a828dd111"},
-    {file = "pygame-2.6.1-cp38-cp38-win_amd64.whl", hash = "sha256:818b4eaec9c4acb6ac64805d4ca8edd4062bebca77bd815c18739fe2842c97e9"},
-    {file = "pygame-2.6.1-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:15efaa11a80a65dd589a95bebe812fa5bfc7e14946b638a424c5bd9ac6cca1a4"},
-    {file = "pygame-2.6.1-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:481cfe1bdbb7fe00acc5950c494c26f00240888619bdc396fc8c39a734797432"},
-    {file = "pygame-2.6.1-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:5d09fd950725d187aa5207c0cb8eb9ab0d2f8ce9ab8d189c30eeb470e71b617e"},
-    {file = "pygame-2.6.1-cp39-cp39-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:163e66de169bd5670c86e27d0b74aad0d2d745e3b63cf4e7eb5b2bff1231ca8d"},
-    {file = "pygame-2.6.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:fb6e8d0547f30ddc845f4fd1e33070ef548233ad0dbf21f7ecea768883d1bbdc"},
-    {file = "pygame-2.6.1-cp39-cp39-win32.whl", hash = "sha256:d29eb9a93f12aa3d997b6e3c447ac85b2a4b142ab2548441523a8fcf5e216042"},
-    {file = "pygame-2.6.1-cp39-cp39-win_amd64.whl", hash = "sha256:6582aa71a681e02e55d43150a9ab41394e6bf4d783d2962a10aea58f424be060"},
-    {file = "pygame-2.6.1-pp36-pypy36_pp73-win32.whl", hash = "sha256:4a8ea113b1bf627322a025a1a5a87e3818a7f55ab3a4077ff1ae5c8c60576614"},
-    {file = "pygame-2.6.1-pp38-pypy38_pp73-macosx_10_9_x86_64.whl", hash = "sha256:b7f9f8e6f76de36f4725175d686601214af362a4f30614b4dae2240198e72e6f"},
-    {file = "pygame-2.6.1-pp39-pypy39_pp73-macosx_10_15_x86_64.whl", hash = "sha256:bbb7167c92103a2091366e9af26d4914ba3776666e8677d3c93551353fffa626"},
-    {file = "pygame-2.6.1-pp39-pypy39_pp73-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:17498a2b043bc0e795faedef1b081199c688890200aef34991c1941caa2d2c89"},
-    {file = "pygame-2.6.1-pp39-pypy39_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:7103c60939bbc1e05cfc7ba3f1d2ad3bbf103b7828b82a7166a9ab6f51950146"},
-    {file = "pygame-2.6.1.tar.gz", hash = "sha256:56fb02ead529cee00d415c3e007f75e0780c655909aaa8e8bf616ee09c9feb1f"},
-]
-
-[[package]]
-name = "pygeodesy"
-version = "23.12.29"
-description = "Pure Python geodesy tools"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "PyGeodesy-23.12.29-py2.py3-none-any.whl", hash = "sha256:509b63d5e122d1ccdb3167046d9499c0df466c4a7a09ead1173fbffbaed23418"},
-    {file = "PyGeodesy-23.12.29.zip", hash = "sha256:725ef47874c3785369178efe0b2a531bedc22119e37944e8828c961f925766ed"},
-]
-
-[[package]]
-name = "pymetis"
-version = "2025.2.2"
-description = "A graph partitioning package"
-optional = false
-python-versions = ">=3.10"
-groups = ["main"]
-files = [
-    {file = "pymetis-2025.2.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:d0b18c77d68f348a9870d039f8bd1e0c207276cedb18a63fe176cb4f72967837"},
-    {file = "pymetis-2025.2.2-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:c5756c0d082ac9637337f1c25d1ddd10d4c7226bf27097b251e05d16fe006287"},
-    {file = "pymetis-2025.2.2-cp310-cp310-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:8195db2a4d217a8a20e6126dd765d636e68164b8cdea66e1f14a798a89403c39"},
-    {file = "pymetis-2025.2.2-cp310-cp310-musllinux_1_2_x86_64.whl", hash = "sha256:8c85bd6ca25838652f5ee26887d198c3bd3de78ad3c8269080515fc74a00dc67"},
-    {file = "pymetis-2025.2.2-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:8f18b10aaeff4a8a86a4d57ff8dfd106a3dfbcd0027da083cefa4f4a8f130a15"},
-    {file = "pymetis-2025.2.2-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:a3b2695e826ec500689f75d701f3b0bbffaea60b8dca3dcccceb7d3f1ac81974"},
-    {file = "pymetis-2025.2.2-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:8b283cfc1e45bd5ec237d0db9bce72f05ed54556ef3a7b13f7f642287d22cb48"},
-    {file = "pymetis-2025.2.2-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:f8e7723bb3e0dda6ae7f3e54217f22c6ffe2aad78575bafb47ec311b863fc02c"},
-    {file = "pymetis-2025.2.2-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:fccafb50056dc93e22effe14abadb87921d0314741ff0a4d6208df5c42ffdb68"},
-    {file = "pymetis-2025.2.2-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:b2758f36952c9fcf864838b6d01b5eab067f5f35ce80721f8d185276e97fe640"},
-    {file = "pymetis-2025.2.2-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:e355cd0de2ee17e50f8022970727c7edc98a56136f2db6d623c632b6e7150a96"},
-    {file = "pymetis-2025.2.2-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:904d190253492bb48c0dd2e179adb590c4a94e8bbeacbdfe82d0b21a29ccda7f"},
-    {file = "pymetis-2025.2.2-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:6b0b2a38ced17850553982c8b18d9cd33afba91ac246ce0bdb3d6d8e569bd7e9"},
-    {file = "pymetis-2025.2.2-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:38a4880968203263bfe709105a808ad8f5e0993c962e04639c3a5b36f60bc134"},
-    {file = "pymetis-2025.2.2-cp313-cp313-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:08f9f603cc5328ee9b747d1cd6ced23a17ff99c1bcd17f20dfced92186e1d127"},
-    {file = "pymetis-2025.2.2-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:896db1f37907335e4e60c39cc2bd5b66e3aebd52e04b092d8d1d2a4bcffba114"},
-    {file = "pymetis-2025.2.2-cp314-cp314-macosx_10_15_x86_64.whl", hash = "sha256:c070460ba8b96e2a5d3bfdf1337983d29db9ee3448cbc2c5e8a2fbd8cc65479c"},
-    {file = "pymetis-2025.2.2-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:c9a7b93c5a4745bc5abe7316f7542a16a964906394dc32267318315f2804b43c"},
-    {file = "pymetis-2025.2.2-cp314-cp314-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:b7c93735a8bc200a0f00b3efa6dcc51d9ee1500b48b7852b3a19372e33f04b37"},
-    {file = "pymetis-2025.2.2-cp314-cp314-musllinux_1_2_x86_64.whl", hash = "sha256:48650250a56611497e0c39c4e52539a5ee1b5349a930d7d7815a0224c85b2706"},
-    {file = "pymetis-2025.2.2-cp314-cp314t-macosx_10_15_x86_64.whl", hash = "sha256:9b0c4ff5e36156dd3d157304634c96642cf909a982ee8f778684a6201952466e"},
-    {file = "pymetis-2025.2.2-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:fc42996ef8b95078693698074883114f62c0209341f32face33ac6327599d3ad"},
-    {file = "pymetis-2025.2.2-cp314-cp314t-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:db8169f36fb042a560e33bb80e15ec91f39f009518ed2fdd4784a457207cd644"},
-    {file = "pymetis-2025.2.2-cp314-cp314t-musllinux_1_2_x86_64.whl", hash = "sha256:301c0e6556b37c3321ce190a5638f5ae2110341d6e3e2e5a2141687de06a5e51"},
-    {file = "pymetis-2025.2.2.tar.gz", hash = "sha256:79c6d56c30c6f3df7cc755617cbadcfc252a175ce4e5a59982edad0f1ab71c99"},
-]
-
-[package.dependencies]
-typing-extensions = ">=4.5"
-
-[package.extras]
-doc = ["furo", "sphinx (>=4)", "sphinx-copybutton"]
-test = ["meshpy", "numpy", "pytest", "ruff", "typos"]
-
-[[package]]
 name = "pyparsing"
 version = "3.2.5"
 description = "pyparsing - Classes and methods to define and execute parsing grammars"
@@ -2750,192 +2215,6 @@ files = [
 
 [package.extras]
 diagrams = ["jinja2", "railroad-diagrams"]
-
-[[package]]
-name = "pyproj"
-version = "3.7.1"
-description = "Python interface to PROJ (cartographic projections and coordinate transformations library)"
-optional = false
-python-versions = ">=3.10"
-groups = ["main"]
-markers = "python_version == \"3.10\""
-files = [
-    {file = "pyproj-3.7.1-cp310-cp310-macosx_13_0_x86_64.whl", hash = "sha256:bf09dbeb333c34e9c546364e7df1ff40474f9fddf9e70657ecb0e4f670ff0b0e"},
-    {file = "pyproj-3.7.1-cp310-cp310-macosx_14_0_arm64.whl", hash = "sha256:6575b2e53cc9e3e461ad6f0692a5564b96e7782c28631c7771c668770915e169"},
-    {file = "pyproj-3.7.1-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:8cb516ee35ed57789b46b96080edf4e503fdb62dbb2e3c6581e0d6c83fca014b"},
-    {file = "pyproj-3.7.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1e47c4e93b88d99dd118875ee3ca0171932444cdc0b52d493371b5d98d0f30ee"},
-    {file = "pyproj-3.7.1-cp310-cp310-musllinux_1_2_aarch64.whl", hash = "sha256:3e8d276caeae34fcbe4813855d0d97b9b825bab8d7a8b86d859c24a6213a5a0d"},
-    {file = "pyproj-3.7.1-cp310-cp310-musllinux_1_2_x86_64.whl", hash = "sha256:f173f851ee75e54acdaa053382b6825b400cb2085663a9bb073728a59c60aebb"},
-    {file = "pyproj-3.7.1-cp310-cp310-win32.whl", hash = "sha256:f550281ed6e5ea88fcf04a7c6154e246d5714be495c50c9e8e6b12d3fb63e158"},
-    {file = "pyproj-3.7.1-cp310-cp310-win_amd64.whl", hash = "sha256:3537668992a709a2e7f068069192138618c00d0ba113572fdd5ee5ffde8222f3"},
-    {file = "pyproj-3.7.1-cp311-cp311-macosx_13_0_x86_64.whl", hash = "sha256:a94e26c1a4950cea40116775588a2ca7cf56f1f434ff54ee35a84718f3841a3d"},
-    {file = "pyproj-3.7.1-cp311-cp311-macosx_14_0_arm64.whl", hash = "sha256:263b54ba5004b6b957d55757d846fc5081bc02980caa0279c4fc95fa0fff6067"},
-    {file = "pyproj-3.7.1-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:f6d6a2ccd5607cd15ef990c51e6f2dd27ec0a741e72069c387088bba3aab60fa"},
-    {file = "pyproj-3.7.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:8c5dcf24ede53d8abab7d8a77f69ff1936c6a8843ef4fcc574646e4be66e5739"},
-    {file = "pyproj-3.7.1-cp311-cp311-musllinux_1_2_aarch64.whl", hash = "sha256:3c2e7449840a44ce860d8bea2c6c1c4bc63fa07cba801dcce581d14dcb031a02"},
-    {file = "pyproj-3.7.1-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:0829865c1d3a3543f918b3919dc601eea572d6091c0dd175e1a054db9c109274"},
-    {file = "pyproj-3.7.1-cp311-cp311-win32.whl", hash = "sha256:6181960b4b812e82e588407fe5c9c68ada267c3b084db078f248db5d7f45d18a"},
-    {file = "pyproj-3.7.1-cp311-cp311-win_amd64.whl", hash = "sha256:5ad0ff443a785d84e2b380869fdd82e6bfc11eba6057d25b4409a9bbfa867970"},
-    {file = "pyproj-3.7.1-cp312-cp312-macosx_13_0_x86_64.whl", hash = "sha256:2781029d90df7f8d431e29562a3f2d8eafdf233c4010d6fc0381858dc7373217"},
-    {file = "pyproj-3.7.1-cp312-cp312-macosx_14_0_arm64.whl", hash = "sha256:d61bf8ab04c73c1da08eedaf21a103b72fa5b0a9b854762905f65ff8b375d394"},
-    {file = "pyproj-3.7.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:04abc517a8555d1b05fcee768db3280143fe42ec39fdd926a2feef31631a1f2f"},
-    {file = "pyproj-3.7.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:084c0a475688f934d386c2ab3b6ce03398a473cd48adfda70d9ab8f87f2394a0"},
-    {file = "pyproj-3.7.1-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:a20727a23b1e49c7dc7fe3c3df8e56a8a7acdade80ac2f5cca29d7ca5564c145"},
-    {file = "pyproj-3.7.1-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:bf84d766646f1ebd706d883755df4370aaf02b48187cedaa7e4239f16bc8213d"},
-    {file = "pyproj-3.7.1-cp312-cp312-win32.whl", hash = "sha256:5f0da2711364d7cb9f115b52289d4a9b61e8bca0da57f44a3a9d6fc9bdeb7274"},
-    {file = "pyproj-3.7.1-cp312-cp312-win_amd64.whl", hash = "sha256:aee664a9d806612af30a19dba49e55a7a78ebfec3e9d198f6a6176e1d140ec98"},
-    {file = "pyproj-3.7.1-cp313-cp313-macosx_13_0_x86_64.whl", hash = "sha256:5f8d02ef4431dee414d1753d13fa82a21a2f61494737b5f642ea668d76164d6d"},
-    {file = "pyproj-3.7.1-cp313-cp313-macosx_14_0_arm64.whl", hash = "sha256:0b853ae99bda66cbe24b4ccfe26d70601d84375940a47f553413d9df570065e0"},
-    {file = "pyproj-3.7.1-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:83db380c52087f9e9bdd8a527943b2e7324f275881125e39475c4f9277bdeec4"},
-    {file = "pyproj-3.7.1-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b35ed213892e211a3ce2bea002aa1183e1a2a9b79e51bb3c6b15549a831ae528"},
-    {file = "pyproj-3.7.1-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:a8b15b0463d1303bab113d1a6af2860a0d79013c3a66fcc5475ce26ef717fd4f"},
-    {file = "pyproj-3.7.1-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:87229e42b75e89f4dad6459200f92988c5998dfb093c7c631fb48524c86cd5dc"},
-    {file = "pyproj-3.7.1-cp313-cp313-win32.whl", hash = "sha256:d666c3a3faaf3b1d7fc4a544059c4eab9d06f84a604b070b7aa2f318e227798e"},
-    {file = "pyproj-3.7.1-cp313-cp313-win_amd64.whl", hash = "sha256:d3caac7473be22b6d6e102dde6c46de73b96bc98334e577dfaee9886f102ea2e"},
-    {file = "pyproj-3.7.1.tar.gz", hash = "sha256:60d72facd7b6b79853f19744779abcd3f804c4e0d4fa8815469db20c9f640a47"},
-]
-
-[package.dependencies]
-certifi = "*"
-
-[[package]]
-name = "pyproj"
-version = "3.7.2"
-description = "Python interface to PROJ (cartographic projections and coordinate transformations library)"
-optional = false
-python-versions = ">=3.11"
-groups = ["main"]
-markers = "python_version == \"3.11\""
-files = [
-    {file = "pyproj-3.7.2-cp311-cp311-macosx_13_0_x86_64.whl", hash = "sha256:2514d61f24c4e0bb9913e2c51487ecdaeca5f8748d8313c933693416ca41d4d5"},
-    {file = "pyproj-3.7.2-cp311-cp311-macosx_14_0_arm64.whl", hash = "sha256:8693ca3892d82e70de077701ee76dd13d7bca4ae1c9d1e739d72004df015923a"},
-    {file = "pyproj-3.7.2-cp311-cp311-manylinux_2_28_aarch64.whl", hash = "sha256:5e26484d80fea56273ed1555abaea161e9661d81a6c07815d54b8e883d4ceb25"},
-    {file = "pyproj-3.7.2-cp311-cp311-manylinux_2_28_x86_64.whl", hash = "sha256:281cb92847814e8018010c48b4069ff858a30236638631c1a91dd7bfa68f8a8a"},
-    {file = "pyproj-3.7.2-cp311-cp311-musllinux_1_2_aarch64.whl", hash = "sha256:9c8577f0b7bb09118ec2e57e3babdc977127dd66326d6c5d755c76b063e6d9dc"},
-    {file = "pyproj-3.7.2-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:a23f59904fac3a5e7364b3aa44d288234af267ca041adb2c2b14a903cd5d3ac5"},
-    {file = "pyproj-3.7.2-cp311-cp311-win32.whl", hash = "sha256:f2af4ed34b2cf3e031a2d85b067a3ecbd38df073c567e04b52fa7a0202afde8a"},
-    {file = "pyproj-3.7.2-cp311-cp311-win_amd64.whl", hash = "sha256:0b7cb633565129677b2a183c4d807c727d1c736fcb0568a12299383056e67433"},
-    {file = "pyproj-3.7.2-cp311-cp311-win_arm64.whl", hash = "sha256:38b08d85e3a38e455625b80e9eb9f78027c8e2649a21dec4df1f9c3525460c71"},
-    {file = "pyproj-3.7.2-cp312-cp312-macosx_13_0_x86_64.whl", hash = "sha256:0a9bb26a6356fb5b033433a6d1b4542158fb71e3c51de49b4c318a1dff3aeaab"},
-    {file = "pyproj-3.7.2-cp312-cp312-macosx_14_0_arm64.whl", hash = "sha256:567caa03021178861fad27fabde87500ec6d2ee173dd32f3e2d9871e40eebd68"},
-    {file = "pyproj-3.7.2-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:c203101d1dc3c038a56cff0447acc515dd29d6e14811406ac539c21eed422b2a"},
-    {file = "pyproj-3.7.2-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:1edc34266c0c23ced85f95a1ee8b47c9035eae6aca5b6b340327250e8e281630"},
-    {file = "pyproj-3.7.2-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:aa9f26c21bc0e2dc3d224cb1eb4020cf23e76af179a7c66fea49b828611e4260"},
-    {file = "pyproj-3.7.2-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:f9428b318530625cb389b9ddc9c51251e172808a4af79b82809376daaeabe5e9"},
-    {file = "pyproj-3.7.2-cp312-cp312-win32.whl", hash = "sha256:b3d99ed57d319da042f175f4554fc7038aa4bcecc4ac89e217e350346b742c9d"},
-    {file = "pyproj-3.7.2-cp312-cp312-win_amd64.whl", hash = "sha256:11614a054cd86a2ed968a657d00987a86eeb91fdcbd9ad3310478685dc14a128"},
-    {file = "pyproj-3.7.2-cp312-cp312-win_arm64.whl", hash = "sha256:509a146d1398bafe4f53273398c3bb0b4732535065fa995270e52a9d3676bca3"},
-    {file = "pyproj-3.7.2-cp313-cp313-macosx_13_0_x86_64.whl", hash = "sha256:19466e529b1b15eeefdf8ff26b06fa745856c044f2f77bf0edbae94078c1dfa1"},
-    {file = "pyproj-3.7.2-cp313-cp313-macosx_14_0_arm64.whl", hash = "sha256:c79b9b84c4a626c5dc324c0d666be0bfcebd99f7538d66e8898c2444221b3da7"},
-    {file = "pyproj-3.7.2-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:ceecf374cacca317bc09e165db38ac548ee3cad07c3609442bd70311c59c21aa"},
-    {file = "pyproj-3.7.2-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:5141a538ffdbe4bfd157421828bb2e07123a90a7a2d6f30fa1462abcfb5ce681"},
-    {file = "pyproj-3.7.2-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:f000841e98ea99acbb7b8ca168d67773b0191de95187228a16110245c5d954d5"},
-    {file = "pyproj-3.7.2-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:8115faf2597f281a42ab608ceac346b4eb1383d3b45ab474fd37341c4bf82a67"},
-    {file = "pyproj-3.7.2-cp313-cp313-win32.whl", hash = "sha256:f18c0579dd6be00b970cb1a6719197fceecc407515bab37da0066f0184aafdf3"},
-    {file = "pyproj-3.7.2-cp313-cp313-win_amd64.whl", hash = "sha256:bb41c29d5f60854b1075853fe80c58950b398d4ebb404eb532536ac8d2834ed7"},
-    {file = "pyproj-3.7.2-cp313-cp313-win_arm64.whl", hash = "sha256:2b617d573be4118c11cd96b8891a0b7f65778fa7733ed8ecdb297a447d439100"},
-    {file = "pyproj-3.7.2-cp313-cp313t-macosx_13_0_x86_64.whl", hash = "sha256:d27b48f0e81beeaa2b4d60c516c3a1cfbb0c7ff6ef71256d8e9c07792f735279"},
-    {file = "pyproj-3.7.2-cp313-cp313t-macosx_14_0_arm64.whl", hash = "sha256:55a3610d75023c7b1c6e583e48ef8f62918e85a2ae81300569d9f104d6684bb6"},
-    {file = "pyproj-3.7.2-cp313-cp313t-manylinux_2_28_aarch64.whl", hash = "sha256:8d7349182fa622696787cc9e195508d2a41a64765da9b8a6bee846702b9e6220"},
-    {file = "pyproj-3.7.2-cp313-cp313t-manylinux_2_28_x86_64.whl", hash = "sha256:d230b186eb876ed4f29a7c5ee310144c3a0e44e89e55f65fb3607e13f6db337c"},
-    {file = "pyproj-3.7.2-cp313-cp313t-musllinux_1_2_aarch64.whl", hash = "sha256:237499c7862c578d0369e2b8ac56eec550e391a025ff70e2af8417139dabb41c"},
-    {file = "pyproj-3.7.2-cp313-cp313t-musllinux_1_2_x86_64.whl", hash = "sha256:8c225f5978abd506fd9a78eaaf794435e823c9156091cabaab5374efb29d7f69"},
-    {file = "pyproj-3.7.2-cp313-cp313t-win32.whl", hash = "sha256:2da731876d27639ff9d2d81c151f6ab90a1546455fabd93368e753047be344a2"},
-    {file = "pyproj-3.7.2-cp313-cp313t-win_amd64.whl", hash = "sha256:f54d91ae18dd23b6c0ab48126d446820e725419da10617d86a1b69ada6d881d3"},
-    {file = "pyproj-3.7.2-cp313-cp313t-win_arm64.whl", hash = "sha256:fc52ba896cfc3214dc9f9ca3c0677a623e8fdd096b257c14a31e719d21ff3fdd"},
-    {file = "pyproj-3.7.2-cp314-cp314-macosx_13_0_x86_64.whl", hash = "sha256:2aaa328605ace41db050d06bac1adc11f01b71fe95c18661497763116c3a0f02"},
-    {file = "pyproj-3.7.2-cp314-cp314-macosx_14_0_arm64.whl", hash = "sha256:35dccbce8201313c596a970fde90e33605248b66272595c061b511c8100ccc08"},
-    {file = "pyproj-3.7.2-cp314-cp314-manylinux_2_28_aarch64.whl", hash = "sha256:25b0b7cb0042444c29a164b993c45c1b8013d6c48baa61dc1160d834a277e83b"},
-    {file = "pyproj-3.7.2-cp314-cp314-manylinux_2_28_x86_64.whl", hash = "sha256:85def3a6388e9ba51f964619aa002a9d2098e77c6454ff47773bb68871024281"},
-    {file = "pyproj-3.7.2-cp314-cp314-musllinux_1_2_aarch64.whl", hash = "sha256:b1bccefec3875ab81eabf49059e2b2ea77362c178b66fd3528c3e4df242f1516"},
-    {file = "pyproj-3.7.2-cp314-cp314-musllinux_1_2_x86_64.whl", hash = "sha256:d5371ca114d6990b675247355a801925814eca53e6c4b2f1b5c0a956336ee36e"},
-    {file = "pyproj-3.7.2-cp314-cp314-win32.whl", hash = "sha256:77f066626030f41be543274f5ac79f2a511fe89860ecd0914f22131b40a0ec25"},
-    {file = "pyproj-3.7.2-cp314-cp314-win_amd64.whl", hash = "sha256:5a964da1696b8522806f4276ab04ccfff8f9eb95133a92a25900697609d40112"},
-    {file = "pyproj-3.7.2-cp314-cp314-win_arm64.whl", hash = "sha256:e258ab4dbd3cf627809067c0ba8f9884ea76c8e5999d039fb37a1619c6c3e1f6"},
-    {file = "pyproj-3.7.2-cp314-cp314t-macosx_13_0_x86_64.whl", hash = "sha256:bbbac2f930c6d266f70ec75df35ef851d96fdb3701c674f42fd23a9314573b37"},
-    {file = "pyproj-3.7.2-cp314-cp314t-macosx_14_0_arm64.whl", hash = "sha256:b7544e0a3d6339dc9151e9c8f3ea62a936ab7cc446a806ec448bbe86aebb979b"},
-    {file = "pyproj-3.7.2-cp314-cp314t-manylinux_2_28_aarch64.whl", hash = "sha256:f7f5133dca4c703e8acadf6f30bc567d39a42c6af321e7f81975c2518f3ed357"},
-    {file = "pyproj-3.7.2-cp314-cp314t-manylinux_2_28_x86_64.whl", hash = "sha256:5aff3343038d7426aa5076f07feb88065f50e0502d1b0d7c22ddfdd2c75a3f81"},
-    {file = "pyproj-3.7.2-cp314-cp314t-musllinux_1_2_aarch64.whl", hash = "sha256:b0552178c61f2ac1c820d087e8ba6e62b29442debddbb09d51c4bf8acc84d888"},
-    {file = "pyproj-3.7.2-cp314-cp314t-musllinux_1_2_x86_64.whl", hash = "sha256:47d87db2d2c436c5fd0409b34d70bb6cdb875cca2ebe7a9d1c442367b0ab8d59"},
-    {file = "pyproj-3.7.2-cp314-cp314t-win32.whl", hash = "sha256:c9b6f1d8ad3e80a0ee0903a778b6ece7dca1d1d40f6d114ae01bc8ddbad971aa"},
-    {file = "pyproj-3.7.2-cp314-cp314t-win_amd64.whl", hash = "sha256:1914e29e27933ba6f9822663ee0600f169014a2859f851c054c88cf5ea8a333c"},
-    {file = "pyproj-3.7.2-cp314-cp314t-win_arm64.whl", hash = "sha256:d9d25bae416a24397e0d85739f84d323b55f6511e45a522dd7d7eae70d10c7e4"},
-    {file = "pyproj-3.7.2.tar.gz", hash = "sha256:39a0cf1ecc7e282d1d30f36594ebd55c9fae1fda8a2622cee5d100430628f88c"},
-]
-
-[package.dependencies]
-certifi = "*"
-
-[[package]]
-name = "pyqt6"
-version = "6.10.0"
-description = "Python bindings for the Qt cross platform application toolkit"
-optional = false
-python-versions = ">=3.9"
-groups = ["main"]
-files = [
-    {file = "pyqt6-6.10.0-cp39-abi3-macosx_10_14_universal2.whl", hash = "sha256:0eb82f152a83a8ae39f7d3ba580829ff7c0e8179d19d70f396853c10c8ddc5ac"},
-    {file = "pyqt6-6.10.0-cp39-abi3-manylinux_2_34_x86_64.whl", hash = "sha256:43e94a0ad4713055b47b4676d23432349845729912e4f3d20ac95935931c5e6f"},
-    {file = "pyqt6-6.10.0-cp39-abi3-manylinux_2_39_aarch64.whl", hash = "sha256:357da0f1465557dde249a31bc1f152320b7628a644e1d55d2db09b635394f39f"},
-    {file = "pyqt6-6.10.0-cp39-abi3-win_amd64.whl", hash = "sha256:8b5e4ea573733017a76bd12ea1b53351fd7f6dc57f8abf4329c4a41fea6dde04"},
-    {file = "pyqt6-6.10.0-cp39-abi3-win_arm64.whl", hash = "sha256:c2b5fc1a028e95b096f3a5966611cc8194e8e9e69984c41477417e18b5ce1362"},
-    {file = "pyqt6-6.10.0.tar.gz", hash = "sha256:710ecfd720d9a03b2c684881ae37f528e11d17e8f1bf96431d00a6a73f308e36"},
-]
-
-[package.dependencies]
-PyQt6-Qt6 = ">=6.10.0,<6.11.0"
-PyQt6-sip = ">=13.8,<14"
-
-[[package]]
-name = "pyqt6-qt6"
-version = "6.10.0"
-description = "The subset of a Qt installation needed by PyQt6."
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "pyqt6_qt6-6.10.0-py3-none-macosx_10_14_x86_64.whl", hash = "sha256:9b48d9eba795a78d21393b1909e7a0406512038ea4667463e4882e284bf95817"},
-    {file = "pyqt6_qt6-6.10.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:768ced73dbb2c85e6d72ea63fd7409ba934d4b24580ef073a3eb16fd88d3fe70"},
-    {file = "pyqt6_qt6-6.10.0-py3-none-manylinux_2_34_x86_64.whl", hash = "sha256:cd38b281bb7229b8114f13126aacd77f831a97105fdb1d900260a48ead8c9fcd"},
-    {file = "pyqt6_qt6-6.10.0-py3-none-manylinux_2_39_aarch64.whl", hash = "sha256:497df665091451ab7fde3355e262b243d2a2d97924b899a5cbb193a0cc573b7e"},
-    {file = "pyqt6_qt6-6.10.0-py3-none-win_amd64.whl", hash = "sha256:d11bc03908cacbd2e3426289ad51dcf6d2896af6ffec595626ce9cf9b93e770d"},
-    {file = "pyqt6_qt6-6.10.0-py3-none-win_arm64.whl", hash = "sha256:7f3ae89337e905dba436c226027ebd8777d4cdeef386131ad9a1b0a53ecc1a81"},
-]
-
-[[package]]
-name = "pyqt6-sip"
-version = "13.10.2"
-description = "The sip module support for PyQt6"
-optional = false
-python-versions = ">=3.9"
-groups = ["main"]
-files = [
-    {file = "pyqt6_sip-13.10.2-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:8132ec1cbbecc69d23dcff23916ec07218f1a9bbbc243bf6f1df967117ce303e"},
-    {file = "pyqt6_sip-13.10.2-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:07f77e89d93747dda71b60c3490b00d754451729fbcbcec840e42084bf061655"},
-    {file = "pyqt6_sip-13.10.2-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:4ffa71ddff6ef031d52cd4f88b8bba08b3516313c023c7e5825cf4a0ba598712"},
-    {file = "pyqt6_sip-13.10.2-cp310-cp310-win_amd64.whl", hash = "sha256:e907394795e61f1174134465c889177f584336a98d7a10beade2437bf5942244"},
-    {file = "pyqt6_sip-13.10.2-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:1a6c2f168773af9e6c7ef5e52907f16297d4efd346e4c958eda54ea9135be18e"},
-    {file = "pyqt6_sip-13.10.2-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b1d3cc9015a1bd8c8d3e86a009591e897d4d46b0c514aede7d2970a2208749cd"},
-    {file = "pyqt6_sip-13.10.2-cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:ddd578a8d975bfb5fef83751829bf09a97a1355fa1de098e4fb4d1b74ee872fc"},
-    {file = "pyqt6_sip-13.10.2-cp311-cp311-win_amd64.whl", hash = "sha256:061d4a2eb60a603d8be7db6c7f27eb29d9cea97a09aa4533edc1662091ce4f03"},
-    {file = "pyqt6_sip-13.10.2-cp311-cp311-win_arm64.whl", hash = "sha256:45ac06f0380b7aa4fcffd89f9e8c00d1b575dc700c603446a9774fda2dcfc0de"},
-    {file = "pyqt6_sip-13.10.2-cp312-cp312-macosx_10_9_universal2.whl", hash = "sha256:83e6a56d3e715f748557460600ec342cbd77af89ec89c4f2a68b185fa14ea46c"},
-    {file = "pyqt6_sip-13.10.2-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:4ccf197f8fa410e076936bee28ad9abadb450931d5be5625446fd20e0d8b27a6"},
-    {file = "pyqt6_sip-13.10.2-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:37af463dcce39285e686d49523d376994d8a2508b9acccb7616c4b117c9c4ed7"},
-    {file = "pyqt6_sip-13.10.2-cp312-cp312-win_amd64.whl", hash = "sha256:c7b34a495b92790c70eae690d9e816b53d3b625b45eeed6ae2c0fe24075a237e"},
-    {file = "pyqt6_sip-13.10.2-cp312-cp312-win_arm64.whl", hash = "sha256:c80cc059d772c632f5319632f183e7578cd0976b9498682833035b18a3483e92"},
-    {file = "pyqt6_sip-13.10.2-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:8b5d06a0eac36038fa8734657d99b5fe92263ae7a0cd0a67be6acfe220a063e1"},
-    {file = "pyqt6_sip-13.10.2-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:ad376a6078da37b049fdf9d6637d71b52727e65c4496a80b753ddc8d27526aca"},
-    {file = "pyqt6_sip-13.10.2-cp313-cp313-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:3dde8024d055f496eba7d44061c5a1ba4eb72fc95e5a9d7a0dbc908317e0888b"},
-    {file = "pyqt6_sip-13.10.2-cp313-cp313-win_amd64.whl", hash = "sha256:0b097eb58b4df936c4a2a88a2f367c8bb5c20ff049a45a7917ad75d698e3b277"},
-    {file = "pyqt6_sip-13.10.2-cp313-cp313-win_arm64.whl", hash = "sha256:cc6a1dfdf324efaac6e7b890a608385205e652845c62130de919fd73a6326244"},
-    {file = "pyqt6_sip-13.10.2-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:38b5823dca93377f8a4efac3cbfaa1d20229aa5b640c31cf6ebbe5c586333808"},
-    {file = "pyqt6_sip-13.10.2-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:5506b9a795098df3b023cc7d0a37f93d3224a9c040c43804d4bc06e0b2b742b0"},
-    {file = "pyqt6_sip-13.10.2-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:e455a181d45a28ee8d18d42243d4f470d269e6ccdee60f2546e6e71218e05bb4"},
-    {file = "pyqt6_sip-13.10.2-cp39-cp39-win_amd64.whl", hash = "sha256:9c67ed66e21b11e04ffabe0d93bc21df22e0a5d7e2e10ebc8c1d77d2f5042991"},
-    {file = "pyqt6_sip-13.10.2.tar.gz", hash = "sha256:464ad156bf526500ce6bd05cac7a82280af6309974d816739b4a9a627156fafe"},
-]
 
 [[package]]
 name = "python-dateutil"
@@ -3589,22 +2868,6 @@ docs = ["matplotlib", "numpydoc (==1.1.*)", "sphinx", "sphinx-book-theme", "sphi
 test = ["pytest", "pytest-cov", "scipy-doctest"]
 
 [[package]]
-name = "similaritymeasures"
-version = "1.4.0"
-description = "Quantify the difference between two arbitrary curves in space"
-optional = false
-python-versions = ">=3.8"
-groups = ["main"]
-files = [
-    {file = "similaritymeasures-1.4.0-py3-none-any.whl", hash = "sha256:4beae86c93a202cbbd8451f8b0d7163d54ba7562563af56f62a47f3491efe00f"},
-    {file = "similaritymeasures-1.4.0.tar.gz", hash = "sha256:52032dd11ea3c0f94158e17df16f8d512101d6de0d31a2db42193f1434720572"},
-]
-
-[package.dependencies]
-numpy = ">=1.14.0"
-scipy = ">=0.19.0"
-
-[[package]]
 name = "six"
 version = "1.17.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -3667,20 +2930,6 @@ charts = ["graphviz (>=0.19.0)", "matplotlib (>=3.0.0)", "orjson (>=3.5.0)", "pl
 pdf = ["streamlit-pdf (>=1.0.0)"]
 snowflake = ["snowflake-connector-python (>=3.3.0) ; python_version < \"3.12\"", "snowflake-snowpark-python[modin] (>=1.17.0) ; python_version < \"3.12\""]
 sql = ["SQLAlchemy (>=2.0.0)"]
-
-[[package]]
-name = "sumolib"
-version = "1.24.0"
-description = "Python helper modules to read networks, parse output data and do other useful stuff related to the traffic simulation Eclipse SUMO"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "sumolib-1.24.0-py3-none-any.whl", hash = "sha256:d4e8c0315dd240af60665cb7c0f34f876abf91daab73f53c17a5c8284c0acd5d"},
-]
-
-[package.extras]
-visualization = ["matplotlib"]
 
 [[package]]
 name = "tenacity"
@@ -3753,20 +3002,6 @@ discord = ["requests"]
 notebook = ["ipywidgets (>=6)"]
 slack = ["slack-sdk"]
 telegram = ["requests"]
-
-[[package]]
-name = "traci"
-version = "1.24.0"
-description = "The pure python version of the TraCI API to communicate with the traffic simulation Eclipse SUMO"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "traci-1.24.0-py3-none-any.whl", hash = "sha256:eb273d596d7279cbe5734ec23297e8689b78526d43089f7e21a9f3fb3de4fdea"},
-]
-
-[package.dependencies]
-sumolib = ">=1.24.0"
 
 [[package]]
 name = "triangle"
@@ -3884,17 +3119,6 @@ socks = ["pysocks (>=1.5.6,!=1.5.7,<2.0)"]
 zstd = ["zstandard (>=0.18.0)"]
 
 [[package]]
-name = "utm"
-version = "0.7.0"
-description = "Bidirectional UTM-WGS84 converter for python"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "utm-0.7.0.tar.gz", hash = "sha256:3c9a3650e98bb6eecec535418d0dfd4db8f88c8ceaca112a0ff0787e116566e2"},
-]
-
-[[package]]
 name = "virtualenv"
 version = "20.35.4"
 description = "Virtual Python Environment builder"
@@ -3982,4 +3206,4 @@ test = ["pytest (>=4.6.7)", "pytest-checkdocs (>=1.2.5) ; python_version < \"3\"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.12"
-content-hash = "15789c3d964ab26ae66d33e2755bf294dff2f82311c4e367cfdbd2bbba36eecf"
+content-hash = "81e01a327361cf5daf16a8ca81275e2a2d663c18a37ccd8c6cad6fb585a9811b"

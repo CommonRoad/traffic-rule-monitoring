@@ -269,7 +269,6 @@ def store_summary_table():
         f.write(r"""\begin{table*}[!t]
      \centering
      \caption{Computation times for different configurations from \cref{tab:configurations} for evaluating rule-compliance of complete scenarios.}
-     \center
      \begin{tabular}{@{}lcccccccc@{}}
       \toprule
       \textbf{Scenario}                   &   \textbf{\#Vehicles} &   \textbf{\#Time Steps} &   \textbf{C1 [s]} &   \textbf{C2 [s]} &     \textbf{C3 [s]} &   \textbf{C4 [s]} &   \textbf{C5 [s]} & \textbf{C6 [s]} \\

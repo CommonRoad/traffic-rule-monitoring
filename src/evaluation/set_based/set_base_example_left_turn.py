@@ -29,7 +29,7 @@ def eval_set_based_left_turn():
     config_path = (
         Path(__file__).parent.parent.parent.parent / "configurations/set_based" / "ZAM_TestTurnLeft-2_1_S-1.yaml"
     )
-    plot_limits = [40, 70, 40, 120]
+    plot_limits = [40, 70, 40, 90]
     intersection_params = {"tIntersectionPassBefore": 15.0, "tIntersectionPassAfter": 15.0}
 
     set_based_left_turn(str(scenario), config_path, plot_limits, intersection_params, True)

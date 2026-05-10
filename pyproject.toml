@@ -10,8 +10,8 @@ requires-python = ">=3.10,<3.12"
 
 [tool.poetry.dependencies]
 #rv-monitors = { git = "git@gitlab.lrz.de:cps/commonroad/rv-monitors.git", branch = "develop" }
-commonroad-carla-interface = { git = "git@gitlab.lrz.de:cps/commonroad/commonroad-carla-interface.git", branch = "monitor-integration" }
-#commonroad-reactive-planner = { git = "git@gitlab.lrz.de:cps/reactive-planner.git", branch = "integration_crmonitor" }
+#commonroad-carla-interface = { git = "git@gitlab.lrz.de:cps/commonroad/commonroad-carla-interface.git", branch = "monitor-integration" }
+commonroad-reactive-planner = { git = "git@gitlab.lrz.de:cps/reactive-planner.git", branch = "integration_crmonitor" }
 #tabulate = "^0.9.0"
 #tikzplotlib = "^0.10.1"
 #matplotlib = "=3.7.3"
