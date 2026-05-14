@@ -104,12 +104,12 @@ python test_drives_visualization.py
 ## :speech_balloon: Citation
 ```
 @article{Althoff2025xx
-  author = {Althoff, Matthias and Maierhofer, Sebastian and Würsching, Gerald and Lin, Yuanfei and Lercher, Florian and Stolz, Roland},
-  title = {No More Traffic Tickets: A Tutorial to Ensure Traffic-Rule Compliance of Automated Vehicles},
-  journal = {Proceedings of the IEEE},
+  author = {Maierhofer, Sebastian and Althoff, Matthias},
+  title = {Monitoring Traffic Rule Compliance of Automated Vehicles},
+  journal = {tbd},
   volume = {tbd},
   number = {tbd},
   pages = {tbd},
-  year={2025},
+  year={tbd},
 }
 ```
