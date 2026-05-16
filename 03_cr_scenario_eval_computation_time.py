@@ -1,5 +1,6 @@
 import argparse
 import concurrent.futures
+import statistics
 import time
 from pathlib import Path
 from typing import Dict, List, Tuple
@@ -59,7 +60,7 @@ def compare_result(
 
 
 def evaluate(
-    sc: Scenario, conf: EvalConfig, rule_set: List[str], exp_result: Dict[int, Dict[str, Dict[int, List[int]]]]
+    sc: Scenario, conf: EvalConfig, rule_set: List[str], exp_result: Dict[int, Dict[str, Dict[int, List[int]]]], repetitions: int
 ) -> float:
     print(f"Evaluating scenario {sc.scenario_id} - {conf}")
     sim_param = crmonitor.MonitorSimulationParameters()
@@ -127,11 +128,12 @@ def evaluate(
 
     computation_times = []
     failure = False
-    for _ in range(5):
+    for _ in range(repetitions):
+        world = crcpp.World(sc)
         try:
-            start_time = time.time()
-            actual_result = list(monitor.evaluate_scenarios_on_given_egos([crcpp.World(sc)], []).values())[0]
-            end_time = time.time()
+            start_time = time.perf_counter()
+            actual_result = list(monitor.evaluate_scenarios_on_given_egos([world], []).values())[0]
+            end_time = time.perf_counter()
         except Exception as e:
             print(f"Error during evaluation: {e}")
             failure = True
@@ -147,17 +149,17 @@ def evaluate(
                 raise RuntimeError("Evaluation result does not match expected result.")
         computation_times.append(end_time - start_time)
     if not failure:
-        average_time = sum(computation_times) / len(computation_times)
+        average_time = statistics.median(computation_times)
         print(actual_result)
         print(
-            f"Average computation time {conf.name}: {average_time:.6f} seconds / Num. vehicles: {len(sc.obstacles)} / Num. time steps: {sum([obs.prediction.final_time_step - obs.initial_state.time_step for obs in sc.obstacles])}"
+            f"Median computation time {conf.name}: {average_time:.6f} seconds / Num. vehicles: {len(sc.obstacles)} / Num. time steps: {sum([obs.prediction.final_time_step - obs.initial_state.time_step for obs in sc.obstacles])}"
         )
     else:
         average_time = 0.0
     return np.round(average_time, 4)
 
 
-def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.ndarray:
+def eval_scenario(config_settings: List[Tuple], max_workers: int = 24, repetitions: int = 5) -> np.ndarray:
     res = np.array(["Scenario Name", "num_vehicles", "num_time_steps", "C1", "C2", "C3", "C4", "C5", "C6"]).reshape(
         1, -1
     )
@@ -218,11 +220,12 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24) -> np.nda
                     eval_config,
                     idx,
                     list(result.values())[0] if eval_config.check_results else {},
+                    repetitions,
                 )
             )
 
     with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
-        future_to_conf = {executor.submit(evaluate, conf[0], conf[3], conf[1], conf[5]): conf for conf in evaluations}
+        future_to_conf = {executor.submit(evaluate, conf[0], conf[3], conf[1], conf[5], conf[6]): conf for conf in evaluations}
         for future in concurrent.futures.as_completed(future_to_conf):
             conf = future_to_conf[future]
             res[conf[2] + 1, conf[4] + 3] = future.result()
@@ -245,12 +248,6 @@ scenario_configs = [
     ),
     (
         Path(__file__).parent / "scenarios/planning/intersection/DEU_Salzwedel-107/" / "DEU_Salzwedel-107_1_T-7.pb",
-        activated_intersection_rule_set,
-    ),
-    (
-        Path(__file__).parent
-        / "scenarios/planning/intersection/DEU_TestRightBeforeLeft-1/"
-        / "DEU_TestRightBeforeLeft-1_2_T-1.pb",
         activated_intersection_rule_set,
     ),
     (
@@ -295,7 +292,8 @@ def store_summary_table():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate predicates on scenarios.")
     parser.add_argument("--threads", type=int, default=24, help="Number of threads to use.")
+    parser.add_argument("--repetitions", type=int, default=5, help="Number of timed repetitions per configuration.")
     args = parser.parse_args()
-    comp_summary = eval_scenario(scenario_configs, max_workers=args.threads)
+    comp_summary = eval_scenario(scenario_configs, max_workers=args.threads, repetitions=args.repetitions)
 
     store_summary_table()

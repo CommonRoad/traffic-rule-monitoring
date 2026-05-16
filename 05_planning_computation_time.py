@@ -2,6 +2,7 @@ import argparse
 import concurrent.futures
 import copy
 import logging
+import statistics
 from pathlib import Path
 from typing import List, Tuple
 
@@ -26,11 +27,12 @@ def evaluate(
     conf: EvalConfig,
     rule_set: List[str],
     timeout: int = 600,
+    repetitions: int = 5,
 ):
     print(f"Evaluating scenario {sc_path} - {conf}")
 
     computation_times = []
-    for _ in range(1):
+    for _ in range(repetitions):
         config_path = Path(__file__).parent / f"configurations/planning/{sc_path.stem}.yaml"
 
         rp_config = ReactivePlannerConfiguration.load(config_path, str(sc_path))
@@ -72,11 +74,13 @@ def evaluate(
         except Exception:
             logging.error(f"Error evaluating predicate scenario from path {str(sc_path)} with config {str(conf)}.")
             computation_times.append(0.0)
-    average_time = sum(computation_times) / len(computation_times)
+    average_time = statistics.median(computation_times) if computation_times else 0.0
     return np.round(average_time, 4)
 
 
-def eval_scenario(config_settings: List[Tuple], max_workers: int = 24, timeout: int = 600) -> np.ndarray:
+def eval_scenario(
+    config_settings: List[Tuple], max_workers: int = 24, timeout: int = 900, repetitions: int = 5
+) -> np.ndarray:
     res = np.array(["Scenario Name", "C1", "C2", "C3", "C4", "C5", "C6"]).reshape(1, -1)
 
     evaluations = []
@@ -139,7 +143,9 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24, timeout: 
                 )
 
     with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
-        future_to_conf = {executor.submit(evaluate, conf[0], conf[3], conf[1], timeout): conf for conf in evaluations}
+        future_to_conf = {
+            executor.submit(evaluate, conf[0], conf[3], conf[1], timeout, repetitions): conf for conf in evaluations
+        }
         for future in concurrent.futures.as_completed(future_to_conf):
             conf = future_to_conf[future]
             res[conf[2], conf[4] + 1] = future.result()
@@ -173,14 +179,19 @@ scenario_configs = [
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate predicates on scenarios.")
     parser.add_argument("--threads", type=int, default=24, help="Number of threads to use.")
-    parser.add_argument("--timeout", type=int, default=600, help="Timeout in seconds.")
+    parser.add_argument("--timeout", type=int, default=2400, help="Timeout in seconds.")
+    parser.add_argument(
+        "--repetitions", type=int, default=1, help="Number of full planning runs per configuration (median is reported)."
+    )
     args = parser.parse_args()
 
-    comp_summary = eval_scenario(scenario_configs, max_workers=args.threads, timeout=args.timeout)
+    comp_summary = eval_scenario(
+        scenario_configs, max_workers=args.threads, timeout=args.timeout, repetitions=args.repetitions
+    )
 
     path = Path(__file__).parent / "output/planning"
     if not path.exists():
         path.mkdir(parents=True, exist_ok=True)
     print("##### Overall Summary #######")
     with open(f"{path}/comp_summary.txt", "w") as f:
-        f.write(tabulate(comp_summary, headers="firstrow", tablefmt="latex"))
+        f.write(tabulate(comp_summary, headers="firstrow", tablefmt="latex", floatfmt=".2f"))

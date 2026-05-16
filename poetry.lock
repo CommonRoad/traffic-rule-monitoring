@@ -980,6 +980,17 @@ unicode = ["unicodedata2 (>=15.1.0) ; python_version <= \"3.12\""]
 woff = ["brotli (>=1.0.1) ; platform_python_implementation == \"CPython\"", "brotlicffi (>=0.8.0) ; platform_python_implementation != \"CPython\"", "zopfli (>=0.1.4)"]
 
 [[package]]
+name = "func-timeout"
+version = "4.3.5"
+description = "Python module which allows you to specify timeouts when calling any existing function. Also provides support for stoppable-threads"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "func_timeout-4.3.5.tar.gz", hash = "sha256:74cd3c428ec94f4edfba81f9b2f14904846d5ffccc27c92433b8b5939b5575dd"},
+]
+
+[[package]]
 name = "gitdb"
 version = "4.0.12"
 description = "Git Object Database"
@@ -3206,4 +3217,4 @@ test = ["pytest (>=4.6.7)", "pytest-checkdocs (>=1.2.5) ; python_version < \"3\"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.12"
-content-hash = "81e01a327361cf5daf16a8ca81275e2a2d663c18a37ccd8c6cad6fb585a9811b"
+content-hash = "be41750f95abbff67c2ce8e6d17164c6890a92675c93620c60cedf4973b171e2"
