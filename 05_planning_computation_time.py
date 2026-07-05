@@ -79,7 +79,11 @@ def evaluate(
 
 
 def eval_scenario(
-    config_settings: List[Tuple], max_workers: int = 24, timeout: int = 900, repetitions: int = 5
+    config_settings: List[Tuple],
+    max_workers: int = 24,
+    timeout: int = 900,
+    repetitions: int = 5,
+    max_config: int = 4,
 ) -> np.ndarray:
     res = np.array(["Scenario Name", "C1", "C2", "C3", "C4", "C5", "C6"]).reshape(1, -1)
 
@@ -117,30 +121,32 @@ def eval_scenario(
             axis=0,
         )
         for idx, eval_config in enumerate(configs[1:7]):
-            if not any("_U" in rname for rname in activated_traffic_rule_sets) or idx > 1:
-                # only show first case for simple scenario due to computation time
-                if "ZAM_Augmentation" in str(scenario_path):
-                    conf_copy = copy.deepcopy(eval_config)
-                    conf_copy.complete_rule_eval = True
-                    conf_copy.complete_collision_eval = True
-                    evaluations.append(
-                        (
-                            scenario_path,
-                            activated_traffic_rule_sets,
-                            (base_idx + 1) * 2 - 1,
-                            conf_copy,
-                            idx,
-                        )
-                    )
+            if idx >= max_config:
+                # only run up to C{max_config}
+                continue
+            # only show first case for simple scenario due to computation time
+            if "ZAM_Augmentation" in str(scenario_path):
+                conf_copy = copy.deepcopy(eval_config)
+                conf_copy.complete_rule_eval = True
+                conf_copy.complete_collision_eval = True
                 evaluations.append(
                     (
                         scenario_path,
                         activated_traffic_rule_sets,
-                        (base_idx + 1) * 2,
-                        eval_config,
+                        (base_idx + 1) * 2 - 1,
+                        conf_copy,
                         idx,
                     )
                 )
+            evaluations.append(
+                (
+                    scenario_path,
+                    activated_traffic_rule_sets,
+                    (base_idx + 1) * 2,
+                    eval_config,
+                    idx,
+                )
+            )
 
     with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
         future_to_conf = {
@@ -155,11 +161,11 @@ def eval_scenario(
 
 scenario_configs = [
     (
-        Path(__file__).parent / "scenarios/motivating_examples" / "ZAM_Augmentation-1_1_T-1.xml",
+        Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_5_T-1.xml",
         activated_interstate_rule_set,
     ),
     (
-        Path(__file__).parent / "scenarios/motivating_examples" / "USA_US101-22_5_T-1.xml",
+        Path(__file__).parent / "scenarios/motivating_examples" / "ZAM_Augmentation-1_1_T-1.xml",
         activated_interstate_rule_set,
     ),
     (
@@ -179,14 +185,25 @@ scenario_configs = [
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate predicates on scenarios.")
     parser.add_argument("--threads", type=int, default=24, help="Number of threads to use.")
-    parser.add_argument("--timeout", type=int, default=2400, help="Timeout in seconds.")
+    parser.add_argument("--timeout", type=int, default=1200, help="Timeout in seconds.")
     parser.add_argument(
         "--repetitions", type=int, default=1, help="Number of full planning runs per configuration (median is reported)."
+    )
+    parser.add_argument(
+        "--max-config",
+        type=int,
+        default=4,
+        choices=range(1, 7),
+        help="Highest config to evaluate (e.g. 4 to skip C5 and C6).",
     )
     args = parser.parse_args()
 
     comp_summary = eval_scenario(
-        scenario_configs, max_workers=args.threads, timeout=args.timeout, repetitions=args.repetitions
+        scenario_configs,
+        max_workers=args.threads,
+        timeout=args.timeout,
+        repetitions=args.repetitions,
+        max_config=args.max_config,
     )
 
     path = Path(__file__).parent / "output/planning"
