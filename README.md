@@ -52,7 +52,13 @@ All of them are pre-installed in the Docker image described [below](#computer-ge
 ```bash
 docker pull ghcr.io/commonroad/traffic-rule-monitoring/traffic-rule-monitoring:latest
 ```
-Alternatively, you can build the image yourself with `docker build -t traffic-rule-monitoring .`.
+Alternatively, you can build the image yourself.
+The image is built from local checkouts of the CommonRoad tools, which `docker/prepare_sources.sh` copies into `docker/sources/` (by default from the parent directory of this repository):
+```bash
+docker/prepare_sources.sh
+docker build -t traffic-rule-monitoring .
+```
+`docker/sources/MANIFEST.txt` records the branch, commit, and uncommitted changes of every copied repository.
 
 2. Make sure that you are in the root directory of this repository and start the container:
 ```bash
@@ -65,8 +71,9 @@ Thus, modifications to the code inside the container are also reflected on your 
 
 3. Install the evaluation package inside the container:
 ```bash
-pip install .
+pip install -e .
 ```
+The editable install (`-e`) is required: the scripts locate the scenarios, configurations, and output directory relative to the repository.
 
 > **Note:** You might not have permission to access files created inside the container from the host machine.
 > In this case, change the owner of the files using `sudo chown -R $USER <directory>`.
