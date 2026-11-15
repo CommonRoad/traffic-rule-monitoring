@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import yaml
-from evaluation.monitor.formula_size_eval import formula_size_eval
+
 from evaluation.monitor.lazy_eval import eval_lazy
 from evaluation.monitor.trace_length_eval import eval_trace_length
 
@@ -18,6 +18,3 @@ for eval_params in params["eval_trace_length"]:
 
 for idx, eval_params in enumerate(params["lazy_eval"]):
     eval_lazy(**eval_params, num_iters=num_iters, seed=seed, with_tex=with_tex, idx=idx)
-
-for fs_params in params["formula_size_eval"]:
-    formula_size_eval(**fs_params, seed=seed, num_iters=num_iters, with_tex=with_tex)

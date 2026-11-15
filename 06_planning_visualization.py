@@ -6,12 +6,12 @@ import crmonitor
 from commonroad_rp.trajectories import FeasibilityStatus
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
 
-from src.evaluation.common.config import (
+from evaluation.common.config import (
     activated_intersection_rule_set,
     activated_interstate_rule_set,
 )
-from src.evaluation.common.scenario_eval import load_pred_costs
-from src.evaluation.planning.rp_planner import run_planner_cr_scenario
+from evaluation.common.scenario_eval import load_pred_costs
+from evaluation.planning.rp_planner import run_planner_cr_scenario
 
 
 def evaluate(

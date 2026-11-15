@@ -12,14 +12,14 @@ from commonroad_rp.utility.config import ReactivePlannerConfiguration
 from func_timeout import FunctionTimedOut, func_timeout
 from tabulate import tabulate
 
-from src.evaluation.common.config import (
+from evaluation.common.config import (
     EvalConfig,
     activated_intersection_rule_set,
     activated_interstate_rule_set,
     configs,
 )
-from src.evaluation.common.scenario_eval import load_pred_costs
-from src.evaluation.planning.rp_planner import run_planner_cr_scenario
+from evaluation.common.scenario_eval import load_pred_costs
+from evaluation.planning.rp_planner import run_planner_cr_scenario
 
 
 def evaluate(
@@ -184,10 +184,13 @@ scenario_configs = [
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate predicates on scenarios.")
-    parser.add_argument("--threads", type=int, default=24, help="Number of threads to use.")
+    parser.add_argument("--threads", type=int, default=1, help="Number of parallel workers.")
     parser.add_argument("--timeout", type=int, default=1200, help="Timeout in seconds.")
     parser.add_argument(
-        "--repetitions", type=int, default=1, help="Number of full planning runs per configuration (median is reported)."
+        "--repetitions",
+        type=int,
+        default=1,
+        help="Number of full planning runs per configuration (median is reported).",
     )
     parser.add_argument(
         "--max-config",

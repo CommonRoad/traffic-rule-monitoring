@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import rvm
 import yaml
-from evaluation.monitor.common_monitor import create_trace, evaluate, update_trace
 
-from src.evaluation.monitor import path
+from evaluation.monitor import path
+from evaluation.monitor.common_monitor import create_trace, evaluate, update_trace
 
 try:
     import tikzplotlib

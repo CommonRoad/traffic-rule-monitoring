@@ -17,3 +17,12 @@ path/to/log/file
 /crMonitorLogging.log
 /_tmp/
 *.mp4
+.claude/
+CLAUDE.md
+.pytest_cache/
+.ruff_cache/
+*.log
+/src/evaluation/monitor/output/
+/src/evaluation/monitor/stats/
+/src/evaluation/monitor/figs/
+/brightened_results/

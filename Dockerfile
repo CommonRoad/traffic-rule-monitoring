@@ -1,28 +1,19 @@
-###############
-# Build image #
-###############
-FROM python:3.11-bullseye AS build
+FROM python:3.11-bullseye
 
 RUN apt-get update && \
-    apt-get install -y \
+    apt-get install -y --no-install-recommends \
         ca-certificates wget git pkg-config \
         build-essential g++-13 clang ninja-build \
-        clang-format-13 clang-tidy-13 \
-        gcovr doxygen graphviz cppcheck \
         libomp-dev \
         libboost-all-dev \
         libeigen3-dev \
         libprotobuf-dev protobuf-compiler \
         libyaml-cpp-dev \
         libspdlog-dev \
-        libgtest-dev \
         librange-v3-dev \
+        libgtest-dev libgmock-dev doctest-dev \
         libgl1 \
-        libgtest-dev libgmock-dev \
-        doctest-dev \
         default-jdk && \
-    apt-get update && \
-    apt-get install -y  && \
     rm -rf /var/lib/apt/lists/*
 
 # Install newer version of CMake than provided by the standard repos
@@ -35,10 +26,25 @@ RUN wget "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/c
     rm /tmp/cmake-install.sh
 ENV PATH="/opt/cmake/bin:${PATH}"
 
-RUN pip install --no-cache-dir pipx && pipx ensurepath && pipx install poetry
-ENV PATH="/root/.local/bin:${PATH}"
+# Versions of the CommonRoad tools used for the results in the paper.
+# commonroad-monitor builds and installs commonroad-cpp (environment model) and rv-monitors at the versions it pins.
+ARG COMMONROAD_GITHUB="https://github.com/CommonRoad"
+ARG COMMONROAD_MONITOR_REF="TODO-release-tag"
+ARG REACTIVE_PLANNER_REF="TODO-release-tag"
+ARG COMMONROAD_PREDICTION_REF="TODO-release-tag"
+ARG COMMONROAD_CARLA_INTERFACE_REF="TODO-release-tag"
 
-COPY . .
-RUN poetry install -v
+RUN pip install --no-cache-dir \
+        "commonroad_monitor @ git+${COMMONROAD_GITHUB}/commonroad-monitor.git@${COMMONROAD_MONITOR_REF}" && \
+    pip install --no-cache-dir \
+        "commonroad-reactive-planner @ git+${COMMONROAD_GITHUB}/commonroad-reactive-planner.git@${REACTIVE_PLANNER_REF}" \
+        "commonroad-prediction @ git+${COMMONROAD_GITHUB}/commonroad-prediction.git@${COMMONROAD_PREDICTION_REF}" \
+        "commonroad-carla-interface @ git+${COMMONROAD_GITHUB}/commonroad-carla-interface.git@${COMMONROAD_CARLA_INTERFACE_REF}"
+
+# Install the remaining (public) dependencies of the evaluation package.
+# The repository itself is mounted to /workspace at runtime and installed with `pip install .` (see README).
+COPY pyproject.toml README.md /tmp/evaluation/
+COPY src /tmp/evaluation/src
+RUN pip install --no-cache-dir /tmp/evaluation && pip uninstall -y evaluation && rm -rf /tmp/evaluation
 
 WORKDIR /workspace

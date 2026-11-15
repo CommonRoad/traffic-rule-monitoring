@@ -11,7 +11,7 @@ from commonroad_rp.utility.utils_coordinate_system import (
 )
 from commonroad_rp.utility.visualization import visualize_planner_at_timestep
 
-from src.evaluation.planning.rp_planner import create_ego_draw_params
+from evaluation.planning.rp_planner import create_ego_draw_params
 
 
 def motivation_planning_example() -> None:

@@ -14,7 +14,7 @@ from commonroad_rp.reactive_planner import ReactivePlanner
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
 from commonroad_rp.utility.utils_coordinate_system import create_coordinate_system, create_initial_ref_path
 
-from src.evaluation.set_based.set_based_common import set_scenario_id
+from evaluation.set_based.set_based_common import set_scenario_id
 
 REPO_ROOT = Path(__file__).parent
 SCENARIO_DIRS = [
@@ -47,8 +47,13 @@ def _prepare_scenario(scenario_path: Path) -> Path:
                 changed = True
     CONVERTED_DIR.mkdir(parents=True, exist_ok=True)
     CommonRoadFileWriter(
-        sc, pp, author="na", affiliation="na", source="na",
-        tags=sc.tags or set(), file_format=FileFormat.XML,
+        sc,
+        pp,
+        author="na",
+        affiliation="na",
+        source="na",
+        tags=sc.tags or set(),
+        file_format=FileFormat.XML,
     ).write_to_file(str(converted), OverwriteExistingFile.ALWAYS)
     if changed:
         print(f"   normalized Interval time_steps -> {converted.name}")
@@ -126,8 +131,7 @@ def _render_latex_booktabs(rows, headers):
 
 
 def _write_summary(rows):
-    headers = ["scenario", "rejected_with", "rejected_without", "diff_rejected",
-               "solved_with", "solved_without"]
+    headers = ["scenario", "rejected_with", "rejected_without", "diff_rejected", "solved_with", "solved_without"]
     with (OUTPUT_DIR / "summary.csv").open("w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=headers)
         writer.writeheader()
@@ -142,9 +146,15 @@ CHILD_RESULT_RE = re.compile(r"^CHILD_RESULT=(.*)$")
 def _run_in_child(scenario_path: Path, with_monitor: bool) -> dict:
     """Run a single (scenario, monitor) pair in a subprocess so that C++ segfaults
     only kill the child. Returns a dict {rejected, solved} or {error: '...'} on failure."""
-    cmd = [sys.executable, str(Path(__file__).resolve()),
-           "--child", "--scenario", str(scenario_path),
-           "--monitor", "1" if with_monitor else "0"]
+    cmd = [
+        sys.executable,
+        str(Path(__file__).resolve()),
+        "--child",
+        "--scenario",
+        str(scenario_path),
+        "--monitor",
+        "1" if with_monitor else "0",
+    ]
     try:
         proc = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
     except subprocess.TimeoutExpired:
@@ -165,8 +175,12 @@ def _run_in_child(scenario_path: Path, with_monitor: bool) -> dict:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--limit", type=int, default=None, help="Process only the first N scenarios.")
-    parser.add_argument("--scenario", action="append", default=None,
-                        help="Restrict to specific scenario file (stem or full filename). Repeatable.")
+    parser.add_argument(
+        "--scenario",
+        action="append",
+        default=None,
+        help="Restrict to specific scenario file (stem or full filename). Repeatable.",
+    )
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--monitor", type=int, default=None, help=argparse.SUPPRESS)
     args = parser.parse_args()
@@ -203,14 +217,16 @@ def main():
             diff = int(rej_w) - int(rej_wo)
         except (TypeError, ValueError):
             diff = "n/a"
-        rows.append({
-            "scenario": sc_path.stem,
-            "rejected_with": rej_w,
-            "rejected_without": rej_wo,
-            "diff_rejected": diff,
-            "solved_with": fmt(r_with, "solved"),
-            "solved_without": fmt(r_without, "solved"),
-        })
+        rows.append(
+            {
+                "scenario": sc_path.stem,
+                "rejected_with": rej_w,
+                "rejected_without": rej_wo,
+                "diff_rejected": diff,
+                "solved_with": fmt(r_with, "solved"),
+                "solved_without": fmt(r_without, "solved"),
+            }
+        )
     _write_summary(rows)
 
 

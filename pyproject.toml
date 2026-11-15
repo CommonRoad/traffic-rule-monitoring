@@ -1,22 +1,28 @@
 [project]
 name = "evaluation"
-version = "0.1.0"
+version = "1.0.0"
 readme = { file = "README.md", content-type = "text/markdown" }
-description = ""
+description = "Evaluation scripts for the paper 'Efficient Traffic Rule Monitoring for Rule-Compliant Motion Planning of Automated Vehicles'"
 authors = [
-    { name = "Sebastian Maierhofer", email = "sebastian.maierhofer@tum.de" }
+    { name = "Sebastian Maierhofer", email = "sebastian.maierhofer@tum.de" },
+    { name = "Matthias Althoff" },
 ]
 requires-python = ">=3.10,<3.12"
 
+[tool.poetry]
+packages = [{ include = "evaluation", from = "src" }]
+
+# The traffic rule monitor (commonroad-monitor, commonroad-cpp, rv-monitors, which also bring commonroad-io), the
+# reactive planner with monitor integration, commonroad-prediction, and the CommonRoad-CARLA interface are
+# installed from source at pinned versions in the Docker image (see Dockerfile and README).
 [tool.poetry.dependencies]
-#rv-monitors = { git = "git@gitlab.lrz.de:cps/commonroad/rv-monitors.git", branch = "develop" }
-#commonroad-carla-interface = { git = "git@gitlab.lrz.de:cps/commonroad/commonroad-carla-interface.git", branch = "monitor-integration" }
-commonroad-reactive-planner = { git = "git@gitlab.lrz.de:cps/reactive-planner.git", branch = "integration_crmonitor" }
-#tabulate = "^0.9.0"
-#tikzplotlib = "^0.10.1"
-#matplotlib = "=3.7.3"
-#func-timeout = "^4.3.5"
+numpy = "^1.26"
+pandas = "^2.2"
+matplotlib = "^3.8"
+pyyaml = "^6.0"
+tabulate = ">=0.9"
 func-timeout = "^4.3.5"
+opencv-python-headless = "^4.9"
 
 [tool.poetry.group.dev]
 optional = true

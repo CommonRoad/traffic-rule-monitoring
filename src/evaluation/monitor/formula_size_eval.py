@@ -3,6 +3,7 @@ from typing import List, Tuple
 
 import pandas as pd
 import rvm
+
 from evaluation.monitor.specifications import gen_fmla
 
 try:
@@ -11,8 +12,8 @@ except ImportError:
     tikzplotlib = None
 from matplotlib import pyplot as plt
 
-from src.evaluation.monitor import path
-from src.evaluation.monitor.common_monitor import create_trace, evaluate, update_trace
+from evaluation.monitor import path
+from evaluation.monitor.common_monitor import create_trace, evaluate, update_trace
 
 plt.style.use("ggplot")
 
