@@ -8,16 +8,15 @@ from typing import Dict, List, Tuple
 import crcpp
 import crmonitor
 import numpy as np
-import yaml
 from commonroad.scenario.scenario import Scenario
 
-from src.evaluation.common.config import (
+from evaluation.common.config import (
     EvalConfig,
     activated_intersection_rule_set,
     activated_interstate_rule_set,
     configs,
 )
-from src.evaluation.common.scenario_eval import load_pred_costs, load_scenario
+from evaluation.common.scenario_eval import load_pred_costs, load_scenario
 
 
 def remove_non_divisible_copy(expected_result: Dict[int, Dict[str, Dict[int, List[int]]]], divisor: float):
@@ -60,7 +59,11 @@ def compare_result(
 
 
 def evaluate(
-    sc: Scenario, conf: EvalConfig, rule_set: List[str], exp_result: Dict[int, Dict[str, Dict[int, List[int]]]], repetitions: int
+    sc: Scenario,
+    conf: EvalConfig,
+    rule_set: List[str],
+    exp_result: Dict[int, Dict[str, Dict[int, List[int]]]],
+    repetitions: int,
 ) -> float:
     print(f"Evaluating scenario {sc.scenario_id} - {conf}")
     sim_param = crmonitor.MonitorSimulationParameters()
@@ -201,11 +204,9 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24, repetitio
                 crcpp.TimeParameters(50, 0.3, 0.1),
                 crcpp.ActuatorParameters.vehicle_defaults(),
             )
-            with open(Path(__file__).parent / "configurations/predicates/predicate_costs.yaml", "r") as file:
-                data = yaml.safe_load(file)
+            data = load_pred_costs(True, activated_traffic_rule_sets, Path(__file__).parent)
             predicate_cost = {
-                key: [value["cost"], value["probability"], value["priority"]]
-                for key, value in data.get("predicateCost", {}).items()
+                key: [value["cost"], value["probability"]] for key, value in data.get("predicateCost", {}).items()
             }
             monitor.set_config(sim_param, monitor_config, predicate_cost, {}, {})
             monitor.activate_rule_sets(activated_traffic_rule_sets)
@@ -225,7 +226,9 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24, repetitio
             )
 
     with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
-        future_to_conf = {executor.submit(evaluate, conf[0], conf[3], conf[1], conf[5], conf[6]): conf for conf in evaluations}
+        future_to_conf = {
+            executor.submit(evaluate, conf[0], conf[3], conf[1], conf[5], conf[6]): conf for conf in evaluations
+        }
         for future in concurrent.futures.as_completed(future_to_conf):
             conf = future_to_conf[future]
             res[conf[2] + 1, conf[4] + 3] = future.result()
@@ -291,7 +294,7 @@ def store_summary_table():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate predicates on scenarios.")
-    parser.add_argument("--threads", type=int, default=24, help="Number of threads to use.")
+    parser.add_argument("--threads", type=int, default=1, help="Number of parallel workers.")
     parser.add_argument("--repetitions", type=int, default=5, help="Number of timed repetitions per configuration.")
     args = parser.parse_args()
     comp_summary = eval_scenario(scenario_configs, max_workers=args.threads, repetitions=args.repetitions)

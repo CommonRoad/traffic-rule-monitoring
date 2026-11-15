@@ -17,7 +17,7 @@ from commonroad_rp.utility.utils_coordinate_system import (
 )
 from commonroad_rp.utility.visualization import plot_final_trajectory, visualize_planner_at_timestep
 
-from src.evaluation.common.scenario_eval import create_ego_draw_params
+from evaluation.common.scenario_eval import create_ego_draw_params
 
 
 def run_planner_cr_scenario(
@@ -131,7 +131,7 @@ def run_planner_cr_scenario(
             ego_vehicle=ego_vehicle_solution,
             rnd=rnd,
             ego_params=create_ego_draw_params(0),
-            plot_limits=plot_limits
+            plot_limits=plot_limits,
         )
         evaluate_results(config, ego_vehicle_solution.prediction.trajectory, planner.record_input_list)
 

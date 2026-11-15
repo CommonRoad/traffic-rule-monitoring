@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from src.evaluation.common.scenario_eval import vis_scenario
+from evaluation.common.scenario_eval import vis_scenario
 
 
 def motivation_scenario_eval_example():

@@ -5,6 +5,7 @@ from commonroad.planning.goal import GoalRegion
 from commonroad.planning.planning_problem import PlanningProblem
 from commonroad.scenario.state import InitialState, PMState
 from crcarla.carla_interface import CarlaInterface
+
 from evaluation.planning.carla import execute_simulation, init_carla_params, init_rp_config_carla
 
 param = init_carla_params()

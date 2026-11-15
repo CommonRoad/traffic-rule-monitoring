@@ -12,8 +12,8 @@ from commonroad_rp.utility.utils_coordinate_system import (
 )
 from commonroad_rp.utility.visualization import visualize_planner_at_timestep
 
-from src.evaluation.common.scenario_eval import create_ego_draw_params
-from src.evaluation.set_based.set_based_vis import draw_figure
+from evaluation.common.scenario_eval import create_ego_draw_params
+from evaluation.set_based.set_based_vis import draw_figure
 
 
 def execute_rp(rp_config: ReactivePlannerConfiguration, pl: List[Union[int, float]], left_turn: bool):

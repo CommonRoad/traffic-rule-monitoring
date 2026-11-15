@@ -14,9 +14,9 @@ import crmonitor
 import yaml
 from func_timeout import FunctionTimedOut, func_timeout
 
-from src.evaluation.common.config import activated_intersection_rule_set, activated_interstate_rule_set
-from src.evaluation.common.scenario_eval import load_scenario
-from src.evaluation.predicate_collection import extract_arg_combinations
+from evaluation.common.config import activated_intersection_rule_set, activated_interstate_rule_set
+from evaluation.common.scenario_eval import load_scenario
+from evaluation.predicate_collection import extract_arg_combinations
 
 
 @dataclasses.dataclass
@@ -351,7 +351,7 @@ def evaluate_scenario(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate predicates on scenarios.")
-    parser.add_argument("--threads", type=int, default=24, help="Number of threads to use.")
+    parser.add_argument("--threads", type=int, default=1, help="Number of parallel workers.")
     parser.add_argument("--step_size", type=int, default=10, help="Time step step size.")
     args = parser.parse_args()
 

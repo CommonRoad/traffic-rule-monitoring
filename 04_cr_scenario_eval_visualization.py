@@ -1,8 +1,7 @@
 from pathlib import Path
 
 from evaluation.common.config import activated_intersection_rule_set, activated_interstate_rule_set
-
-from src.evaluation.common.scenario_eval import vis_scenario
+from evaluation.common.scenario_eval import vis_scenario
 
 if __name__ == "__main__":
     scenario_configs = [

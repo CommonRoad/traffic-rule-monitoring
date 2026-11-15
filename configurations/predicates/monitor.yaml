@@ -1,12 +1,12 @@
+# Configuration for the standalone commonroad-monitor CLI (paths are relative to the repository root).
 simulation_param:
   evaluation_mode: directory
   log_level: "info"
-  log_file_path: "/home/sebastian/03_code/runtime-verification-motion-planners/output/predicates/log.txt"
+  log_file_path: "output/predicates/log.txt"
   threads: 16
-  directories: ["/home/sebastian/03_code/commonroad-scenarios/scenarios_2020a/NGSIM/Lankershim"
-     ]
+  directories: ["scenarios/planning/intersection"]
   performance_measurement: true
-  output_directory: "/home/sebastian/03_code/runtime-verification-motion-planners/output/predicates"
+  output_directory: "output/predicates"
   output_file_name: "traffic_rule_evaluation"
   single_file_storage: false
   benchmark_id: "DEU_TrafficLightTest-1_1_T-1"

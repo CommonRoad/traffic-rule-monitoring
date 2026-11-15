@@ -12,7 +12,7 @@ from commonroad_rp.trajectories import TrajectorySample
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
 from matplotlib import pyplot as plt
 
-from src.evaluation.common.scenario_eval import create_ego_draw_params
+from evaluation.common.scenario_eval import create_ego_draw_params
 
 
 def draw_traffic_cone(rnd: MPRenderer, position: np.ndarray) -> None:

@@ -3,7 +3,7 @@ from typing import List, Union
 
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
 
-from src.evaluation.set_based.set_based_common import execute_rp, set_scenario_id
+from evaluation.set_based.set_based_common import execute_rp, set_scenario_id
 
 
 def set_based_safe_distance(

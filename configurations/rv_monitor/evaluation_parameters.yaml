@@ -1,7 +1,7 @@
 general:
   seed: 10
   num_iters: 5
-  with_tex: true
+  with_tex: false
 
 eval_trace_length:
   - name: running_example_atomic
@@ -64,6 +64,7 @@ lazy_eval:
     xlabel: Trace Length
 
 
+# Only used by tools/formula_size_eval.py (not part of the paper)
 formula_size_eval:
   - name: formula_size_atomic
     num_atomics: 4
