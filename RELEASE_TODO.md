@@ -96,5 +96,8 @@ The paper itself isn't changed in this plan; it is updated later in a separate s
 
 ## Publishing
 
+- [x] Docker image `ghcr.io/commonroad/traffic-rule-monitoring/traffic-rule-monitoring` pushed as `:latest` and `:v1.0` (2026-11-15). Still to do: make the package public (org Packages > Package settings > Change visibility) and test `docker pull` while logged out.
+- [ ] **Update the dependencies after their release.** The image was built from unreleased branches and from checkouts with uncommitted changes (`commonroad-io` feature/new-format, `reactive-planner` integration_crmonitor, `commonroad-carla-interface` monitor-integration, `commonroad-prediction`, detached `commonroad-velocity-planner`). Once these are released, update the carla interface, etc., rebuild and re-push the image, and fix the README. Tracked in a GitLab issue.
+- [ ] `import rvm` and `import crmonitor` conflict in one process (nanobind duplicate `FormulaEvaluationMode`). No script does both. Fix upstream if wanted, or note it in the README.
 - [ ] Create the GitHub repo `CommonRoad/traffic-rule-monitoring` with a **single squashed commit** of the release tree, not the 161 private commits. Leave out `RELEASE_TODO.md`, `CLAUDE.md`, `.claude/`, `.idea/`, and `output/`.
 - [ ] Check that the redirect `redirect.cps.cit.tum.de/traffic-rule-monitoring` points to the repo.
