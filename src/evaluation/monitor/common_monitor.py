@@ -18,6 +18,31 @@ figs_path = Path(__file__).parent / Path("figs")
 
 trace = []
 
+# Artificially enforced computation times of the predicates in ms (paper, Sec. "Artificial Specifications and Traces").
+PREDICATE_DELAYS_MS = {"a": 0.0001, "b": 0.005, "c": 0.002, "d": 0.001, "e": 0.005, "f": 2.0}
+
+
+def predicate_costs(inverted: bool = False, probability: float = 0.5) -> dict:
+    """Predicate costs [cost, satisfaction probability, priority] of the artificial predicates for the reordering.
+
+    The cost in [0, 100] is the computation time relative to the slowest predicate. The satisfaction probability of
+    the pseudorandom traces is not known and set to 0.5. Inverted costs (cost -> 100 - cost, probability ->
+    1 - probability) order the operands unfavorably, as for the paper's Baseline."""
+    slowest = max(PREDICATE_DELAYS_MS.values())
+    costs = {}
+    for name, delay in PREDICATE_DELAYS_MS.items():
+        cost = 100.0 * delay / slowest
+        costs[name] = [100.0 - cost, 1.0 - probability, 0.0] if inverted else [cost, probability, 0.0]
+    return costs
+
+
+
+def busy_wait(seconds: float) -> None:
+    """Block for the given time by spinning; time.sleep cannot resolve the microsecond delays of the predicates."""
+    end = time.perf_counter_ns() + int(seconds * 1e9)
+    while time.perf_counter_ns() < end:
+        pass
+
 
 def update_trace(new_trace: List[List[str]]):
     """
@@ -79,39 +104,33 @@ def create_trace(length: int, num_atomics: int, seed: int, predicate: bool) -> r
         return actions
 
 
-# 0.0001ms
 def a(time_step: int, rand: int) -> bool:
-    time.sleep(float(0.001 / 1000))
+    busy_wait(PREDICATE_DELAYS_MS["a"] / 1000)
     return "a" in trace[time_step]
 
 
-# 0.005ms
 def b(time_step: int, rand: int) -> bool:
-    time.sleep(0.005 / 1000)
+    busy_wait(PREDICATE_DELAYS_MS["b"] / 1000)
     return "b" in trace[time_step]
 
 
-# 0.002ms
 def c(time_step: int, rand: int) -> bool:
-    time.sleep(0.002 / 1000)
+    busy_wait(PREDICATE_DELAYS_MS["c"] / 1000)
     return "c" in trace[time_step]
 
 
-# 0.001ms
 def d(time_step: int, rand: int) -> bool:
-    time.sleep(0.001 / 1000)
+    busy_wait(PREDICATE_DELAYS_MS["d"] / 1000)
     return "d" in trace[time_step]
 
 
-# 0.005ms
 def e(time_step: int, rand: int) -> bool:
-    time.sleep(0.005 / 1000)
+    busy_wait(PREDICATE_DELAYS_MS["e"] / 1000)
     return "e" in trace[time_step]
 
 
-# 2ms
 def f(time_step: int, rand: int) -> bool:
-    time.sleep(2 / 1000)
+    busy_wait(PREDICATE_DELAYS_MS["f"] / 1000)
     return "f" in trace[time_step]
 
 

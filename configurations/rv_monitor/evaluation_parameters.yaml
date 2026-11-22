@@ -11,7 +11,7 @@ eval_trace_length:
         "S2",
         "G((a) U[0, 4] (b))",
     ],
-    ["S3", "G((a) U[0, 4] (b) & (a) S[0, 4] (b))"]
+    ["S3", "G(((a) S[0, 4] (b)) | ((a) U[0, 4] (b)))"]
 ]
     num_atomics: 2
     max_y: 1.1
@@ -25,7 +25,7 @@ eval_trace_length:
         "S2",
         "G(X[0, 4] b)",
     ],
-    ["S3", "G((c) U[0, 4] (d) & (e) S[0, 4] (f))"],
+    ["S3", "G(((c) S[0, 4] (d)) | ((e) U[0, 4] (f)))"],
 ]
     num_atomics: 6
     max_y: 1.1

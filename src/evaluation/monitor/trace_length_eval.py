@@ -7,7 +7,7 @@ import rvm
 import yaml
 
 from evaluation.monitor import path
-from evaluation.monitor.common_monitor import create_trace, evaluate, update_trace
+from evaluation.monitor.common_monitor import create_trace, evaluate, predicate_costs, update_trace
 
 try:
     import tikzplotlib
@@ -41,7 +41,15 @@ def eval_trace_length(
         update_trace(trace := create_trace(trace_length, num_atomics, seed, pred))
         evaluate(
             "Baseline",
-            rvm.Hydra2(formulas, connectedEval=False, shortCircuiting=False),
+            # Baseline of the paper: no connected evaluation and short-circuiting; the operands are ordered with
+            # inverted predicate costs (unfavorable order)
+            rvm.Hydra2(
+                formulas,
+                connectedEval=False,
+                shortCircuiting=False,
+                reordering=True,
+                predicateCosts=predicate_costs(inverted=True),
+            ),
             trace,
             df,
             None,
@@ -49,7 +57,7 @@ def eval_trace_length(
             pred,
             num_iters,
         )
-        evaluate("Ours", rvm.Hydra2(formulas), trace, df, None, trace_length, pred, num_iters)
+        evaluate("Ours", rvm.Hydra2(formulas, predicateCosts=predicate_costs()), trace, df, None, trace_length, pred, num_iters)
 
     # Plotting
     plt.figure(figsize=(10, 8))
