@@ -12,6 +12,7 @@ from commonroad_rp.utility.config import ReactivePlannerConfiguration
 from func_timeout import FunctionTimedOut, func_timeout
 from tabulate import tabulate
 
+from evaluation.common.cutoff import FAILED_CELL, format_cell
 from evaluation.common.config import (
     EvalConfig,
     activated_intersection_rule_set,
@@ -66,27 +67,30 @@ def evaluate(
                 run_planner_cr_scenario,
                 args=(rp_config,),
             )
-            computation_times.append(res if res is not None else 0.0)
+            if res is None:
+                logging.error(f"No computation time returned for scenario {str(sc_path)} with config {conf.name}.")
+            else:
+                computation_times.append(res)
         except FunctionTimedOut:
             logging.error(
                 f"Timout during evaluating of scenario {str(rp_config.scenario.scenario_id)} with config {str(conf)}."
             )
-            computation_times.append(0.0)
         except Exception:
             logging.error(f"Error evaluating predicate scenario from path {str(sc_path)} with config {str(conf)}.")
-            computation_times.append(0.0)
-    average_time = statistics.median(computation_times) if computation_times else 0.0
-    return np.round(average_time, 4)
+    # timeouts and errors are kept out of the median and reported as x if no repetition succeeded
+    if not computation_times:
+        return FAILED_CELL
+    return format_cell(statistics.median(computation_times))
 
 
 def eval_scenario(
     config_settings: List[Tuple],
     max_workers: int = 24,
-    timeout: int = 900,
+    timeout: int = 1200,
     repetitions: int = 5,
     max_config: int = 6,
 ) -> np.ndarray:
-    res = np.array(["Scenario Name", "C1", "C2", "C3", "C4", "C5", "C6"]).reshape(1, -1)
+    res = np.array(["Scenario Name"] + [conf.name for conf in configs[1:7]], dtype=object).reshape(1, -1)
 
     evaluations = []
     for base_idx, setting in enumerate(config_settings):

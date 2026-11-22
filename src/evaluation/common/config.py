@@ -22,27 +22,34 @@ class EvalConfig:
     complete_rule_eval: bool = False
     complete_collision_eval: bool = False
 
+    @property
+    def latex_name(self) -> str:
+        return "\\textbf{Ours}$^\\text{" + self.name[-1] + "}$" if self.name.startswith("Ours^") else f"\\textbf{{{self.name}}}"
 
+
+# The configurations are named as in the paper (Tab. "Configurations for our monitor evaluations").
+# Earlier versions used C0 (no monitor) and C1-C6 for the planner baseline, Baseline, C1, C2, Ours, Ours^I, Ours^E.
 configs = [
-    EvalConfig(name="C0"),
-    EvalConfig(name="C1", with_monitor=True),  # C1: Baseline
-    EvalConfig(name="C2", with_monitor=True, connected_eval=True),  # C2: connected evaluation
+    EvalConfig(name="No monitor"),
+    EvalConfig(name="Baseline", with_monitor=True),
+    EvalConfig(name="C1", with_monitor=True, connected_eval=True),
+    EvalConfig(name="C2", with_monitor=True, short_circuiting=True, connected_eval=True),
+    EvalConfig(name="Ours", with_monitor=True, short_circuiting=True, connected_eval=True, reordering=True),
     EvalConfig(
-        name="C3", with_monitor=True, short_circuiting=True, connected_eval=True
-    ),  # C3: connected evaluation and short-circuiting
+        name="Ours^I",
+        with_monitor=True,
+        short_circuiting=True,
+        connected_eval=True,
+        iterative_eval=True,
+        reordering=True,
+    ),
     EvalConfig(
-        name="C4", with_monitor=True, short_circuiting=True, connected_eval=True, reordering=True
-    ),  # C4: connected evaluation, short-circuiting, and reordering
-    EvalConfig(
-        name="C5", with_monitor=True, short_circuiting=True, connected_eval=True, iterative_eval=True, reordering=True
-    ),  # C5: connected evaluation, short-circuiting, reordering, and iterative evaluation
-    EvalConfig(
-        name="C6",
+        name="Ours^E",
         with_monitor=True,
         short_circuiting=True,
         connected_eval=True,
         early_termination=True,
         iterative_eval=True,
         reordering=True,
-    ),  # C6: connected evaluation, short-circuiting, reordering, iterative evaluation, and early termination
+    ),
 ]

@@ -17,6 +17,7 @@ from evaluation.common.config import (
     configs,
     trace_step_sizes,
 )
+from evaluation.common.cutoff import CUTOFF_SECONDS, format_cell, run_with_cutoff
 from evaluation.common.scenario_eval import load_pred_costs, load_scenario
 
 
@@ -64,8 +65,8 @@ def evaluate(
     conf: EvalConfig,
     rule_set: List[str],
     exp_result: Dict[int, Dict[str, Dict[int, List[int]]]],
-    repetitions: int,
 ) -> float:
+    """Single timed run; raises if the evaluation fails."""
     print(f"Evaluating scenario {sc.scenario_id} - {conf}")
     sim_param = crmonitor.MonitorSimulationParameters()
     sim_param.world_parameters = crcpp.WorldParameters(
@@ -130,41 +131,52 @@ def evaluate(
                     expected_result_early_termination[ego_id][min_rule][ego_id] = [min_ego_time_step]
             exp_res = expected_result_early_termination
 
+    world = crcpp.World(sc)
+    start_time = time.perf_counter()
+    actual_result = list(monitor.evaluate_scenarios_on_given_egos([world], []).values())[0]
+    end_time = time.perf_counter()
+    if conf.check_results:
+        if not compare_result(exp_res, actual_result) and not conf.early_termination and not conf.iterative_eval:
+            raise RuntimeError("Evaluation result does not match expected result.")
+        elif not compare_result(exp_res, actual_result) and conf.early_termination and conf.iterative_eval:
+            raise RuntimeError("Evaluation result does not match expected result.")
+        elif not compare_result(exp_res, actual_result) and conf.iterative_eval and not conf.iterative_eval:
+            raise RuntimeError("Evaluation result does not match expected result.")
+        elif not compare_result(exp_res, actual_result) and not conf.early_termination and conf.iterative_eval:
+            raise RuntimeError("Evaluation result does not match expected result.")
+    print(
+        f"Computation time {conf.name}: {end_time - start_time:.6f} seconds / Num. vehicles: {len(sc.obstacles)} / Num. time steps: {sum([obs.prediction.final_time_step - obs.initial_state.time_step for obs in sc.obstacles])}"
+    )
+    return end_time - start_time
+
+
+def evaluate_with_cutoff(
+    sc: Scenario,
+    conf: EvalConfig,
+    rule_set: List[str],
+    exp_result: Dict[int, Dict[str, Dict[int, List[int]]]],
+    repetitions: int,
+    cutoff: float,
+) -> str:
+    """Median computation time over the successful repetitions as table cell.
+
+    Repetitions that fail or exceed the cut-off are kept out of the median; "x" if none succeeded."""
     computation_times = []
-    failure = False
     for _ in range(repetitions):
-        world = crcpp.World(sc)
-        try:
-            start_time = time.perf_counter()
-            actual_result = list(monitor.evaluate_scenarios_on_given_egos([world], []).values())[0]
-            end_time = time.perf_counter()
-        except Exception as e:
-            print(f"Error during evaluation: {e}")
-            failure = True
-            break
-        if conf.check_results:
-            if not compare_result(exp_res, actual_result) and not conf.early_termination and not conf.iterative_eval:
-                raise RuntimeError("Evaluation result does not match expected result.")
-            elif not compare_result(exp_res, actual_result) and conf.early_termination and conf.iterative_eval:
-                raise RuntimeError("Evaluation result does not match expected result.")
-            elif not compare_result(exp_res, actual_result) and conf.iterative_eval and not conf.iterative_eval:
-                raise RuntimeError("Evaluation result does not match expected result.")
-            elif not compare_result(exp_res, actual_result) and not conf.early_termination and conf.iterative_eval:
-                raise RuntimeError("Evaluation result does not match expected result.")
-        computation_times.append(end_time - start_time)
-    if not failure:
-        average_time = statistics.median(computation_times)
-        print(actual_result)
-        print(
-            f"Median computation time {conf.name}: {average_time:.6f} seconds / Num. vehicles: {len(sc.obstacles)} / Num. time steps: {sum([obs.prediction.final_time_step - obs.initial_state.time_step for obs in sc.obstacles])}"
-        )
-    else:
-        average_time = 0.0
-    return np.round(average_time, 4)
+        status, value = run_with_cutoff(evaluate, (sc, conf, rule_set, exp_result), cutoff)
+        if status != "ok":
+            print(f"Evaluation of scenario {sc.scenario_id} with {conf.name} failed ({status}): {value}")
+            if status == "timeout":
+                break  # a repeated run would exceed the cut-off again
+            continue
+        computation_times.append(value)
+    return format_cell(statistics.median(computation_times) if computation_times else None)
 
 
-def eval_scenario(config_settings: List[Tuple], max_workers: int = 24, repetitions: int = 5) -> np.ndarray:
-    res = np.array(["Scenario Name", "num_vehicles", "num_time_steps", "C1", "C2", "C3", "C4", "C5", "C6"]).reshape(
+def eval_scenario(
+    config_settings: List[Tuple], max_workers: int = 24, repetitions: int = 5, cutoff: float = CUTOFF_SECONDS
+) -> np.ndarray:
+    res = np.array(["Scenario Name", "num_vehicles", "num_time_steps"] + [conf.name for conf in configs[1:7]], dtype=object).reshape(
         1, -1
     )
     evaluations = []
@@ -226,9 +238,11 @@ def eval_scenario(config_settings: List[Tuple], max_workers: int = 24, repetitio
                 )
             )
 
-    with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
+    # each evaluation runs in its own process, which is killed when the cut-off is exceeded
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
         future_to_conf = {
-            executor.submit(evaluate, conf[0], conf[3], conf[1], conf[5], conf[6]): conf for conf in evaluations
+            executor.submit(evaluate_with_cutoff, conf[0], conf[3], conf[1], conf[5], conf[6], cutoff): conf
+            for conf in evaluations
         }
         for future in concurrent.futures.as_completed(future_to_conf):
             conf = future_to_conf[future]
@@ -262,42 +276,54 @@ scenario_configs = [
 
 
 def store_summary_table():
-    global scenario
     path = Path(__file__).parent / "output/planning"
     if not path.exists():
         path.mkdir(parents=True, exist_ok=True)
+    conf_names = [conf.latex_name for conf in configs[1:7]]
     with open(f"{path}/comp_summary.txt", "w") as f:
-        f.write(r"""\begin{table*}[!t]
+        f.write(
+            r"""\begin{table*}[!t]
      \centering
-     \caption{Computation times for different configurations from \cref{tab:configurations} for evaluating rule-compliance of complete scenarios.}
-     \begin{tabular}{@{}lcccccccc@{}}
+     \caption{Computation times (in seconds) for different configurations from \cref{tab:configurations} for evaluating the rule-compliance of complete scenarios.}
+     \begin{tabular}{@{}lrrrrrrrr@{}}
       \toprule
-      \textbf{Scenario}                   &   \textbf{\#Vehicles} &   \textbf{\#Time Steps} &   \textbf{C1 [s]} &   \textbf{C2 [s]} &     \textbf{C3 [s]} &   \textbf{C4 [s]} &   \textbf{C5 [s]} & \textbf{C6 [s]} \\
+      \textbf{Scenario}                   &   \textbf{\#Vehicles} &   \textbf{\#Time Steps} &   """
+            + " &   ".join(conf_names)
+            + r""" \\
       \midrule
-    """)
+"""
+        )
         # Skip header row (index 0)
         for row in comp_summary[1:]:
-            # Format each value, keep floats with 4 decimals, others as int or str
-            scenario = row[0].replace("_", "\_")
+            scenario = row[0].replace("_", r"\_")
             num_vehicles = int(row[1])
             num_time_steps = int(row[2])
-            c_values = [f"{float(x):.4f}" if x is not None else "" for x in row[3:]]
-            f.write(
-                f"  {scenario} & {num_vehicles:13d} & {num_time_steps:14d} &   {c_values[0]} &   {c_values[1]} &  {c_values[2]} &  {c_values[3]} & {c_values[4]} & {c_values[5]} \\\\\n"
-            )
-        f.write(r"""
+            # None (not computed) is left empty; "x" marks cut-off or failed evaluations
+            c_values = [str(x) if x is not None else "" for x in row[3:]]
+            f.write(f"  {scenario} & {num_vehicles:13d} & {num_time_steps:14d} &   " + " & ".join(c_values) + " \\\\\n")
+        f.write(
+            r"""
       \bottomrule
      \end{tabular}
-     \label{tab:artificial_examples_eval}
+     \label{tab:comp_time_scenario_evaluation}
     \end{table*}
-    """)
+    """
+        )
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate predicates on scenarios.")
     parser.add_argument("--threads", type=int, default=1, help="Number of parallel workers.")
     parser.add_argument("--repetitions", type=int, default=5, help="Number of timed repetitions per configuration.")
+    parser.add_argument(
+        "--cutoff",
+        type=float,
+        default=CUTOFF_SECONDS,
+        help="Cut-off time in seconds per evaluation (default: 20 min); exceeded evaluations are reported as x.",
+    )
     args = parser.parse_args()
-    comp_summary = eval_scenario(scenario_configs, max_workers=args.threads, repetitions=args.repetitions)
+    comp_summary = eval_scenario(
+        scenario_configs, max_workers=args.threads, repetitions=args.repetitions, cutoff=args.cutoff
+    )
 
     store_summary_table()
