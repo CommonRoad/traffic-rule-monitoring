@@ -202,7 +202,7 @@ if __name__ == "__main__":
         type=int,
         default=6,
         choices=range(1, 7),
-        help="Highest config to evaluate (default: all six; e.g. 4 to skip the iterative and early-termination configurations).",
+        help="Highest config to evaluate (default: all six; e.g. 4 to skip Ours^I and Ours^E).",
     )
     args = parser.parse_args()
 

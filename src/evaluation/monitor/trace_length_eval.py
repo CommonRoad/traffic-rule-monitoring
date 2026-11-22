@@ -57,7 +57,8 @@ def eval_trace_length(
             pred,
             num_iters,
         )
-        evaluate("Ours", rvm.Hydra2(formulas, predicateCosts=predicate_costs()), trace, df, None, trace_length, pred, num_iters)
+        ours = rvm.Hydra2(formulas, predicateCosts=predicate_costs())
+        evaluate("Ours", ours, trace, df, None, trace_length, pred, num_iters)
 
     # Plotting
     plt.figure(figsize=(10, 8))

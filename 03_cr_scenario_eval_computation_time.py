@@ -176,9 +176,8 @@ def evaluate_with_cutoff(
 def eval_scenario(
     config_settings: List[Tuple], max_workers: int = 24, repetitions: int = 5, cutoff: float = CUTOFF_SECONDS
 ) -> np.ndarray:
-    res = np.array(["Scenario Name", "num_vehicles", "num_time_steps"] + [conf.name for conf in configs[1:7]], dtype=object).reshape(
-        1, -1
-    )
+    header = ["Scenario Name", "num_vehicles", "num_time_steps"] + [conf.name for conf in configs[1:7]]
+    res = np.array(header, dtype=object).reshape(1, -1)
     evaluations = []
     for base_idx, setting in enumerate(config_settings):
         scenario_path, activated_traffic_rule_sets = setting

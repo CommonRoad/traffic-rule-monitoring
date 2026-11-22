@@ -1,7 +1,7 @@
 import multiprocessing
 from typing import Any, Callable, Optional, Tuple
 
-# Cut-off time for a single evaluation (20 min), as in the paper; cells of exceeded or failed evaluations are marked "x".
+# Cut-off time for a single evaluation (20 min), as in the paper; failed evaluations are marked "x".
 CUTOFF_SECONDS = 20 * 60
 FAILED_CELL = "x"
 

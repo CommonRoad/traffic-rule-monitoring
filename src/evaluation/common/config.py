@@ -24,7 +24,9 @@ class EvalConfig:
 
     @property
     def latex_name(self) -> str:
-        return "\\textbf{Ours}$^\\text{" + self.name[-1] + "}$" if self.name.startswith("Ours^") else f"\\textbf{{{self.name}}}"
+        if self.name.startswith("Ours^"):
+            return "\\textbf{Ours}$^\\text{" + self.name[-1] + "}$"
+        return f"\\textbf{{{self.name}}}"
 
 
 # The configurations are named as in the paper (Tab. "Configurations for our monitor evaluations").
