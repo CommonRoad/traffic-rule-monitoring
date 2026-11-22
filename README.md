@@ -82,7 +82,7 @@ The editable install (`-e`) is required: the scripts locate the scenarios, confi
 
 The scripts compare the following configurations of the monitor.
 Each configuration enables one additional feature.
-The paper and the code use different names:
+The code uses the names of the paper (the planner without monitor is called "No monitor"). Former versions of the code used the names in the second column:
 
 | Paper | Code | Connected | Short-circuiting | Reordering | Iterative | Early termination |
 |---|---|:-:|:-:|:-:|:-:|:-:|
@@ -94,7 +94,7 @@ The paper and the code use different names:
 | Ours<sup>I</sup> | C5 | ✓ | ✓ | ✓ | ✓ | |
 | Ours<sup>E</sup> | C6 | ✓ | ✓ | ✓ | ✓ | ✓ |
 
-The configurations are defined in `src/evaluation/common/config.py`, together with the evaluated rule sets for interstates (R_G1–R_G5, R_I1–R_I5) and intersections (R_G1–R_G3, R_U2, R_U5, R_U12).
+The configurations are defined in `src/evaluation/common/config.py`, together with the evaluated rule sets for interstates (R_G1–R_G4, R_I1–R_I5) and intersections (R_G1–R_G4, R_U1–R_U5).
 The predicate costs and satisfaction probabilities used for reordering are stored in `configurations/predicates/` (the `*_inverted.yaml` files are used for configurations without reordering).
 
 ## :arrow_forward: Replicating the Results from the Paper
@@ -105,7 +105,7 @@ All outputs are written to the `output/` directory.
 All computation times in the paper were measured using a single thread on an AMD Ryzen 9 9950X CPU with 64 GB RAM.
 The scripts with a `--threads` option use one thread by default.
 You can increase the number of threads to reduce the total runtime, but the individual computation times will then differ from the paper.
-Evaluations exceeding the cut-off time of 20 minutes are marked with x in the paper.
+Evaluations exceeding the cut-off time of 20 minutes (`--cutoff`/`--timeout`) and failed evaluations are marked with x in the generated tables and are not part of the medians.
 
 | Script | Results in the paper |
 |---|---|
@@ -207,7 +207,7 @@ python 09_carla_yield_sign.py
 
 ### `10_set_based_summary.py`
 
-Executes one planning cycle with and without the monitor for each set-based CommonRoad scenario in `scenarios/set_based` and counts the trajectories rejected due to rule violations.
+Executes one planning cycle with and without the monitor for each set-based CommonRoad scenario in `scenarios/set_based/cr_scenarios` (23 scenarios) and counts the trajectories rejected due to rule violations.
 Two scenarios that crash the environment model are skipped, so 23 scenarios are evaluated.
 Each run is executed in a separate process.
 The results are written to `output/set_based_scenario_eval`.
