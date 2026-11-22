@@ -9,7 +9,7 @@ from crcarla.carla_interface import CarlaInterface
 from evaluation.planning.carla import execute_simulation, init_carla_params, init_rp_config_carla
 
 param = init_carla_params()
-rp_config = init_rp_config_carla(["R_U2", "R_G14"])
+rp_config = init_rp_config_carla(["R_U2", "R_G1"])
 
 carla_interface = CarlaInterface(param)
 scenario = carla_interface.create_cr_map()
