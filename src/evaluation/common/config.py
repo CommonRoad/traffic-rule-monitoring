@@ -1,19 +1,12 @@
 import dataclasses
 
-activated_intersection_rule_set = [
-    "R_G1",
-    "R_G2",
-    "R_G3",
-    #   "R_G4",
-    #   "R_G5",
-    #  "R_U1",
-    "R_U2",
-    #   "R_U3",
-    #   "R_U4",
-    "R_U5",
-    "R_U12",
-]
-activated_interstate_rule_set = ["R_G1", "R_G2", "R_G3", "R_G4", "R_G5", "R_I1", "R_I2", "R_I3", "R_I4", "R_I5"]
+# Rule sets as in the paper's rule table (Tab. "Considered traffic rules"): all general rules (R-G1 to R-G4) plus the
+# rules of the road type (R-IN1 to R-IN5 for intersections, R-I1 to R-I5 for interstates).
+activated_intersection_rule_set = ["R_G1", "R_G2", "R_G3", "R_G4", "R_U1", "R_U2", "R_U3", "R_U4", "R_U5"]
+activated_interstate_rule_set = ["R_G1", "R_G2", "R_G3", "R_G4", "R_I1", "R_I2", "R_I3", "R_I4", "R_I5"]
+
+# Evaluation step sizes w of the paper (Tab. "Scenario and rule parameters").
+trace_step_sizes = [10, 1]
 
 
 @dataclasses.dataclass
