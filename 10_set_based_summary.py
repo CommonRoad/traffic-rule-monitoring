@@ -1,6 +1,7 @@
 import argparse
 import csv
 import json
+import math
 import re
 import subprocess
 import sys
@@ -9,42 +10,63 @@ from pathlib import Path
 
 from commonroad.common.file_reader import CommonRoadFileReader
 from commonroad.common.file_writer import CommonRoadFileWriter, OverwriteExistingFile
-from commonroad.common.util import FileFormat
+from commonroad.common.util import FileFormat, Interval
+from commonroad.geometry.shape import Polygon, ShapeGroup
+from commonroad.prediction.prediction import Occupancy, SetBasedPrediction
 from commonroad_rp.reactive_planner import ReactivePlanner
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
 from commonroad_rp.utility.utils_coordinate_system import create_coordinate_system, create_initial_ref_path
+from shapely.geometry import Polygon as ShapelyPolygon
 
 from evaluation.set_based.set_based_common import set_scenario_id
 
 REPO_ROOT = Path(__file__).parent
-SCENARIO_DIRS = [
-    REPO_ROOT / "scenarios" / "set_based" / "cr_scenarios",
-    REPO_ROOT / "scenarios" / "set_based",
-]
+# The 23 set-based CommonRoad benchmark scenarios (without the hand-made examples of 07_set_based.py).
+SCENARIO_DIR = REPO_ROOT / "scenarios" / "set_based" / "cr_scenarios"
 TEMPLATE_YAML = REPO_ROOT / "configurations" / "set_based" / "ZAM_Augmentation-1_1_S-1.yaml"
 OUTPUT_DIR = REPO_ROOT / "output" / "set_based_scenario_eval"
 CONVERTED_DIR = OUTPUT_DIR / "_converted"
-# Scenarios that consistently crash the C++ back-end (RuntimeError / SIGSEGV inside crcpp).
-SKIP_SCENARIOS = {"DEU_Muc-30_1_S-1", "ZAM_HW-1_1_S-1"}
 REJECTION_RE = re.compile(r"Rejected (\d+) infeasible trajectories due to rule violations")
 
 
+def _shape_parts(shape):
+    return list(shape.shapes) if isinstance(shape, ShapeGroup) else [shape]
+
+
+def _is_degenerate(shape) -> bool:
+    """Zero-area polygons (e.g., collinear vertices) crash the triangulation of the collision checker."""
+    return isinstance(shape, Polygon) and (len(shape.vertices) < 3 or not ShapelyPolygon(shape.vertices).area > 1e-6)
+
+
 def _prepare_scenario(scenario_path: Path) -> Path:
-    """Some scenarios store Interval time_steps on occupancies, which crcpp.World cannot cast.
-    Load, flatten any Interval time_step to its integer end, and write a normalized XML.
+    """Normalize a set-based scenario so that it can be loaded by crcpp.World and the collision checker:
+    - occupancies with a time interval apply to every time step of the whole interval; occupancies of the same
+      time step are merged into a shape group,
+    - zero-area polygons are removed from the occupancy shapes,
+    - interval-valued initial states use the lower bound (the set-based prediction only needs the current velocity).
     Returns the path to the normalized scenario."""
     converted = CONVERTED_DIR / scenario_path.name
-    if converted.exists() and converted.stat().st_mtime >= scenario_path.stat().st_mtime:
-        return converted
     sc, pp = CommonRoadFileReader(str(scenario_path)).open()
-    changed = False
     for o in sc.dynamic_obstacles:
+        for attr, value in list(vars(o.initial_state).items()):
+            if isinstance(value, Interval):
+                setattr(o.initial_state, attr, value.start)
         if o.prediction is None or not hasattr(o.prediction, "occupancy_set"):
             continue
+        per_step = {}
         for occ in o.prediction.occupancy_set:
-            if not isinstance(occ.time_step, int):
-                occ.time_step = int(occ.time_step.end)
-                changed = True
+            ts = occ.time_step
+            steps = [ts] if not isinstance(ts, Interval) else range(math.ceil(ts.start), math.floor(ts.end) + 1)
+            parts = [part for part in _shape_parts(occ.shape) if not _is_degenerate(part)]
+            for step in steps:
+                per_step.setdefault(int(step), []).extend(parts)
+        occupancies = []
+        for step in sorted(per_step):
+            if not per_step[step]:
+                continue
+            shape = per_step[step][0] if len(per_step[step]) == 1 else ShapeGroup(per_step[step])
+            occupancies.append(Occupancy(step, shape))
+        o.prediction = SetBasedPrediction(o.prediction.initial_time_step, occupancies)
     CONVERTED_DIR.mkdir(parents=True, exist_ok=True)
     CommonRoadFileWriter(
         sc,
@@ -55,21 +77,16 @@ def _prepare_scenario(scenario_path: Path) -> Path:
         tags=sc.tags or set(),
         file_format=FileFormat.XML,
     ).write_to_file(str(converted), OverwriteExistingFile.ALWAYS)
-    if changed:
-        print(f"   normalized Interval time_steps -> {converted.name}")
     return converted
 
 
 def _read_latest_rejection_count(log_dir: Path) -> int:
+    """Sum the rule-violation rejections over all sampling levels of the planning cycle (latest log)."""
     logs = list(log_dir.glob("*.log"))
     if not logs:
         return 0
     latest = max(logs, key=lambda p: p.stat().st_mtime)
-    for line in latest.read_text().splitlines():
-        m = REJECTION_RE.search(line)
-        if m:
-            return int(m.group(1))
-    return 0
+    return sum(int(m.group(1)) for m in REJECTION_RE.finditer(latest.read_text()))
 
 
 def run_once(scenario_path: Path, with_monitor: bool) -> dict:
@@ -196,7 +213,7 @@ def main():
         return
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    scenarios = sorted(p for d in SCENARIO_DIRS for p in d.glob("*.xml") if p.stem not in SKIP_SCENARIOS)
+    scenarios = sorted(SCENARIO_DIR.glob("*.xml"))
     if args.scenario:
         wanted = {Path(s).stem for s in args.scenario}
         scenarios = [p for p in scenarios if p.stem in wanted]
