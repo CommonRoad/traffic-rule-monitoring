@@ -55,7 +55,8 @@ def init_rp_config_carla(rules: List[str]):
     rp_config.debug.complete_rule_eval = True
     rp_config.monitor.with_rule_monitoring = True
     rp_config.monitor.activated_traffic_rules = rules
-    rp_config.monitor.trace_reset_option_val = crmonitor.TraceResetOptions.always
+    rp_config.monitor.trace_reset_option = "filter"
+    rp_config.monitor.trace_reset_option_val = crmonitor.TraceResetOptions.filter
     rp_config.monitor.trace_step = list(trace_step_sizes)
     rp_config.monitor.field_of_view_front = 150
     rp_config.monitor.field_of_view_rear = 75

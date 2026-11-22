@@ -35,7 +35,7 @@ monitor:
   with_rule_monitoring: True
   activated_traffic_rules: [ 'R_U5' ]
   set_based: True
-  trace_reset_option: "always"
+  trace_reset_option: "filter"
   log_level: "DEBUG"
   history_size: 0
   trace_step: [10, 1]

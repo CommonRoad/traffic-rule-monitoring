@@ -35,6 +35,6 @@ monitor:
   with_rule_monitoring: True
   activated_traffic_rules: [ 'R_GS1' ]
   set_based: True
-  trace_reset_option: "always"
+  trace_reset_option: "filter"
   history_size: 0
   trace_step: [10, 1]
