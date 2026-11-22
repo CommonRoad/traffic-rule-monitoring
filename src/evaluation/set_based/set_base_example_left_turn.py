@@ -25,9 +25,9 @@ def set_based_left_turn(
 
 
 def eval_set_based_left_turn():
-    scenario = Path(__file__).parent.parent.parent.parent / "scenarios/set_based" / "ZAM_TestTurnLeft-2_1_S-1.xml"
+    scenario = Path(__file__).parent.parent.parent.parent / "scenarios/set_based" / "DEU_TestTurnLeft-1_1_T-1.xml"
     config_path = (
-        Path(__file__).parent.parent.parent.parent / "configurations/set_based" / "ZAM_TestTurnLeft-2_1_S-1.yaml"
+        Path(__file__).parent.parent.parent.parent / "configurations/set_based" / "DEU_TestTurnLeft-1_1_T-1.yaml"
     )
     plot_limits = [40, 70, 40, 90]
     intersection_params = {"tIntersectionPassBefore": 15.0, "tIntersectionPassAfter": 15.0}

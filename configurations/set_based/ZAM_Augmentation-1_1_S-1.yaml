@@ -11,8 +11,8 @@ sampling:
   sampling_method: 1
   num_sampling_levels: 4
   t_min: 0.4
-  d_min: -1.5
-  d_max: 3.5
+  d_min: 0.0
+  d_max: 0.0
   max_deceleration_ratio: 0.125
 
 debug:

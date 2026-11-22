@@ -189,7 +189,7 @@ python 06_planning_visualization.py
 
 ### `07_set_based.py`
 
-Evaluates the safe distance rule R_G1 in ZAM_Augmentation-1_1_S-1 and the left-turn rule in ZAM_TestTurnLeft-2_1_S-1 using set-based predictions, with and without the monitor.
+Evaluates the safe distance rule R_G1 in ZAM_Augmentation-1_1_S-1 and the left-turn rule in DEU_TestTurnLeft-1_1_T-1 using set-based predictions, with and without the monitor.
 The plots are written to `output/set_based`.
 ```bash
 python 07_set_based.py
