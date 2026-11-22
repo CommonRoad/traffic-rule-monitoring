@@ -17,6 +17,7 @@ from evaluation.common.config import (
     activated_intersection_rule_set,
     activated_interstate_rule_set,
     configs,
+    trace_step_sizes,
 )
 from evaluation.common.scenario_eval import load_pred_costs
 from evaluation.planning.rp_planner import run_planner_cr_scenario
@@ -39,7 +40,7 @@ def evaluate(
         rp_config.monitor.activated_traffic_rules = rule_set
         rp_config.debug.complete_rule_eval = conf.complete_rule_eval
         rp_config.debug.complete_collision_eval = conf.complete_collision_eval
-        rp_config.monitor.trace_step = [10, 1] if conf.iterative_eval else [1]
+        rp_config.monitor.trace_step = list(trace_step_sizes) if conf.iterative_eval else [1]
         rp_config.monitor.short_circuiting = conf.short_circuiting
         rp_config.monitor.hydra_reordering = (
             True  # we need to set this to True to also set a bad reordering for demonstration purposes
@@ -83,7 +84,7 @@ def eval_scenario(
     max_workers: int = 24,
     timeout: int = 900,
     repetitions: int = 5,
-    max_config: int = 4,
+    max_config: int = 6,
 ) -> np.ndarray:
     res = np.array(["Scenario Name", "C1", "C2", "C3", "C4", "C5", "C6"]).reshape(1, -1)
 
@@ -195,9 +196,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--max-config",
         type=int,
-        default=4,
+        default=6,
         choices=range(1, 7),
-        help="Highest config to evaluate (e.g. 4 to skip C5 and C6).",
+        help="Highest config to evaluate (default: all six; e.g. 4 to skip the iterative and early-termination configurations).",
     )
     args = parser.parse_args()
 

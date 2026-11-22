@@ -15,6 +15,7 @@ from evaluation.common.config import (
     activated_intersection_rule_set,
     activated_interstate_rule_set,
     configs,
+    trace_step_sizes,
 )
 from evaluation.common.scenario_eval import load_pred_costs, load_scenario
 
@@ -74,7 +75,7 @@ def evaluate(
         crcpp.TimeParameters(50, 0.3, 0.1),
         crcpp.ActuatorParameters.vehicle_defaults(),
     )
-    sim_param.trace_step = [10, 1] if conf.iterative_eval else [1]
+    sim_param.trace_step = list(trace_step_sizes) if conf.iterative_eval else [1]
 
     data = load_pred_costs(conf.reordering, rule_set, Path(__file__).parent)
     predicate_cost = {

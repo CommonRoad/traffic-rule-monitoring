@@ -37,3 +37,4 @@ monitor:
   set_based: True
   trace_reset_option: "always"
   history_size: 0
+  trace_step: [10, 1]

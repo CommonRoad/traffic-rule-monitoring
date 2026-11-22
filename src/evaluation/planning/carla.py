@@ -14,6 +14,8 @@ from crcarla.controller.reactive_planner import ReactivePlannerInterface
 from crcarla.helper.config import CarlaParams, CustomVis, SupportedCARLAVersion, TrajectoryVisualization
 from crpred.basic_models.constant_velocity_predictor import ConstantVelocityCurvilinearPredictor
 
+from evaluation.common.config import trace_step_sizes
+
 
 def init_carla_params():
     param = CarlaParams()
@@ -54,6 +56,7 @@ def init_rp_config_carla(rules: List[str]):
     rp_config.monitor.with_rule_monitoring = True
     rp_config.monitor.activated_traffic_rules = rules
     rp_config.monitor.trace_reset_option_val = crmonitor.TraceResetOptions.always
+    rp_config.monitor.trace_step = list(trace_step_sizes)
     rp_config.monitor.field_of_view_front = 150
     rp_config.monitor.field_of_view_rear = 75
     rp_config.monitor.temporal_parameters = {"tIntersectionPassBefore": 5.0, "tIntersectionPassAfter": 5.0}
