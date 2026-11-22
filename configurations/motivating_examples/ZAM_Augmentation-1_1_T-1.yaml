@@ -37,4 +37,4 @@ monitor:
   trace_reset_option: "always"
   log_level: "DEBUG"
   history_size: 0
-  trace_step: [1]
+  trace_step: [10, 1]
